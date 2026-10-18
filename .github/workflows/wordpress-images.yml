@@ -1,0 +1,44 @@
+name: Optimize WordPress Preview Images
+
+on:
+  push:
+    branches: [wordpress]
+    paths:
+      - '.github/workflows/wordpress-images.yml'
+      - 'wordpress/tools/optimize_images.py'
+      - 'wordpress/themes/mojarrad/assets/images/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wordpress
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check 'Pillow>=10,<13'
+      - name: Optimize JPEG files and compare sizes
+        run: |
+          python wordpress/tools/optimize_images.py > wordpress-image-report.json
+          cat wordpress-image-report.json | tail -5
+      - name: Verify source Next.js media unchanged
+        run: git diff --exit-code -- public/images
+      - name: Commit only optimized theme images
+        run: |
+          git add wordpress/themes/mojarrad/assets/images
+          if git diff --cached --quiet; then
+            echo "No image changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(wordpress): compress preview JPEG images [skip ci]"
+          git push origin HEAD:wordpress
