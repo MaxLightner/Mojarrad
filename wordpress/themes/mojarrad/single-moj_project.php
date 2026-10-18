@@ -3,6 +3,7 @@
   $id=get_the_ID(); $kind=mojarrad_project_status($id);
   $status_labels=array('in-progress'=>'در دست اقدام','completed'=>'انجام‌شده','future'=>'پروژه آینده');
   $gallery=array_filter(array_map('absint',explode(',',mojarrad_meta('gallery_ids',$id))));
+  $demo_gallery=array_filter(explode(',',mojarrad_meta('demo_gallery',$id)));
 ?>
 <section class="project-hero">
   <div class="project-hero-photo"><?php mojarrad_project_cover($id,'full'); ?></div>
@@ -28,9 +29,9 @@
   <?php if(get_the_content()): ?>
   <section class="project-description"><h2 class="title-line">درباره پروژه</h2><div class="prose"><?php the_content(); ?></div></section>
   <?php endif; ?>
-  <?php if('completed'===$kind && $gallery): ?>
+  <?php if('completed'===$kind && ($gallery || $demo_gallery)): ?>
     <section class="section"><h2 class="title-line">گالری پروژه</h2><div class="gallery-grid">
-      <?php foreach($gallery as $aid) {
+      <?php foreach($demo_gallery as $filename) { echo '<a href="'.esc_url(mojarrad_asset('images/'.basename($filename))).'" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="'.esc_url(mojarrad_asset('images/'.basename($filename))).'" alt=""></a>'; } foreach($gallery as $aid) {
         $image=wp_get_attachment_image($aid,'large',false,array('loading'=>'lazy'));
         $url=wp_get_attachment_url($aid);
         if($image && $url) echo '<a href="'.esc_url($url).'" target="_blank" rel="noopener noreferrer">'.$image.'</a>';
