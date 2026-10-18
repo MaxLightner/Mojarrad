@@ -1,0 +1,294 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// نقش‌ها: admin (مدیر سیستم) | executor (مجری) | engineer (مهندس)
+// supervisor (ناظر) | owner (مالک) | foreman (سرپرست کارگاه) | contractor (پیمانکار)
+model User {
+  id           String          @id @default(cuid())
+  username     String          @unique
+  passwordHash String
+  fullName     String
+  role         String
+  active       Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  sessions      Session[]
+  accesses      ProjectAccess[]
+  comments      Comment[]
+  timelineEvents TimelineEvent[]
+  eventImages   EventImage[]
+}
+
+model Session {
+  token     String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// category: completed | in-progress | future
+// commentsVisibility: management (فقط مدیر و مجری) | team (+مهندس/سرپرست) | all (+مالک/ناظر)
+model Project {
+  id                String          @id @default(cuid())
+  slug              String          @unique
+  title             String
+  subtitle          String?
+  category          String
+  status            String?
+  location          String
+  area              String
+  year              String
+  progress          Int             @default(0)
+  description       String
+  coverImage        String
+  gallery           String          @default("[]")
+  startDate         String?
+  endDate           String?
+  commentsVisibility String         @default("management")
+  order             Int             @default(0)
+  // بخش فروش
+  forSale           Boolean         @default(false)
+  salePrice         String?
+  saleDescription   String?
+  events            TimelineEvent[]
+  documents         Document[]
+  workers           Worker[]
+  accesses          ProjectAccess[]
+  contractInfo      ContractInfo?
+  referenceItems    ReferenceItem[]
+  payments          PaymentReceipt[]
+}
+
+model ProjectAccess {
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([userId, projectId])
+}
+
+// category: execution (اجرا) | supply (تأمین) | delay (تأخیر) | visit (بازدید) | decision (تصمیم/مجوز)
+// kind: point (رویداد نقطه‌ای) | stage_start (شروع مرحله) | stage_end (پایان مرحله)
+// stageKey: کلید مرحله — رکورد شروع و پایانِ یک مرحله با همین کلید به هم وصل می‌شوند (نخ تایم‌لاین)
+// stageGroup: گروه کاری برای رنگ و آیکون — structure | mep | finishing | exterior | admin
+model TimelineEvent {
+  id          String        @id @default(cuid())
+  projectId   String
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date        DateTime
+  category    String
+  kind        String        @default("point")
+  stageKey    String?
+  stageGroup  String?
+  title       String
+  description String
+  isReport    Boolean       @default(false)
+  images      String        @default("[]")
+  files       String        @default("[]") // پیوست‌های فایل: [{name,url}]
+  authorId    String?
+  author      User?         @relation(fields: [authorId], references: [id])
+  createdAt   DateTime      @default(now())
+  comments    Comment[]
+  eventImages EventImage[]
+}
+
+// visibility (مخاطب کامنت — چه کسی علاوه بر مدیریت آن را می‌بیند):
+//   management: فقط مدیر و مجری (داخلی)
+//   team: + مهندس و سرپرست کارگاه
+//   owner: + مالک
+//   contractor: + پیمانکار
+// needsFollowUp: درخواست پیگیری از مخاطب (تا resolvedAt ثبت نشود برجسته می‌ماند)
+model Comment {
+  id           String        @id @default(cuid())
+  eventId      String
+  event        TimelineEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  authorId     String
+  author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  text         String
+  image        String? // عکس مشروح‌شده (خط/فلش روی تصویر)
+  visibility   String        @default("management")
+  needsFollowUp Boolean      @default(false)
+  resolvedAt   DateTime?
+  createdAt    DateTime      @default(now())
+}
+
+// عکس پیشنهادی کاربران برای رویداد — با تأیید مدیر به گالری رویداد اضافه می‌شود
+// status: pending | approved | rejected
+model EventImage {
+  id          String        @id @default(cuid())
+  eventId     String
+  event       TimelineEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url         String
+  caption     String?
+  uploadedById String?
+  uploader    User?         @relation(fields: [uploadedById], references: [id])
+  status      String        @default("pending")
+  createdAt   DateTime      @default(now())
+}
+
+// category: permit (مجوز ساخت) | completion (پایان‌کار) | contract (قرارداد) | drawing (نقشه) | other
+model Document {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  category  String
+  fileUrl   String?
+  note      String?
+  createdAt DateTime @default(now())
+}
+
+model Worker {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fullName  String
+  job       String
+  phone     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// وضعیت پیمانکاری — فقط برای مجری و مدیر
+model ContractInfo {
+  id              String   @id @default(cuid())
+  projectId       String   @unique
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contractorName  String
+  startDate       String   // شمسی: ۱۴۰۴/۰۲
+  endDate         String   // شمسی: ۱۴۰۵/۰۶
+  financialStatus String   // balanced | debtor | creditor
+  totalPaid       String   // جمع پرداختی (تومان)
+  note            String?
+  updatedAt       DateTime @updatedAt
+}
+
+// دفترچه تماس مجری — شماره‌هایی که برای روز مبادا نگه می‌داریم
+// type: worker | contractor | supplier | other
+// isTemporary: اگر تا ۳۰ روز تیک (بررسی) نشود حذف می‌شود
+model ContactEntry {
+  id           String    @id @default(cuid())
+  name         String
+  phone        String
+  type         String    @default("worker")
+  note         String?
+  isTemporary  Boolean   @default(true)
+  lastCheckedAt DateTime @default(now())
+  createdAt    DateTime  @default(now())
+}
+
+// category: prices (قیمت‌ها) | policy (قوانین و سیاست‌ها) | company (خبر شرکت)
+model NewsItem {
+  id         String   @id @default(cuid())
+  title      String
+  category   String
+  excerpt    String
+  content    String
+  coverImage String?
+  date       DateTime
+}
+
+// معرفی مسئولین — category: company (هیئت‌مدیره/مدیران) | municipal (شهرداری و نهادهای شهر) | provincial (نهادهای استانی)
+model Official {
+  id          String  @id @default(cuid())
+  name        String
+  role        String
+  category    String  @default("company")
+  description String
+  avatar      String?
+  order       Int     @default(0)
+}
+
+// وبلاگ تخصصی — تکنولوژی‌های ساخت که استفاده می‌کنیم
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  category    String
+  excerpt     String
+  content     String
+  coverImage  String?
+  readMinutes Int      @default(4)
+  date        DateTime
+}
+
+// رفرنس‌ها و بازنگری‌های مالک — به‌جای واتساپ!
+// category: map (نقشه/پلان) | photo (عکس رفرنس) | material (مصالح/برند) | other
+// status: active (معتبر) | superseded (نسخه جدیدتر آمده — برای آرشیو نگه داشته می‌شود)
+model ReferenceItem {
+  id          String             @id @default(cuid())
+  projectId   String
+  project     Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  category    String             @default("photo")
+  description String
+  fileUrl     String?
+  version     Int                @default(1)
+  status      String             @default("active")
+  addedById   String?
+  addedByName String?
+  createdAt   DateTime           @default(now())
+  messages    ReferenceMessage[]
+}
+
+// پرسش‌وپاسخ روی رفرنس — پیمانکار/سرپرست سوال می‌پرسد، مجری/مالک جواب می‌دهد
+model ReferenceMessage {
+  id          String        @id @default(cuid())
+  referenceId String
+  reference   ReferenceItem @relation(fields: [referenceId], references: [id], onDelete: Cascade)
+  authorId    String
+  authorName  String
+  authorRole  String
+  text        String
+  createdAt   DateTime      @default(now())
+}
+
+// رسید پرداخت‌ها — مالک ثبت می‌کند، همزمان رویداد تایم‌لاین مالی می‌سازد
+// (amount رقمی بدون جداکننده مثل \"500000000\" — فرمت در UI)
+model PaymentReceipt {
+  id              String    @id @default(cuid())
+  projectId       String
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date            DateTime
+  amount          String
+  description     String
+  receiptImage    String?
+  addedById       String?
+  addedByName     String?
+  timelineEventId String?
+  createdAt       DateTime  @default(now())
+}
+
+// type: consulting | supplier | contractor | sale (همکاری در فروش)
+model RequestLead {
+  id        String   @id @default(cuid())
+  type      String
+  name      String
+  company   String?
+  phone     String
+  field     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+// آرشیو پروژه — وقتی پروژه تمام می‌شود، کل سابقه در یک فایل ZIP ذخیره
+// و پروژه از دیتابیس/داشبورد حذف می‌شود؛ زیپ در داشبورد قابل دانلود است
+model ProjectArchive {
+  id          String   @id @default(cuid())
+  projectTitle String
+  slug        String
+  fileName    String   // نام فایل در پوشهٔ archives/
+  sizeBytes   Int      @default(0)
+  eventCount  Int      @default(0)
+  summary     String   @default("{}") // {events, comments, photos, payments, documents...}
+  createdById String?
+  createdByName String?
+  createdAt   DateTime @default(now())
+}

@@ -1,0 +1,348 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.theme-dark *));
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Vazirmatn", "Tahoma", sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+}
+
+/* ===== تم تیره (لوکس) ===== */
+:root,
+.theme-dark {
+  --radius: 1rem;
+  --background: #0a0a0f;
+  --foreground: #f2efe6;
+  --card: #14141c;
+  --card-foreground: #f2efe6;
+  --popover: #17171f;
+  --popover-foreground: #f2efe6;
+  --primary: #d4a531;
+  --primary-foreground: #14120a;
+  --secondary: #1e1e28;
+  --secondary-foreground: #d8d4c5;
+  --muted: #191922;
+  --muted-foreground: #9a96a8;
+  --accent: #241f0e;
+  --accent-foreground: #e9c766;
+  --destructive: #e5484d;
+  --border: rgba(212, 165, 49, 0.16);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #d4a531;
+  --gold: #d4a531;
+  --gold-soft: #e9c766;
+  --surface: #12121a;
+  --surface-2: #1a1a24;
+  --hero-grad: radial-gradient(1200px 600px at 70% -10%, rgba(212, 165, 49, 0.14), transparent 60%),
+    radial-gradient(900px 500px at 10% 110%, rgba(90, 70, 160, 0.1), transparent 60%);
+  --glass: rgba(20, 20, 28, 0.72);
+  --shadow-lux: 0 20px 60px -20px rgba(0, 0, 0, 0.8);
+}
+
+/* ===== تم روشن ===== */
+.theme-light {
+  --radius: 1rem;
+  --background: #faf7f0;
+  --foreground: #211d12;
+  --card: #ffffff;
+  --card-foreground: #211d12;
+  --popover: #ffffff;
+  --popover-foreground: #211d12;
+  --primary: #9c7a14;
+  --primary-foreground: #fffdf5;
+  --secondary: #f0ead9;
+  --secondary-foreground: #4a4230;
+  --muted: #f2eee2;
+  --muted-foreground: #6f6a58;
+  --accent: #f5ecd2;
+  --accent-foreground: #7a6010;
+  --destructive: #c92a2a;
+  --border: rgba(156, 122, 20, 0.22);
+  --input: rgba(33, 29, 18, 0.1);
+  --ring: #9c7a14;
+  --gold: #9c7a14;
+  --gold-soft: #c19a2e;
+  --surface: #ffffff;
+  --surface-2: #f7f3e8;
+  --hero-grad: radial-gradient(1100px 550px at 75% -10%, rgba(193, 154, 46, 0.18), transparent 60%),
+    radial-gradient(700px 400px at 5% 110%, rgba(122, 96, 16, 0.08), transparent 60%);
+  --glass: rgba(255, 253, 245, 0.78);
+  --shadow-lux: 0 16px 48px -18px rgba(90, 70, 10, 0.25);
+}
+
+/* ===== تم گرم پاستلی ===== */
+.theme-pastel {
+  --radius: 1.25rem;
+  --background: #f6ece2;
+  --foreground: #3f3327;
+  --card: #fdf6ee;
+  --card-foreground: #3f3327;
+  --popover: #fdf6ee;
+  --popover-foreground: #3f3327;
+  --primary: #c1764a;
+  --primary-foreground: #fff8f2;
+  --secondary: #f0e0d1;
+  --secondary-foreground: #6b5341;
+  --muted: #f3e6da;
+  --muted-foreground: #8a7563;
+  --accent: #efe0d4;
+  --accent-foreground: #a06038;
+  --destructive: #b3413b;
+  --border: rgba(193, 118, 74, 0.25);
+  --input: rgba(63, 51, 39, 0.12);
+  --ring: #c1764a;
+  --gold: #b3742e;
+  --gold-soft: #d99a55;
+  --surface: #fdf6ee;
+  --surface-2: #f7ebdf;
+  --hero-grad: radial-gradient(1100px 550px at 75% -10%, rgba(217, 154, 85, 0.22), transparent 60%),
+    radial-gradient(700px 420px at 5% 110%, rgba(176, 140, 100, 0.12), transparent 60%);
+  --glass: rgba(253, 246, 238, 0.8);
+  --shadow-lux: 0 16px 48px -18px rgba(120, 80, 40, 0.28);
+}
+
+/* ===== تم سورمه‌ای-نارنجی لوکس ===== */
+.theme-navy {
+  --radius: 1rem;
+  --background: #0a1424;
+  --foreground: #edf1f8;
+  --card: #101f36;
+  --card-foreground: #edf1f8;
+  --popover: #13233d;
+  --popover-foreground: #edf1f8;
+  --primary: #ff8a3d;
+  --primary-foreground: #1f1005;
+  --secondary: #16273f;
+  --secondary-foreground: #c9d4e6;
+  --muted: #142338;
+  --muted-foreground: #8fa0b8;
+  --accent: #1a2c47;
+  --accent-foreground: #ffb066;
+  --destructive: #e5484d;
+  --border: rgba(255, 138, 61, 0.22);
+  --input: rgba(255, 255, 255, 0.09);
+  --ring: #ff8a3d;
+  --gold: #ff8a3d;
+  --gold-soft: #ffb066;
+  --surface: #0f1e33;
+  --surface-2: #152741;
+  --hero-grad: radial-gradient(1200px 600px at 70% -10%, rgba(255, 138, 61, 0.13), transparent 60%),
+    radial-gradient(900px 500px at 10% 110%, rgba(37, 78, 140, 0.35), transparent 60%);
+  --glass: rgba(16, 31, 54, 0.75);
+  --shadow-lux: 0 20px 60px -20px rgba(0, 0, 0, 0.65);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Vazirmatn", "Tahoma", sans-serif;
+    background-image: var(--hero-grad);
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--gold) 35%, transparent);
+  }
+}
+
+/* اسکرول‌بار لوکس */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--gold) 40%, transparent);
+  border-radius: 99px;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.card-lux {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lux);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s, box-shadow 0.35s;
+}
+.card-lux:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+.gold-text {
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold) 60%, var(--gold-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-btn {
+  background: linear-gradient(160deg, var(--gold-soft), var(--gold));
+  color: var(--primary-foreground);
+  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--gold) 60%, transparent);
+  transition: transform 0.25s, box-shadow 0.25s, filter 0.25s;
+}
+.gold-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 14px 32px -10px color-mix(in srgb, var(--gold) 70%, transparent);
+}
+.gold-btn:active {
+  transform: translateY(0);
+}
+
+.section-label {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.title-line::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: 12px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.timeline-rail {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 60%, transparent), var(--border) 30%, var(--border) 70%, transparent);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-soft {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ===== تایم‌لاین ستون‌فقرات ===== */
+
+/* نخ متحرک مرحله باز — خط‌چین جریان‌دار با رنگ گروه کاری */
+.thread-flow {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--tc, #14b8a6) 0 7px,
+    transparent 7px 14px
+  );
+  animation: thread-flow 0.9s linear infinite;
+  border-radius: 2px;
+}
+@keyframes thread-flow {
+  from { background-position-y: 0; }
+  to { background-position-y: 14px; }
+}
+
+/* نبض گره مرحله در جریان */
+.node-pulse {
+  animation: node-pulse 2s ease-in-out infinite;
+}
+@keyframes node-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 0%, transparent); }
+  50% { box-shadow: 0 0 18px 4px color-mix(in srgb, currentColor 25%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thread-flow {
+    animation: none;
+  }
+  .node-pulse {
+    animation: none;
+  }
+}
