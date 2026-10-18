@@ -13,6 +13,21 @@ update_option('blogname', 'گروه ساختمانی نیکا بنا');
 update_option('blogdescription', 'پیش‌نمایش آزمایشی سایت گروه ساختمانی نیکا بنا');
 update_option('permalink_structure', '/%postname%/');
 
+function moj_demo_assign_category($post_id, $name) {
+    $term = term_exists($name, 'category');
+    if (!$term) {
+        $term = wp_insert_term($name, 'category');
+    }
+    if (is_wp_error($term)) {
+        throw new RuntimeException('Category could not be created: ' . $term->get_error_message());
+    }
+    $term_id = is_array($term) ? (int) $term['term_id'] : (int) $term;
+    if (!$term_id) {
+        throw new RuntimeException('Category creation returned no term ID.');
+    }
+    wp_set_post_categories($post_id, array($term_id), false);
+}
+
 function moj_demo_post($type, $slug, $title, $excerpt, $body, $meta = array()) {
     $post = get_page_by_path($slug, OBJECT, $type);
     if ($post) {
@@ -69,7 +84,7 @@ $news = array(
 );
 foreach($news as $n) {
     $id=moj_demo_post('moj_news',$n[0],$n[1],$n[2],$n[2],array('demo_image'=>$n[3]));
-    wp_set_post_categories($id,array(wp_create_category($n[4])),false);
+    moj_demo_assign_category($id, $n[4]);
 }
 $articles=array(
     array('sample-aac-blocks','بلوک هبلکس؛ مزایا و محدودیت‌ها','نکات اجرایی دیوارهای AAC، اتصال و اندود.','aac-2.jpg','مصالح'),
@@ -81,7 +96,7 @@ $articles=array(
 );
 foreach($articles as $a) {
     $id=moj_demo_post('post',$a[0],$a[1],$a[2],$a[2],array('demo_image'=>$a[3]));
-    wp_set_post_categories($id,array(wp_create_category($a[4])),false);
+    moj_demo_assign_category($id, $a[4]);
 }
 $officials=array(
     array('demo-hossein-mojarrad','مهندس حسین مجرد','مدیریت گروه ساختمانی','company'),
