@@ -64,3 +64,17 @@ server.log
 /tests/
 worklog.md
 archives/
+
+# Local databases, credentials and source bundles
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.key
+*.p12
+*.pfx
+*.bundle
+*.tar
+*.zip
+.zscripts/*.pid
+!.env.example
