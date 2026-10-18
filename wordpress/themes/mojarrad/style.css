@@ -1,0 +1,33 @@
+/*
+Theme Name: Mojarrad
+Theme URI: https://github.com/MaxLightner/Mojarrad
+Description: RTL WordPress theme foundation (not the final Next.js UI port).
+Version: 0.1.0
+Requires at least: 6.5
+Requires PHP: 8.1
+Text Domain: mojarrad
+*/
+:root{color-scheme:dark;--bg:#0a1424;--panel:#14243a;--muted:#bdcad7;--gold:#d5b67d;--line:#34455d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:#f5f7fa;direction:rtl;font:16px/1.9 Tahoma,Arial,sans-serif}
+a{color:inherit;text-decoration:none}a:hover{color:var(--gold)}img{max-width:100%;height:auto}
+.container{max-width:1160px;margin:auto;padding:0 24px}
+.site-header,.site-footer{background:#101d30}.site-header{border-bottom:1px solid var(--line)}
+.head-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:78px}
+.brand{font-size:1.2rem;font-weight:700}.menu ul{display:flex;gap:20px;flex-wrap:wrap;list-style:none;padding:0;margin:0}
+.hero{padding:90px 0;background:linear-gradient(135deg,#0a1424,#1e3854)}
+.hero h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.4;margin:0 0 20px}
+.hero p{max-width:650px;color:var(--muted)}
+section.section{padding:55px 0}h2{line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.card-body{padding:20px}.card h2,.card h3{margin:0 0 10px;font-size:1.2rem}
+.muted{color:var(--muted)}.link{color:var(--gold);display:inline-block;margin-top:12px}
+.article{padding:55px 0;max-width:870px;line-height:2}.article h1{font-size:clamp(1.8rem,4vw,3rem)}
+.site-footer{padding:25px 0;border-top:1px solid var(--line);color:var(--muted)}
+.notice{border:1px solid var(--line);border-radius:12px;padding:20px;color:var(--muted)}
+.screen-reader-text{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+.screen-reader-text:focus{clip-path:none;position:static;width:auto;height:auto}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.head-inner{flex-direction:column;align-items:flex-start;padding:15px 0}}
+@media(max-width:550px){.grid{grid-template-columns:1fr}.container{padding:0 16px}.hero{padding:55px 0}.menu ul{gap:12px}}
