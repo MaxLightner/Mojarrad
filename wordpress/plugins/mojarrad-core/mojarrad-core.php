@@ -74,3 +74,29 @@ function mojarrad_activate() {
 register_activation_hook( __FILE__, 'mojarrad_activate' );
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
 add_action( 'rest_api_init', array( 'Mojarrad_REST', 'register_routes' ) );
+
+
+/** Create public route pages only on activation, without overwriting existing content. */
+function mojarrad_create_public_pages() {
+    $pages = array(
+        'about' => array( 'درباره ما', 'page-about.php' ),
+        'sale' => array( 'فروش املاک', 'page-sale.php' ),
+        'consulting' => array( 'مشاوره', 'page-consulting.php' ),
+        'collaborate' => array( 'همکاری', 'page-collaborate.php' ),
+        'blog' => array( 'وبلاگ', 'page-blog.php' ),
+    );
+    foreach ( $pages as $slug => $data ) {
+        $existing = get_page_by_path( $slug );
+        if ( $existing ) { continue; }
+        $id = wp_insert_post( array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_name' => $slug,
+            'post_title' => $data[0],
+            'post_content' => '',
+        ), true );
+        if ( ! is_wp_error( $id ) && $id ) {
+            update_post_meta( $id, '_wp_page_template', $data[1] );
+        }
+    }
+}
