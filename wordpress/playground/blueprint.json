@@ -1,0 +1,46 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/MaxLightner/Mojarrad",
+        "ref": "wordpress",
+        "refType": "branch",
+        "path": "wordpress/plugins/mojarrad-core"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "mojarrad-core"
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/MaxLightner/Mojarrad",
+        "ref": "wordpress",
+        "refType": "branch",
+        "path": "wordpress/themes/mojarrad"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "mojarrad"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\nupdate_option('blogname','نیکا بنا — نسخه آزمایشی');\nupdate_option('blogdescription','پیش‌نمایش وردپرسی پروژه مهندس مجرد');\nupdate_option('permalink_structure','/%postname%/');\nif ( ! get_page_by_path('playground-demo-project', OBJECT, 'moj_project') ) {\n    $id = wp_insert_post(array(\n        'post_type'=>'moj_project',\n        'post_status'=>'publish',\n        'post_name'=>'playground-demo-project',\n        'post_title'=>'پروژه آزمایشی — بررسی نسخه وردپرس',\n        'post_excerpt'=>'داده نمونه فقط برای تست نمایش صفحات، نه اطلاعات واقعی.',\n        'post_content'=>'این یک پروژه آزمایشی است که برای بررسی عملکرد قالب و افزونه وردپرسی ایجاد شده است.'\n    ));\n    if ( ! is_wp_error($id) && $id ) {\n        wp_set_object_terms($id, 'in-progress', 'moj_project_status');\n        update_post_meta($id,'moj_location','مشهد — نمونه آزمایشی');\n        update_post_meta($id,'moj_area','۲۵۰ متر مربع (آزمایشی)');\n        update_post_meta($id,'moj_year','۱۴۰۵');\n        update_post_meta($id,'moj_progress',35);\n        update_post_meta($id,'moj_status','در حال اجرا — نمونه آزمایشی');\n    }\n}\nif ( ! get_page_by_path('playground-demo-news', OBJECT, 'moj_news') ) {\n    wp_insert_post(array(\n        'post_type'=>'moj_news',\n        'post_status'=>'publish',\n        'post_name'=>'playground-demo-news',\n        'post_title'=>'خبر آزمایشی برای بررسی قالب',\n        'post_excerpt'=>'این خبر فقط برای تست طراحی نسخه وردپرس منتشر شده است.',\n        'post_content'=>'داده آزمایشی.'\n    ));\n}\nflush_rewrite_rules();"
+    }
+  ]
+}
