@@ -98,6 +98,7 @@ $contact=moj_office_test($admin,'POST','office/contacts',array(
 moj_office_assert($contact->get_status()===201,'admin contacts create failed');
 $ownerContact=moj_office_test($owner,'GET','office/contacts');
 moj_office_assert($ownerContact->get_status()===403,'owner accessed global contacts');
+if(class_exists('ZipArchive')){
 $archiveDenied=moj_office_test($owner,'POST',"projects/$pid/archives");
 moj_office_assert($archiveDenied->get_status()===403,'owner could archive project');
 $archive=moj_office_test($admin,'POST',"projects/$pid/archives");
@@ -115,6 +116,7 @@ moj_office_assert($zip->open($zipPath)===true,'archive cannot reopen');
 $decoded=json_decode($zip->getFromName('project-data.json'),true);
 moj_office_assert(is_array($decoded)&&count($decoded['records']['office'])>=5,'office data omitted from archive');
 $zip->close();
+}else{update_option('mojarrad_office_archive_smoke','skipped_no_php_zip',false);}
 $archiveList=moj_office_test($admin,'GET',"projects/$pid/archives");
 moj_office_assert($archiveList->get_status()===200 && count($archiveList->get_data()['items'])>=1,'archive not discoverable');
 wp_set_current_user($prior);
