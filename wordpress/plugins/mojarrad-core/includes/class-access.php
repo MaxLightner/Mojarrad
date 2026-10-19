@@ -62,15 +62,15 @@ final class Mojarrad_Access {
         }
         return true;
     }
-    /** Tool permissions for modules not yet implemented: never treated as action authorization. */
+    /** UI navigation hints only; authoritative checks live in Mojarrad_Office_Access. */
     public static function modules_for_role(string $role): array {
         $roles=array(
             'references'=>array('admin','executor','owner'),
             'payments'=>array('admin','executor','owner'),
             'documents'=>array('admin','executor','engineer','foreman','owner','supervisor'),
             'workers'=>array('admin','executor','engineer','foreman'),
-            'contract'=>array('admin','executor','owner'),
-            'contacts'=>array('admin','executor','engineer','foreman'),
+            'contract'=>array('admin','executor'),
+            'contacts'=>array('admin','executor'),
             'management'=>array('admin'),
         );
         $result=array();

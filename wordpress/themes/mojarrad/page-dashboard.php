@@ -70,6 +70,14 @@ foreach($project_ids as $project_id) {
               <div class="dashboard-project-actions">
                 <small class="muted"><?php echo esc_html(number_format_i18n($progress)); ?>٪ پیشرفت</small>
                 <a class="btn-gold" href="<?php echo esc_url(add_query_arg('project',$pid,home_url('/timeline/'))); ?>">تایم‌لاین و گزارش‌ها</a>
+                <?php if(class_exists('Mojarrad_Office_Access')):
+                  $office_caps=Mojarrad_Office_Access::capabilities($user->ID,$pid);
+                  foreach(array('references'=>'رفرنس‌ها','documents'=>'مدارک','payments'=>'پرداخت‌ها','contracts'=>'قراردادها','workers'=>'نیروها','archive'=>'آرشیو') as $section=>$label):
+                    if(!isset($office_caps[$section]))continue; ?>
+                    <a class="text-link" href="<?php echo esc_url(add_query_arg(array('project'=>$pid,'section'=>$section),home_url('/office/'))); ?>"><?php echo esc_html($label); ?> ←</a>
+                  <?php endforeach;
+                endif; ?>
+
                 <?php if(get_post_status($pid)==='publish'): ?><a class="text-link" href="<?php echo esc_url(get_permalink($pid)); ?>">صفحه عمومی پروژه ←</a><?php else: ?><span class="muted">این پروژه صفحه عمومی ندارد</span><?php endif; ?>
                 <?php if($is_manager): ?><a class="text-link" href="<?php echo esc_url(get_edit_post_link($pid)); ?>">ویرایش و تخصیص اعضا</a><?php endif; ?>
               </div>
@@ -113,19 +121,19 @@ foreach($project_ids as $project_id) {
     </section>
     <?php endif; ?>
     <section id="my-tools" class="dashboard-section">
-      <h2 class="title-line">ابزارهای من</h2>
+      <h2 class="title-line">ابزارهای مدیریت</h2>
       <div class="dashboard-tools">
-      <?php
-      $tool_labels=array(
-        'references'=>'رفرنس‌های پروژه','payments'=>'پرداخت‌ها و رسیدها',
-        'documents'=>'مدارک و نقشه‌ها','workers'=>'نیروهای اجرایی',
-        'contract'=>'قراردادها','contacts'=>'دفترچه تماس','management'=>'مدیریت سیستم',
-      );
-      $modules=class_exists('Mojarrad_Access')?Mojarrad_Access::modules_for_role($role):array();
-      foreach($modules as $m): ?>
-        <div class="card-lux tool-card"><strong><?php echo esc_html($tool_labels[$m]??$m); ?></strong><span class="muted">در دست توسعه — هنوز فعال نیست</span></div>
-      <?php endforeach; ?>
-      <?php if(!$modules): ?><p class="notice">در حال حاضر ابزار اختصاصی دیگری برای این نقش فعال نیست.</p><?php endif; ?>
+        <?php if(class_exists('Mojarrad_Office_Access') && Mojarrad_Office_Access::permitted($user->ID,0,'contacts')): ?>
+          <a class="card-lux tool-card" href="<?php echo esc_url(add_query_arg(array('project'=>0,'section'=>'contacts'),home_url('/office/'))); ?>">
+            <strong>دفترچه تماس مجری</strong><span class="muted">شماره‌ها، دسته‌بندی و بررسی شماره‌های موقت ←</span>
+          </a>
+        <?php endif; ?>
+        <?php if($is_manager): ?>
+          <a class="card-lux tool-card" href="<?php echo esc_url(admin_url('edit.php?post_type=moj_project')); ?>">
+            <strong>مدیریت پروژه‌ها</strong><span class="muted">اطلاعات عمومی، گالری و تخصیص اعضا ←</span>
+          </a>
+        <?php endif; ?>
+        <p class="muted">رفرنس‌ها، نقشه‌ها، قراردادها، پرداخت‌ها، نیروها و آرشیو از داخل کارت هر پروژه در دسترس هستند.</p>
       </div>
     </section>
   </div>

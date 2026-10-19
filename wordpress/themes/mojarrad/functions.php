@@ -13,6 +13,20 @@ add_action( 'wp_enqueue_scripts', function () {
     $version = wp_get_theme()->get( 'Version' );
     wp_enqueue_style( 'mojarrad-theme', get_stylesheet_uri(), array(), $version );
     wp_enqueue_script( 'mojarrad-ui', get_template_directory_uri() . '/assets/js/site.js', array(), $version, true );
+    if ( is_page('office') ) {
+        wp_enqueue_style('mojarrad-office',get_template_directory_uri().'/assets/css/office.css',array('mojarrad-theme'),$version);
+        wp_enqueue_script('mojarrad-office',get_template_directory_uri().'/assets/js/office.js',array(),$version,true);
+        $project=isset($_GET['project'])?absint($_GET['project']):0;
+        $uid=get_current_user_id();
+        $caps=class_exists('Mojarrad_Office_Access')?Mojarrad_Office_Access::capabilities($uid,$project):array();
+        $selected=isset($_GET['section'])?sanitize_key(wp_unslash($_GET['section'])):'';
+        $section=isset($caps[$selected])?$selected:array_key_first($caps);
+        wp_add_inline_script('mojarrad-office','window.mojOffice='.wp_json_encode(array(
+            'rest'=>esc_url_raw(rest_url('mojarrad/v1/')),
+            'nonce'=>wp_create_nonce('wp_rest'),'project'=>$project,
+            'section'=>$section,'permissions'=>$caps,
+        ),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).';','before');
+    }
     if ( is_page('timeline') ) {
         wp_enqueue_style('mojarrad-timeline',get_template_directory_uri().'/assets/css/timeline.css',array('mojarrad-theme'),$version);
         wp_enqueue_script('mojarrad-timeline',get_template_directory_uri().'/assets/js/timeline.js',array(),$version,true);

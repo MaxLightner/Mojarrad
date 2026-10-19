@@ -1,0 +1,18 @@
+.moj-office{max-width:1160px}.moj-office-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.moj-office-heading .section-label{display:block;margin-top:13px}.moj-office-tabs{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:16px 2px;margin:18px 0 28px;scrollbar-width:thin}
+.moj-office-tabs a{display:inline-flex;white-space:nowrap;align-items:center;min-height:42px;padding:8px 15px;border-radius:24px;border:1px solid var(--border);background:var(--card);font-size:13px}
+.moj-office-tabs a.is-active{color:var(--accent);border-color:var(--accent)}.moj-office-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:25px 0}
+.moj-office-toolbar h2{margin:3px 0}.moj-office-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.moj-office-card{padding:20px;overflow-wrap:anywhere}.moj-office-card h3{font-size:19px;margin:7px 0 9px}.moj-office-card header{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.moj-office-card p{color:var(--muted);white-space:pre-wrap}.moj-office-card .metadata{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;font-size:12px}
+.moj-office-card .metadata span{background:var(--bg);border-radius:8px;padding:8px;color:var(--muted)}
+.moj-office-card .actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:15px}.moj-office-card .actions button{cursor:pointer}
+.moj-office-card .version{color:var(--accent);font-size:12px}.moj-office-card .status{font-size:11px;border:1px solid var(--border);border-radius:15px;padding:2px 9px;color:var(--muted)}
+.moj-office-messages{border-top:1px solid var(--border);margin-top:18px;padding-top:12px;display:grid;gap:8px}.moj-office-messages .message{padding:9px;background:var(--bg);border-radius:9px;font-size:12px;white-space:pre-wrap}
+.moj-office-messages .message small{display:block;color:var(--muted)}.moj-office-messages form{display:grid;gap:9px}.moj-office-messages textarea{min-height:68px;width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:8px;padding:9px}
+.moj-office-dialog{max-height:90dvh}.moj-office-dialog #moj-office-fields{display:grid;gap:12px}.moj-office-dialog #moj-office-fields>label{display:grid;gap:5px}
+.moj-office-dialog #moj-office-fields input,.moj-office-dialog #moj-office-fields select,.moj-office-dialog #moj-office-fields textarea{width:100%;padding:11px;border:1px solid var(--border);color:var(--fg);background:var(--bg);border-radius:10px}
+.moj-office-card .money{font-weight:700;color:var(--accent);font-size:20px}.moj-office-summary{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:12px}
+@media(max-width:780px){.moj-office-grid{grid-template-columns:1fr}.moj-office-heading{display:grid}.moj-office-toolbar{align-items:center}.moj-office-card .metadata{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.moj-office-tabs a{min-height:44px;padding:8px 12px}.moj-office-card{padding:15px}.moj-office-card .metadata{grid-template-columns:1fr}}
+[hidden]{display:none!important}

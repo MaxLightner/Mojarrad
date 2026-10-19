@@ -9,7 +9,7 @@ final class Mojarrad_Timeline_Media {
     private static function error(string $code,string $text,int $status): WP_Error {
         return new WP_Error($code,$text,array('status'=>$status));
     }
-    private static function vault() {
+    public static function vault() {
         $root=realpath(ABSPATH);
         $folder=defined('MOJARRAD_PRIVATE_DIR') ? MOJARRAD_PRIVATE_DIR
             : dirname(untrailingslashit(ABSPATH)).DIRECTORY_SEPARATOR.'mojarrad-private-vault';
