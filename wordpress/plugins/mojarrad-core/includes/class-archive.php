@@ -47,6 +47,7 @@ final class Mojarrad_Archive {
         return $wpdb->get_results($wpdb->prepare("SELECT * FROM {$t} WHERE {$field}=%d ORDER BY id ASC",$pid),ARRAY_A);
     }
     public static function create(WP_REST_Request $req) {
+        global $wpdb;
         $pid=absint($req['project_id']);
         if(!self::permitted($pid))return self::error('forbidden','تهیه آرشیو فقط برای مدیر سیستم مجاز است.',403);
         if(!class_exists('ZipArchive'))return self::error('zip','افزونه PHP Zip روی سرور فعال نیست.',503);
