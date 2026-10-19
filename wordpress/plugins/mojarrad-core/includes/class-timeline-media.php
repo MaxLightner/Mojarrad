@@ -141,8 +141,11 @@ final class Mojarrad_Timeline_Media {
             'status'=>$status,'created_at'=>current_time('mysql',true),
         ));
         if(!$ok) { @unlink($target); return self::error('database','ثبت اطلاعات فایل انجام نشد.',500); }
+        $new_id=(int)$wpdb->insert_id;
+        // set_transient() writes to the database and may reset $wpdb->insert_id.
         set_transient($rate,(int)get_transient($rate)+1,HOUR_IN_SECONDS);
-        $row=self::record((int)$wpdb->insert_id);
+        $row=self::record($new_id);
+        if(!$row) return self::error('database','شناسه فایل ثبت‌شده پیدا نشد.',500);
         return new WP_REST_Response(array('media'=>self::serialize($row,$uid)),201);
     }
     public static function moderate(WP_REST_Request $req) {
