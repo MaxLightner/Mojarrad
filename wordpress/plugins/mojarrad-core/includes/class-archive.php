@@ -79,6 +79,31 @@ final class Mojarrad_Archive {
         foreach($files as $path){$bytes+=filesize($path);if($bytes>512*1024*1024){
             return self::error('limit','آرشیوهای بزرگ‌تر از ۵۱۲ مگابایت نیازمند پردازش سروری جدا هستند.',413);
         }}
+        // Include WP Media Library featured image and project gallery, in addition
+        // to the private vault evidence. Do not traverse outside wp_upload_dir.
+        $wpAttachments=array();
+        $attachmentPaths=array();
+        $ids=array_filter(array_unique(array_merge(
+            array((int)get_post_thumbnail_id($pid)),
+            array_map('absint',explode(',',(string)get_post_meta($pid,'moj_gallery_ids',true)))
+        )));
+        $uploads=wp_upload_dir();
+        $uploadRoot=realpath($uploads['basedir']);
+        foreach($ids as $aid){
+            if(get_post_type($aid)!=='attachment')continue;
+            $path=realpath((string)get_attached_file($aid));
+            if(!$path||!$uploadRoot||!str_starts_with($path,$uploadRoot.DIRECTORY_SEPARATOR)||!is_readable($path)) {
+                return self::error('missing_media','تصویر عمومی پروژه در کتابخانه رسانه پیدا نشد.',409);
+            }
+            $bytes+=filesize($path);
+            if($bytes>512*1024*1024)return self::error('limit','حجم آرشیو بیش از سقف مجاز است.',413);
+            $entry='wp-media/'.$aid.'/'.basename($path);
+            $attachmentPaths[$entry]=$path;
+            $wpAttachments[]=array(
+                'id'=>$aid,'post'=>get_post($aid,ARRAY_A),
+                'meta'=>get_post_meta($aid),'entry'=>$entry,'sha256'=>hash_file('sha256',$path)
+            );
+        }
         $manifestFiles=array();
         foreach($files as $name=>$path)$manifestFiles[$name]=hash_file('sha256',$path);
         $terms=wp_get_object_terms($pid,'moj_project_status',array('fields'=>'slugs'));
@@ -89,7 +114,11 @@ final class Mojarrad_Archive {
             'postMeta'=>get_post_meta($pid),
             'terms'=>is_wp_error($terms)?array():$terms,
             'members'=>Mojarrad_Access::assigned_users($pid),
+            'wpAttachments'=>$wpAttachments,
             'records'=>$tables,
+            'auditEvents'=>$wpdb->get_results($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}moj_audit_event WHERE project_id=%d ORDER BY id ASC",$pid
+            ),ARRAY_A),
             'checksums'=>$manifestFiles,
         );
         try{$name='backup-'.bin2hex(random_bytes(16)).'.zip';}
@@ -103,6 +132,7 @@ final class Mojarrad_Archive {
         $zip->addFromString('project-data.json',$json);
         $zip->addFromString('README.txt',"Mojarrad verified non-destructive archive\nThis archive includes private project records and files.\nRestore is a controlled administrative process; do not upload to public media.\n");
         foreach($files as $stored=>$path)$zip->addFile($path,'files/'.$stored);
+        foreach($attachmentPaths as $entry=>$path)$zip->addFile($path,$entry);
         if(!$zip->close()||!is_file($temp)){@unlink($temp);return self::error('zip','بستن فایل آرشیو شکست خورد.',500);}
         $check=new ZipArchive();
         if($check->open($temp)!==true){@unlink($temp);return self::error('verify','فایل آرشیو قابل باز شدن نیست.',500);}
@@ -120,6 +150,16 @@ final class Mojarrad_Archive {
                 if(!hash_equals($hash,hash_final($ctx))){$verified=false;break;}
             }
         }
+        if($verified){
+            foreach($wpAttachments as $item){
+                $stream=$check->getStream($item['entry']);
+                if(!$stream){$verified=false;break;}
+                $ctx=hash_init('sha256');
+                while(!feof($stream))hash_update($ctx,fread($stream,65536));
+                fclose($stream);
+                if(!hash_equals($item['sha256'],hash_final($ctx))){$verified=false;break;}
+            }
+        }
         $check->close();
         if(!$verified){@unlink($temp);return self::error('verify','راستی‌آزمایی آرشیو موفق نبود؛ نسخه ناقص نگهداری نشد.',500);}
         if(!rename($temp,$destination)){@unlink($temp);return self::error('storage','انتقال آرشیو به فضای خصوصی ناموفق بود.',500);}
@@ -129,14 +169,14 @@ final class Mojarrad_Archive {
         $sha=hash_file('sha256',$destination);
         $ok=$wpdb->insert(self::table(),array(
             'project_id'=>$pid,'created_by'=>get_current_user_id(),'stored_name'=>$name,
-            'file_sha256'=>$sha,'file_size'=>$size,'included_files'=>count($files),
+            'file_sha256'=>$sha,'file_size'=>$size,'included_files'=>count($files)+count($attachmentPaths),
             'created_at'=>current_time('mysql',true),
         ));
         if(!$ok){@unlink($destination);return self::error('database','ثبت آرشیو ناموفق بود.',500);}
         $id=(int)$wpdb->insert_id;
-        Mojarrad_Office::audit($pid,'create_archive','archive',$id,array('sha256'=>$sha,'files'=>count($files)));
+        Mojarrad_Office::audit($pid,'create_archive','archive',$id,array('sha256'=>$sha,'files'=>count($files)+count($attachmentPaths)));
         return new WP_REST_Response(array('archive'=>array(
-            'id'=>$id,'sha256'=>$sha,'size'=>$size,'files'=>count($files),'url'=>self::signed_url($id),
+            'id'=>$id,'sha256'=>$sha,'size'=>$size,'files'=>count($files)+count($attachmentPaths),'url'=>self::signed_url($id),
         )),201);
     }
     public static function download(): void {
