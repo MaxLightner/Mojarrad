@@ -90,7 +90,7 @@ jobs:
           PHP
           php -S 127.0.0.1:8081 -t /tmp/mojarrad-test /tmp/mojarrad-test/router.php > /tmp/mojarrad-server.log 2>&1 &
           SERVER_PID=$!
-          trap 'kill $SERVER_PID || true' EXIT
+          trap 'tail -n 80 /tmp/mojarrad-server.log || true; kill $SERVER_PID || true' EXIT
           sleep 3
           for path in / /projects/ /news/ /officials/ /about/ /consulting/ /collaborate/ /sale/ /blog/ /login/; do
             echo "Checking $path"
@@ -149,6 +149,7 @@ jobs:
             echo "HTTP forms + login + project isolation verified\n";
           '
           # Exercise actual private image upload and moderation via logged-in HTTP REST.
+          set -x
           PID=$(php wp-cli.phar eval --path=/tmp/mojarrad-test '
             $p=get_page_by_path("torghabe-anjiri-1",OBJECT,"moj_project");
             echo (int)$p->ID;
