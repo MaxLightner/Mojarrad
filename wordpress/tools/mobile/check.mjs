@@ -9,7 +9,7 @@ const failures = [];
 try {
   for (const width of [320,360,375,430,768,1024,1365]) {
     const page = await browser.newPage({viewport:{width,height:780},deviceScaleFactor:1});
-    page.on('pageerror', error => failures.push(width+'px uncaught JS: '+error.message));
+    page.on('pageerror', error => failures.push(width+'px uncaught JS on '+page.url()+': '+(error.stack||error.message)));
     const response = await page.goto(base+'/',{waitUntil:'networkidle',timeout:30000});
     if (response?.status()!==200) failures.push(width+'px homepage status '+response?.status());
     await page.evaluate(() => document.fonts.ready);
@@ -41,7 +41,7 @@ try {
   }
   // A real logged-in member must see their authorized project timeline and report-only feed.
   const member=await browser.newPage({viewport:{width:375,height:780},deviceScaleFactor:1});
-  member.on('pageerror', error=>failures.push('375px timeline uncaught JS: '+error.message));
+  member.on('pageerror', error=>failures.push('375px logged-in uncaught JS on '+member.url()+': '+(error.stack||error.message)));
   await member.goto(base+'/login/',{waitUntil:'networkidle'});
   await member.locator('#user_login').fill('moj_demo_owner');
   await member.locator('#user_pass').fill('ci-owner-password-only');
