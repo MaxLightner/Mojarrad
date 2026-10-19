@@ -13,6 +13,15 @@ add_action( 'wp_enqueue_scripts', function () {
     $version = wp_get_theme()->get( 'Version' );
     wp_enqueue_style( 'mojarrad-theme', get_stylesheet_uri(), array(), $version );
     wp_enqueue_script( 'mojarrad-ui', get_template_directory_uri() . '/assets/js/site.js', array(), $version, true );
+    if ( is_page('timeline') ) {
+        wp_enqueue_style('mojarrad-timeline',get_template_directory_uri().'/assets/css/timeline.css',array('mojarrad-theme'),$version);
+        wp_enqueue_script('mojarrad-timeline',get_template_directory_uri().'/assets/js/timeline.js',array(),$version,true);
+        wp_add_inline_script('mojarrad-timeline','window.mojTimeline='.wp_json_encode(array(
+            'rest'=>esc_url_raw(rest_url('mojarrad/v1/')),
+            'nonce'=>wp_create_nonce('wp_rest'),
+            'project'=>isset($_GET['project'])?absint($_GET['project']):0,
+        ),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).';','before');
+    }
     if ( is_front_page() && is_file( get_template_directory() . '/assets/js/hero3d.js' ) ) {
         wp_enqueue_script( 'mojarrad-three-hero', get_template_directory_uri() . '/assets/js/hero3d.js', array(), $version, true );
     }

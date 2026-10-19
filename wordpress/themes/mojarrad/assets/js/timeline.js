@@ -97,7 +97,7 @@
       await call(id?'timeline/'+id:'projects/'+cfg.project+'/timeline',{
         method:id?'PATCH':'POST',body:JSON.stringify(payload)
       });
-      dialog.close();await load(true);
+      dialog.close();state.busy=false;await load(true);
     }catch(ex){error.hidden=false;error.textContent=ex.message;}
     finally{save.disabled=false;state.busy=false;}
   }

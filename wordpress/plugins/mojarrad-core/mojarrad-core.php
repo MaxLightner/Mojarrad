@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Mojarrad Core
  * Description: WordPress content, memberships and role-aware dashboard backend for Nika Bana.
- * Version: 0.3.0
+ * Version: 0.4.0
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Text Domain: mojarrad-core
  */
 defined('ABSPATH') || exit;
 
-define('MOJARRAD_CORE_VERSION', '0.3.0');
+define('MOJARRAD_CORE_VERSION', '0.4.0');
 define('MOJARRAD_CORE_PATH', plugin_dir_path(__FILE__));
 
 require_once MOJARRAD_CORE_PATH . 'includes/class-schema.php';
@@ -18,6 +18,9 @@ require_once MOJARRAD_CORE_PATH . 'includes/class-rest.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-public-content.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-leads.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-membership.php';
+require_once MOJARRAD_CORE_PATH . 'includes/class-timeline-access.php';
+require_once MOJARRAD_CORE_PATH . 'includes/class-timeline.php';
+require_once MOJARRAD_CORE_PATH . 'includes/class-timeline-media.php';
 
 function mojarrad_register_content_types() {
     register_post_type('moj_project', array(
@@ -90,6 +93,7 @@ function mojarrad_create_public_pages() {
         'blog'=>array('وبلاگ','page-blog.php'),
         'login'=>array('ورود اعضا','page-login.php'),
         'dashboard'=>array('پنل من','page-dashboard.php'),
+        'timeline'=>array('تایم‌لاین پروژه','page-timeline.php'),
     );
     foreach($pages as $slug=>$details) {
         $existing=get_page_by_path($slug);
@@ -131,6 +135,8 @@ function mojarrad_core_upgrade() {
 add_action('init','mojarrad_core_upgrade',20);
 
 add_action('rest_api_init',array('Mojarrad_REST','register_routes'));
+add_action('rest_api_init',array('Mojarrad_Timeline','register_routes'));
+add_action('admin_post_mojarrad_private_media',array('Mojarrad_Timeline_Media','download'));
 add_action('add_meta_boxes_moj_project',array('Mojarrad_Public_Content','project_box'));
 add_action('add_meta_boxes_moj_official',array('Mojarrad_Public_Content','official_box'));
 add_action('save_post_moj_project',array('Mojarrad_Public_Content','save_project'));

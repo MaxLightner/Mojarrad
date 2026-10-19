@@ -12,6 +12,9 @@
     <a class="text-link" href="<?php echo esc_url(mojarrad_link('projects')); ?>">← همه پروژه‌ها</a>
     <span class="eyebrow glass"><?php echo esc_html($status_labels[$kind]??'پروژه'); ?></span>
     <h1><?php echo esc_html(get_the_title()); ?></h1>
+    <?php if(is_user_logged_in() && class_exists('Mojarrad_Access') && Mojarrad_Access::can_read(get_current_user_id(),$id)): ?>
+      <a class="btn-gold" href="<?php echo esc_url(add_query_arg('project',$id,home_url('/timeline/'))); ?>">تایم‌لاین اختصاصی پروژه ←</a>
+    <?php endif; ?>
     <p class="muted"><?php echo esc_html(mojarrad_meta('subtitle',$id)); ?></p>
     <?php if('in-progress'===$kind): ?>
       <div class="progress-line"><span style="width:<?php echo esc_attr((string)min(100,max(0,(int)mojarrad_meta('progress',$id)))); ?>%"></span></div>
