@@ -50,3 +50,5 @@ $anonymous=rest_do_request(new WP_REST_Request('GET','/mojarrad/v1/me/projects')
 if($anonymous->get_status()===200) throw new RuntimeException('Anonymous project data unexpectedly visible.');
 wp_set_current_user($previous);
 update_option('mojarrad_playground_smoke','passed',false);
+
+require __DIR__.'/timeline-smoke.php';
