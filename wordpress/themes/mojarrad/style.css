@@ -86,3 +86,8 @@ Text Domain: mojarrad
 }
 html,body{max-width:100%;overflow-x:clip}
 :where(a,button,input,textarea,select):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+
+/* Keep the anti-bot honeypot in the DOM without adding 9999px document overflow. */
+.form-grid .hidden-trap{position:absolute!important;left:auto!important;right:auto!important;top:auto!important;width:1px!important;height:1px!important;margin:0!important;padding:0!important;clip-path:inset(50%)!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
+.form-grid .hidden-trap input{position:absolute;width:1px;height:1px;padding:0}

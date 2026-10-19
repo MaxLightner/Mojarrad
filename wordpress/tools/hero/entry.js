@@ -160,7 +160,19 @@ import * as THREE from 'three';
       }
       arr.needsUpdate=true;
     }
-    renderer.render(scene,camera);
+    try {
+      renderer.render(scene,camera);
+    } catch(error) {
+      // Headless browsers and low-end GPUs can create a context that cannot render.
+      // Fall back to the 2D building instead of throwing into the page.
+      console.warn('WebGL render disabled: static mobile-safe fallback',error);
+      visible=false;
+      disposed=true;
+      cancelAnimationFrame(request);
+      parent?.classList.remove('hero-three-active');
+      try { renderer.dispose(); } catch (_) {}
+      if(renderer.domElement.parentElement===container) container.removeChild(renderer.domElement);
+    }
   }
   const observer=new MutationObserver(applyTheme);
   observer.observe(document.body,{attributes:true,attributeFilter:['data-moj-theme']});
