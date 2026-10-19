@@ -6,6 +6,9 @@ on:
       - '.github/workflows/wordpress-smoke.yml'
       - 'wordpress/plugins/**'
       - 'wordpress/themes/mojarrad/*.php'
+      - 'wordpress/themes/mojarrad/style.css'
+      - 'wordpress/themes/mojarrad/assets/js/**'
+      - 'wordpress/tools/mobile/**'
       - 'wordpress/playground/**'
   workflow_dispatch:
 permissions:
