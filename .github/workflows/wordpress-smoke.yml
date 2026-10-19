@@ -145,3 +145,15 @@ jobs:
             if(count($items)<1) throw new RuntimeException("Contact form was not stored");
             echo "HTTP forms + login + project isolation verified\n";
           '
+          npm install --no-package-lock --no-save --prefix wordpress/tools/mobile playwright@1.56.1
+          wordpress/tools/mobile/node_modules/.bin/playwright install --with-deps chromium
+          node wordpress/tools/mobile/check.mjs
+
+      - name: Save viewport screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wordpress-responsive-screenshots
+          path: /tmp/mojarrad-mobile-captures
+          if-no-files-found: ignore
+          retention-days: 7
