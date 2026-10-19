@@ -52,3 +52,5 @@ wp_set_current_user($previous);
 update_option('mojarrad_playground_smoke','passed',false);
 
 require __DIR__.'/timeline-smoke.php';
+
+require __DIR__.'/office-smoke.php';
