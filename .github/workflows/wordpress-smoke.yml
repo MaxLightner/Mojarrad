@@ -71,3 +71,77 @@ jobs:
             if(!post_type_exists("moj_project")) throw new RuntimeException("CPT absent");
             echo "Template routes and activation verified\n";
           '
+
+
+      - name: Serve site and test public routes, authentication and contact POST over HTTP
+        shell: bash
+        run: |
+          set -euo pipefail
+          php wp-cli.phar option update home http://127.0.0.1:8081 --path=/tmp/mojarrad-test --quiet
+          php wp-cli.phar option update siteurl http://127.0.0.1:8081 --path=/tmp/mojarrad-test --quiet
+          cat > /tmp/mojarrad-test/router.php <<'PHP'
+          <?php
+          $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+          if (is_file(__DIR__ . $path)) return false;
+          require __DIR__ . '/index.php';
+          PHP
+          php -S 127.0.0.1:8081 -t /tmp/mojarrad-test /tmp/mojarrad-test/router.php > /tmp/mojarrad-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 3
+          for path in / /projects/ /news/ /officials/ /about/ /consulting/ /collaborate/ /sale/ /blog/ /login/; do
+            echo "Checking $path"
+            if ! curl -fsS "http://127.0.0.1:8081$path" >/tmp/mojarrad-page.html; then
+              cat /tmp/mojarrad-server.log; exit 1
+            fi
+            if ! grep -q 'گروه ساختمانی' /tmp/mojarrad-page.html; then
+              echo "Brand header missing: $path"; exit 1
+            fi
+          done
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/dashboard/)
+          test "$CODE" = "302" || (echo "Anonymous dashboard HTTP status: $CODE"; exit 1)
+          ANON=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/wp-json/mojarrad/v1/me/projects)
+          test "$ANON" = "401" || (echo "Anonymous API status: $ANON"; exit 1)
+          php wp-cli.phar user update moj_demo_owner --user_pass='ci-owner-password-only' --path=/tmp/mojarrad-test --quiet
+          php wp-cli.phar user update moj_demo_contractor --user_pass='ci-contractor-password-only' --path=/tmp/mojarrad-test --quiet
+          curl -fsS -c /tmp/moj-owner-cookie http://127.0.0.1:8081/wp-login.php > /dev/null
+          curl -sS -L -b /tmp/moj-owner-cookie -c /tmp/moj-owner-cookie \
+            --data-urlencode 'log=moj_demo_owner' \
+            --data-urlencode 'pwd=ci-owner-password-only' \
+            --data-urlencode 'wp-submit=Log In' \
+            --data-urlencode 'testcookie=1' \
+            http://127.0.0.1:8081/wp-login.php > /tmp/owner-login.html
+          curl -fsS -b /tmp/moj-owner-cookie http://127.0.0.1:8081/dashboard/ > /tmp/owner-dashboard.html
+          grep -q 'ویلای مسکونی طرقبه انجیری' /tmp/owner-dashboard.html
+          if grep -q 'ویلای دوبلکس دهم شریع' /tmp/owner-dashboard.html; then
+            echo "Data leak: owner saw contractor project"; exit 1
+          fi
+          curl -fsS -c /tmp/moj-contractor-cookie http://127.0.0.1:8081/wp-login.php > /dev/null
+          curl -sS -L -b /tmp/moj-contractor-cookie -c /tmp/moj-contractor-cookie \
+            --data-urlencode 'log=moj_demo_contractor' \
+            --data-urlencode 'pwd=ci-contractor-password-only' \
+            --data-urlencode 'wp-submit=Log In' \
+            --data-urlencode 'testcookie=1' \
+            http://127.0.0.1:8081/wp-login.php > /tmp/contractor-login.html
+          curl -fsS -b /tmp/moj-contractor-cookie http://127.0.0.1:8081/dashboard/ > /tmp/contractor-dashboard.html
+          grep -q 'ویلای دوبلکس دهم شریع' /tmp/contractor-dashboard.html
+          if grep -q 'ویلای مسکونی طرقبه انجیری' /tmp/contractor-dashboard.html; then
+            echo "Data leak: contractor saw owner project"; exit 1
+          fi
+          curl -fsS http://127.0.0.1:8081/consulting/ > /tmp/consulting.html
+          NONCE=$(grep -o 'name="moj_nonce" value="[^"]*"' /tmp/consulting.html | head -1 | sed -E 's/^.*value="([^"]*)"/\1/')
+          test -n "$NONCE"
+          FORM_CODE=$(curl -sS -o /dev/null -w '%{http_code}' \
+            --data-urlencode 'action=mojarrad_lead' \
+            --data-urlencode 'moj_type=consulting' \
+            --data-urlencode "moj_nonce=$NONCE" \
+            --data-urlencode 'moj_name=CI Test Contact' \
+            --data-urlencode 'moj_phone=09123456789' \
+            --data-urlencode 'moj_message=Temporary test' \
+            http://127.0.0.1:8081/wp-admin/admin-post.php)
+          test "$FORM_CODE" = "303" || (echo "Lead post HTTP status: $FORM_CODE"; exit 1)
+          php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $items=get_posts(array("post_type"=>"moj_lead","post_status"=>"private","numberposts"=>-1));
+            if(count($items)<1) throw new RuntimeException("Contact form was not stored");
+            echo "HTTP forms + login + project isolation verified\n";
+          '
