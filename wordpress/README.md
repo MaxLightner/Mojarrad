@@ -12,8 +12,8 @@ This folder is the WordPress version. The original Next.js project on the main b
 - Users log in at /login/ and visit /dashboard/.
 
 ## One-click Playground
-Open the v3 Blueprint:
-https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2FMaxLightner%2FMojarrad%2Fwordpress%2Fwordpress%2Fplayground%2Fblueprint-v3.json
+Open the v4 Blueprint with timeline demonstration:
+https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2FMaxLightner%2FMojarrad%2Fwordpress%2Fwordpress%2Fplayground%2Fblueprint-v4.json
 
 Playground auto-installs, activates and seeds 9 demo projects, 5 news items, 6 blog posts and sample role users. Demo user passwords are random; to test individual accounts, reset via WP Admin > Users. The dashboard indicates whether the Playground membership/API checks passed.
 
@@ -29,9 +29,16 @@ Playground auto-installs, activates and seeds 9 demo projects, 5 news items, 6 b
 - Read-only /wp-json/mojarrad/v1/me and /wp-json/mojarrad/v1/me/projects endpoints with WordPress REST cookie+nonce authorization.
 - Browser-loadable real Three.js hero with safe static fallback.
 
+## Timeline module (Mojarrad Core v0.4)
+- Authenticated /timeline/?project=ID is available from the assigned project card.
+- Timeline supports official reports, milestone start/end, note events, role-filtered comments, follow-up completion, attachment review, and soft-deletion recovery.
+- Images/PDF are stored in a private directory outside the web document root; downloads enforce session, project membership, recipient visibility, moderation and nonce.
+- See TIMELINE-MODULE.md for the storage setup, endpoint contract and limitations.
+- Demo timeline events are created automatically by the v4 Playground Blueprint.
+
 ## Not yet delivered
 - Detailed pixel-by-pixel browser visual comparison against the Next.js site, animation effects other than the hero, accessibility/performance QA on real devices.
-- Full construction timeline, project reports and follow-ups, comments, reference versioning, private files, contracts, financial ledgers, staff roster and archives.
+- Design reference versioning, private general documents outside the timeline, contracts, financial ledgers, staff roster and archives; annotated photo editor, push/email notifications and other advanced timeline features.
 - Production domain/hosting deployment, old database migration, live client data.
 
 Private features are deliberately absent or labeled "under development" in the dashboard; they are not misleading clickable controls. Do not put private customer documents in the public WordPress media library.
