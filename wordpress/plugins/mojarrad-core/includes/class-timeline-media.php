@@ -45,9 +45,12 @@ final class Mojarrad_Timeline_Media {
         return true;
     }
     public static function serialize(object $row,int $uid): array {
-        $url=wp_nonce_url(add_query_arg(array(
-            'action'=>'mojarrad_private_media','media_id'=>(int)$row->id,
-        ),admin_url('admin-post.php')),'mojarrad_media_'.(int)$row->id);
+        // wp_nonce_url() HTML-escapes ampersands, which corrupts URLs returned via JSON.
+        $url=add_query_arg(array(
+            'action'=>'mojarrad_private_media',
+            'media_id'=>(int)$row->id,
+            '_wpnonce'=>wp_create_nonce('mojarrad_media_'.(int)$row->id),
+        ),admin_url('admin-post.php'));
         return array(
             'id'=>(int)$row->id,
             'name'=>$row->original_name,'mime'=>$row->mime,
