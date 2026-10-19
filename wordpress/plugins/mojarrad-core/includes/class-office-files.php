@@ -19,6 +19,8 @@ final class Mojarrad_Office_Files {
             || !Mojarrad_Office_Access::permitted($uid,(int)$row->project_id,$row->section,'write')){
             return self::error('forbidden','اجازه بارگذاری این فایل را ندارید.',403);
         }
+        $rate='moj_office_uploads_'.$uid;
+        if((int)get_transient($rate)>=25)return self::error('limit','حداکثر ۲۵ بارگذاری در ساعت مجاز است.',429);
         $params=$req->get_file_params();$file=$params['file']??null;
         if(!is_array($file)||!isset($file['error'],$file['tmp_name'],$file['size'],$file['name'])
             ||(int)$file['error']!==UPLOAD_ERR_OK || !is_uploaded_file($file['tmp_name'])){
@@ -57,6 +59,7 @@ final class Mojarrad_Office_Files {
             'mime'=>$type,'file_size'=>$size,'updated_at'=>current_time('mysql',true),
         ),array('id'=>(int)$row->id));
         if($ok===false){@unlink($dest);return self::error('database','ثبت مشخصات فایل انجام نشد.',500);}
+        set_transient($rate,(int)get_transient($rate)+1,HOUR_IN_SECONDS);
         // Old files are deliberately retained for audit/backup; never silently destroy evidence.
         Mojarrad_Office::audit((int)$row->project_id,'upload_file',$row->section,(int)$row->id,
             array('name'=>$name,'size'=>$size,'replaced'=>$old!==null));

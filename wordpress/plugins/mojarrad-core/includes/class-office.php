@@ -103,7 +103,7 @@ final class Mojarrad_Office {
         $allowed=array(
             'references'=>array('category','note'),
             'documents'=>array('category','note'),
-            'payments'=>array('method','referenceNumber','note','timelineId'),
+            'payments'=>array('method','referenceNumber','note'),
             'contracts'=>array('contractorName','startDate','endDate','financialStatus','totalPaid','note'),
             'workers'=>array('job','phone','active'),
             'contacts'=>array('phone','type','note','isTemporary','lastCheckedAt'),
@@ -237,9 +237,26 @@ final class Mojarrad_Office {
         if(!$row)return self::error('not_found','رکورد پیدا نشد.',404);
         if(!Mojarrad_Office_Access::delete($uid,(int)$row->project_id,$row->section))return self::error('forbidden','فقط مدیر و مجری اجازه بایگانی رکورد دارند.',403);
         global $wpdb;
-        if($wpdb->update(self::table(),array('deleted_at'=>current_time('mysql',true)),array('id'=>(int)$row->id))===false){
+        $wpdb->query('START TRANSACTION');
+        $deleted_at=current_time('mysql',true);
+        if($wpdb->update(self::table(),array('deleted_at'=>$deleted_at),array('id'=>(int)$row->id))===false){
+            $wpdb->query('ROLLBACK');
             return self::error('database','بایگانی انجام نشد.',500);
         }
+        if($row->section==='payments'){
+            $metadata=json_decode((string)$row->metadata,true);
+            $event_id=absint($metadata['timelineId']??0);
+            if($event_id){
+                $table=Mojarrad_Timeline::events_table();
+                $changed=$wpdb->update($table,array('deleted_at'=>$deleted_at,'deleted_by'=>$uid),
+                    array('id'=>$event_id,'project_id'=>(int)$row->project_id,'category'=>'payment'));
+                if($changed!==1){
+                    $wpdb->query('ROLLBACK');
+                    return self::error('database','رویداد مالی مرتبط پیدا نشد؛ برای جلوگیری از مغایرت، حذف لغو شد.',409);
+                }
+            }
+        }
+        $wpdb->query('COMMIT');
         self::audit((int)$row->project_id,'archive_record',$row->section,(int)$row->id);
         return new WP_REST_Response(array('archived'=>true),200);
     }
