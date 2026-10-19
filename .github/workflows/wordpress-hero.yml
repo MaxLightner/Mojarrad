@@ -1,0 +1,39 @@
+name: Build WordPress Three.js Hero
+
+on:
+  push:
+    branches: [wordpress]
+    paths:
+      - '.github/workflows/wordpress-hero.yml'
+      - 'wordpress/tools/hero/entry.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wordpress
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned browser build dependencies
+        run: npm install --prefix wordpress/tools/hero --no-package-lock --no-save three@0.181.0 esbuild@0.25.12
+      - name: Bundle offline Three.js hero
+        run: ./wordpress/tools/hero/node_modules/.bin/esbuild wordpress/tools/hero/entry.js --bundle --minify --format=iife --target=es2020 --outfile=wordpress/themes/mojarrad/assets/js/hero3d.js
+      - name: Verify build asset
+        run: |
+          test -s wordpress/themes/mojarrad/assets/js/hero3d.js
+          wc -c wordpress/themes/mojarrad/assets/js/hero3d.js
+      - name: Commit generated asset
+        run: |
+          git add wordpress/themes/mojarrad/assets/js/hero3d.js
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "build(wordpress): bundle WebGL 3D hero [skip ci]"
+          git push origin HEAD:wordpress

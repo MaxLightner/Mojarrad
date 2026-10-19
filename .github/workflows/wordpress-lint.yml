@@ -1,0 +1,33 @@
+name: WordPress PHP / JS Syntax Check
+on:
+  push:
+    branches: [wordpress]
+    paths:
+      - '.github/workflows/wordpress-lint.yml'
+      - 'wordpress/plugins/**'
+      - 'wordpress/themes/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: PHP syntax lint, all plugin and theme files
+        run: |
+          set -e
+          find wordpress/plugins wordpress/themes -name '*.php' -print0 |
+            xargs -0 -n1 php -l
+      - name: Browser JS syntax lint
+        run: |
+          node --check wordpress/themes/mojarrad/assets/js/site.js
+          node --check wordpress/plugins/mojarrad-core/assets/admin-gallery.js
+          if test -f wordpress/themes/mojarrad/assets/js/hero3d.js; then node --check wordpress/themes/mojarrad/assets/js/hero3d.js; fi

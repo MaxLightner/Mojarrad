@@ -110,6 +110,40 @@ $about=get_page_by_path('about');
 if($about && trim(wp_strip_all_tags($about->post_content))==='') {
     wp_update_post(array('ID'=>$about->ID,'post_content'=>'<p>نیکا بنا با تمرکز بر کیفیت اجرا، گزارش‌دهی و شفافیت پروژه‌های ساختمانی فعالیت می‌کند. این متن نمونه صرفاً برای پیش‌نمایش طراحی صفحه است.</p><p>مدیریت پروژه منظم، مستندسازی و اطلاع‌رسانی به مالکان از اصول محوری ساختار طراحی‌شده برای این سایت است.</p>'));
 }
+
+// Sample users have random passwords, never hard-coded reusable credentials.
+// Administrators can reset them in WP Admin > Users for manual role testing.
+$demo_users=array(
+  'moj_demo_owner'=>array('role'=>'moj_owner','name'=>'مالک آزمایشی'),
+  'moj_demo_supervisor'=>array('role'=>'moj_supervisor','name'=>'ناظر آزمایشی'),
+  'moj_demo_engineer'=>array('role'=>'moj_engineer','name'=>'مهندس آزمایشی'),
+  'moj_demo_contractor'=>array('role'=>'moj_contractor','name'=>'پیمانکار آزمایشی'),
+);
+$demo_user_ids=array();
+foreach($demo_users as $username=>$data) {
+    $user=get_user_by('login',$username);
+    if(!$user) {
+        $id=wp_create_user($username,wp_generate_password(36,true,true),$username.'@example.invalid');
+        if(is_wp_error($id)) throw new RuntimeException('Demo user creation failed: '.$id->get_error_message());
+        $user=get_userdata((int)$id);
+    }
+    $user->set_role($data['role']);
+    wp_update_user(array('ID'=>$user->ID,'display_name'=>$data['name']));
+    $demo_user_ids[$username]=(int)$user->ID;
+}
+$owner_project=get_page_by_path('torghabe-anjiri-1',OBJECT,'moj_project');
+$second_project=get_page_by_path('dahm-sharie-villa',OBJECT,'moj_project');
+if($owner_project && $second_project && class_exists('Mojarrad_Access')) {
+    if(!Mojarrad_Access::set_project_users($owner_project->ID,array(
+        $demo_user_ids['moj_demo_owner'],
+        $demo_user_ids['moj_demo_supervisor'],
+        $demo_user_ids['moj_demo_engineer'],
+    ))) throw new RuntimeException('Could not assign first demo project.');
+    if(!Mojarrad_Access::set_project_users($second_project->ID,array($demo_user_ids['moj_demo_contractor']))) {
+        throw new RuntimeException('Could not assign second demo project.');
+    }
+}
+update_option('mojarrad_playground_demo','1',false);
 flush_rewrite_rules();
 
 // Fail loudly rather than leaving an apparently empty WordPress installation.

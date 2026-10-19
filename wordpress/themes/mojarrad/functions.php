@@ -13,6 +13,9 @@ add_action( 'wp_enqueue_scripts', function () {
     $version = wp_get_theme()->get( 'Version' );
     wp_enqueue_style( 'mojarrad-theme', get_stylesheet_uri(), array(), $version );
     wp_enqueue_script( 'mojarrad-ui', get_template_directory_uri() . '/assets/js/site.js', array(), $version, true );
+    if ( is_front_page() && is_file( get_template_directory() . '/assets/js/hero3d.js' ) ) {
+        wp_enqueue_script( 'mojarrad-three-hero', get_template_directory_uri() . '/assets/js/hero3d.js', array(), $version, true );
+    }
 } );
 
 function mojarrad_asset( string $path ): string {

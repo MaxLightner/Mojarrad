@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<section class="hero hero-home" aria-label="معرفی گروه">
+<section class="hero hero-home" aria-label="معرفی گروه"><div id="moj-three-hero" class="hero-three" aria-hidden="true"></div>
   <img class="hero-photo" src="<?php echo esc_url( mojarrad_asset( 'images/villa-z-1.jpg' ) ); ?>" alt="" />
   <div class="demo-hero-scene" aria-hidden="true"><div class="construction-grid"></div><div class="base"></div><div class="skyline"><i class="floor"></i><i class="floor"></i><i class="floor"></i><i class="floor"></i><i class="floor"></i><i class="floor"></i><i class="floor"></i><i class="floor"></i><i class="floor"></i></div></div><div class="hero-gradient"></div>
   <div class="container hero-inner">
