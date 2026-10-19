@@ -88,7 +88,10 @@ function card(item){
   n.append(E('h3',null,item.title));
   if(item.description)n.append(E('p',null,item.description));
   const meta=metadataDisplay(item);if(meta.children.length)n.append(meta);
-  if(item.amount)n.append(E('p','money',Number(item.amount).toLocaleString('fa-IR')+' تومان'));
+  if(item.amount){
+    const amount=BigInt(item.amount);
+    n.append(E('p','money',amount.toLocaleString('fa-IR')+' تومان'));
+  }
   if(item.date)n.append(E('small','muted','تاریخ: '+safeDate(item.date)));
   n.append(actions(item));
   if(section==='references'){
@@ -117,6 +120,10 @@ async function load(){
     const response=await api(route());
     list.replaceChildren();
     const items=response.items||[];
+    if(section==='payments' && items.length){
+      const total=items.filter(it=>it.status==='active').reduce((sum,it)=>sum+BigInt(it.amount||'0'),0n);
+      list.append(E('div','notice','جمع پرداخت‌های ثبت‌شده: '+total.toLocaleString('fa-IR')+' تومان'));
+    }
     if(!items.length)list.append(E('p','notice','هنوز اطلاعاتی در این بخش ثبت نشده است.'));
     items.forEach(item=>list.append(section==='archive'?archiveCard(item):card(item)));
     status('');
