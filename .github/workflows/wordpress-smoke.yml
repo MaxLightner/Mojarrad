@@ -190,6 +190,37 @@ jobs:
             "http://127.0.0.1:8081/wp-json/mojarrad/v1/media/$MEDIA_ID/moderate" >/tmp/moj-media-approved.json
           python3 -c 'import json; d=json.load(open("/tmp/moj-media-approved.json")); assert d["media"]["status"]=="approved"'
           echo "Real private upload, authenticated download and media moderation PASSED"
+
+          # Real project-office evidence upload, owner-only access, and verified archive download.
+          curl -fsS -b /tmp/moj-owner-cookie "http://127.0.0.1:8081/office/?project=$PID&section=references" > /tmp/moj-owner-office.html
+          OFFICE_NONCE=$(python3 -c 'import json,re; s=open("/tmp/moj-owner-office.html").read(); m=re.search(r"window\.mojOffice=(\{[^;]+\});",s); assert m,"Office REST nonce missing"; print(json.loads(m.group(1))["nonce"])')
+          REF_ID=$(php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            global $wpdb;$t=$wpdb->prefix."moj_office_record";
+            echo (int)$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t} WHERE project_id=%d AND section=%s AND title=%s LIMIT 1",get_page_by_path("torghabe-anjiri-1",OBJECT,"moj_project")->ID,"references","بازنگری نمای اصلی"));
+          ')
+          test "$REF_ID" -gt 0
+          curl -fsS -b /tmp/moj-owner-cookie -H "X-WP-Nonce: $OFFICE_NONCE" \
+            -F "file=@/tmp/moj-test-evidence.png;type=image/png" \
+            "http://127.0.0.1:8081/wp-json/mojarrad/v1/office/record/$REF_ID/file" > /tmp/moj-office-file.json
+          OFFICE_MEDIA_URL=$(python3 -c 'import json; d=json.load(open("/tmp/moj-office-file.json")); assert d["item"]["file"]["mime"]=="image/png"; print(d["item"]["file"]["url"])')
+          OFF_CODE=$(curl -sS -o /tmp/moj-office-download.png -w '%{http_code}' \
+            -b /tmp/moj-owner-cookie "$OFFICE_MEDIA_URL")
+          test "$OFF_CODE" = "200"
+          cmp /tmp/moj-test-evidence.png /tmp/moj-office-download.png
+          ANON_OFF_CODE=$(curl -sS -o /dev/null -w '%{http_code}' "$OFFICE_MEDIA_URL")
+          test "$ANON_OFF_CODE" != "200"
+          CONTRACT_CODE=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-owner-cookie -H "X-WP-Nonce: $OFFICE_NONCE" \
+            "http://127.0.0.1:8081/wp-json/mojarrad/v1/projects/$PID/office/contracts")
+          test "$CONTRACT_CODE" = "403"
+          curl -fsS -b /tmp/moj-admin-cookie -H "X-WP-Nonce: $ADMIN_NONCE" \
+            "http://127.0.0.1:8081/wp-json/mojarrad/v1/projects/$PID/archives" > /tmp/moj-project-archives.json
+          ARCHIVE_URL=$(python3 -c 'import json; d=json.load(open("/tmp/moj-project-archives.json")); assert d["items"];print(d["items"][0]["url"])')
+          curl -fsS -b /tmp/moj-admin-cookie "$ARCHIVE_URL" > /tmp/moj-project-archive.zip
+          unzip -tq /tmp/moj-project-archive.zip
+          PUBLIC_ARCHIVE_CODE=$(curl -sS -o /dev/null -w '%{http_code}' "$ARCHIVE_URL")
+          test "$PUBLIC_ARCHIVE_CODE" != "200"
+          echo "Project office evidence download, private roles and verified archive HTTP checks PASSED"
+
           npm install --no-package-lock --no-save --prefix wordpress/tools/mobile playwright@1.56.1
           wordpress/tools/mobile/node_modules/.bin/playwright install --with-deps chromium
           node wordpress/tools/mobile/check.mjs
