@@ -148,6 +148,47 @@ jobs:
             if(count($items)<1) throw new RuntimeException("Contact form was not stored");
             echo "HTTP forms + login + project isolation verified\n";
           '
+          # Exercise actual private image upload and moderation via logged-in HTTP REST.
+          PID=$(php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $p=get_page_by_path("torghabe-anjiri-1",OBJECT,"moj_project");
+            echo (int)$p->ID;
+          ')
+          REPORT_ID=$(php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            global $wpdb;
+            $t=$wpdb->prefix."moj_timeline_event";
+            echo (int)$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t} WHERE title=%s LIMIT 1","گزارش رسمی پیشرفت (نمونه)"));
+          ')
+          test "$PID" -gt 0
+          test "$REPORT_ID" -gt 0
+          curl -fsS -b /tmp/moj-owner-cookie "http://127.0.0.1:8081/timeline/?project=$PID" >/tmp/moj-owner-timeline.html
+          OWNER_NONCE=$(python3 -c 'import json,re; s=open("/tmp/moj-owner-timeline.html").read(); m=re.search(r"window\.mojTimeline=(\{[^;]+\});",s); assert m,"REST nonce missing"; print(json.loads(m.group(1))["nonce"])')
+          curl -fsS -b /tmp/moj-owner-cookie -H "X-WP-Nonce: $OWNER_NONCE" \
+            "http://127.0.0.1:8081/wp-json/mojarrad/v1/projects/$PID/timeline" > /tmp/timeline-owner.json
+          python3 -c 'import json,sys; d=json.load(open("/tmp/timeline-owner.json")); assert d["events"] and all(e["isReport"] for e in d["events"]),"Owner data leak"'
+          php -r '$im=imagecreatetruecolor(4,4);imagefill($im,0,0,imagecolorallocate($im,52,112,178));imagepng($im,"/tmp/moj-test-evidence.png");imagedestroy($im);'
+          curl -fsS -b /tmp/moj-owner-cookie -H "X-WP-Nonce: $OWNER_NONCE" \
+            -F "file=@/tmp/moj-test-evidence.png;type=image/png" \
+            "http://127.0.0.1:8081/wp-json/mojarrad/v1/timeline/$REPORT_ID/media" > /tmp/moj-media-upload.json
+          python3 -c 'import json; d=json.load(open("/tmp/moj-media-upload.json")); assert d["media"]["status"]=="pending"'
+          MEDIA_ID=$(python3 -c 'import json; print(json.load(open("/tmp/moj-media-upload.json"))["media"]["id"])')
+          MEDIA_URL=$(python3 -c 'import json; print(json.load(open("/tmp/moj-media-upload.json"))["media"]["url"])')
+          OWNER_MEDIA_CODE=$(curl -sS -o /tmp/moj-secure-download.png -w '%{http_code}' -b /tmp/moj-owner-cookie "$MEDIA_URL")
+          test "$OWNER_MEDIA_CODE" = "200"
+          cmp /tmp/moj-test-evidence.png /tmp/moj-secure-download.png
+          PUBLIC_MEDIA_CODE=$(curl -sS -o /dev/null -w '%{http_code}' "$MEDIA_URL")
+          test "$PUBLIC_MEDIA_CODE" != "200"
+          curl -fsS -c /tmp/moj-admin-cookie http://127.0.0.1:8081/wp-login.php >/dev/null
+          curl -sS -L -b /tmp/moj-admin-cookie -c /tmp/moj-admin-cookie \
+            --data-urlencode 'log=siteadmin' --data-urlencode 'pwd=temporary-local-ci-only' \
+            --data-urlencode 'wp-submit=Log In' --data-urlencode 'testcookie=1' \
+            http://127.0.0.1:8081/wp-login.php >/dev/null
+          curl -fsS -b /tmp/moj-admin-cookie "http://127.0.0.1:8081/timeline/?project=$PID" >/tmp/moj-admin-timeline.html
+          ADMIN_NONCE=$(python3 -c 'import json,re; s=open("/tmp/moj-admin-timeline.html").read(); m=re.search(r"window\.mojTimeline=(\{[^;]+\});",s); assert m,"Admin REST nonce missing"; print(json.loads(m.group(1))["nonce"])')
+          curl -fsS -X PATCH -b /tmp/moj-admin-cookie -H "X-WP-Nonce: $ADMIN_NONCE" \
+            -H 'Content-Type: application/json' -d '{"status":"approved"}' \
+            "http://127.0.0.1:8081/wp-json/mojarrad/v1/media/$MEDIA_ID/moderate" >/tmp/moj-media-approved.json
+          python3 -c 'import json; d=json.load(open("/tmp/moj-media-approved.json")); assert d["media"]["status"]=="approved"'
+          echo "Real private upload, authenticated download and media moderation PASSED"
           npm install --no-package-lock --no-save --prefix wordpress/tools/mobile playwright@1.56.1
           wordpress/tools/mobile/node_modules/.bin/playwright install --with-deps chromium
           node wordpress/tools/mobile/check.mjs
