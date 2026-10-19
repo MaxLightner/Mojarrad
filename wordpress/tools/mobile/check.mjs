@@ -39,6 +39,26 @@ try {
     }
     await page.close();
   }
+  // A real logged-in member must see their authorized project timeline and report-only feed.
+  const member=await browser.newPage({viewport:{width:375,height:780},deviceScaleFactor:1});
+  member.on('pageerror', error=>failures.push('375px timeline uncaught JS: '+error.message));
+  await member.goto(base+'/login/',{waitUntil:'networkidle'});
+  await member.locator('#user_login').fill('moj_demo_owner');
+  await member.locator('#user_pass').fill('ci-owner-password-only');
+  await Promise.all([member.waitForURL('**/dashboard/',{timeout:20000}),member.locator('#wp-submit').click()]);
+  const timelineLink=member.locator('a[href*="/timeline/?project="]').first();
+  if(!(await timelineLink.count())) {
+    failures.push('Owner dashboard is missing the timeline link');
+  } else {
+    await Promise.all([member.waitForURL('**/timeline/?project=*',{timeout:20000}),timelineLink.click()]);
+    await member.locator('.moj-event').first().waitFor({state:'visible',timeout:20000});
+    const texts=await member.locator('#moj-events').innerText();
+    if(!texts.includes('گزارش رسمی پیشرفت (نمونه)')) failures.push('Official report missing in owner mobile timeline');
+    if(texts.includes('بازدید داخلی اصلاح‌شده')) failures.push('Internal non-report leaked to owner timeline');
+    if(await member.locator('#moj-open-create').isVisible()) failures.push('Owner received event creation button');
+    await member.screenshot({path:outputs+'/timeline-owner-375.png',fullPage:true,animations:'disabled'});
+  }
+  await member.close();
 } finally { await browser.close(); }
 if (failures.length) {
   console.error('MOBILE BROWSER FAILURES:\n'+failures.join('\n'));
