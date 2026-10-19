@@ -1,0 +1,40 @@
+name: Package Installable WordPress Theme and Plugin
+on:
+  push:
+    branches: [wordpress]
+    paths:
+      - '.github/workflows/wordpress-packages.yml'
+      - 'wordpress/plugins/**'
+      - 'wordpress/themes/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make production-ready install ZIPs
+        run: |
+          set -euo pipefail
+          mkdir -p release/staging/mojarrad-core release/staging/mojarrad
+          cp -a wordpress/plugins/mojarrad-core/. release/staging/mojarrad-core/
+          rm -rf release/staging/mojarrad-core/demo
+          cp -a wordpress/themes/mojarrad/. release/staging/mojarrad/
+          test -s release/staging/mojarrad-core/mojarrad-core.php
+          test -s release/staging/mojarrad/style.css
+          (cd release/staging && zip -q -r ../mojarrad-core.zip mojarrad-core)
+          (cd release/staging && zip -q -r ../mojarrad-theme.zip mojarrad)
+          unzip -tq release/mojarrad-core.zip
+          unzip -tq release/mojarrad-theme.zip
+          (cd release && sha256sum mojarrad-core.zip mojarrad-theme.zip > SHA256SUMS)
+          ls -lh release/*.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mojarrad-wordpress-installers
+          path: |
+            release/mojarrad-core.zip
+            release/mojarrad-theme.zip
+            release/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30
