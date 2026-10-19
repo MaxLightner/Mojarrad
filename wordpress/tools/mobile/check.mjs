@@ -57,6 +57,16 @@ try {
     if(texts.includes('بازدید داخلی اصلاح‌شده')) failures.push('Internal non-report leaked to owner timeline');
     if(await member.locator('#moj-open-create').isVisible()) failures.push('Owner received event creation button');
     await member.screenshot({path:outputs+'/timeline-owner-375.png',fullPage:true,animations:'disabled'});
+
+    const officeUrl=base+'/office/?project='+new URL(member.url()).searchParams.get('project')+'&section=references';
+    await member.goto(officeUrl,{waitUntil:'networkidle'});
+    await member.locator('.moj-office-card').first().waitFor({state:'visible',timeout:20000});
+    if(!(await member.locator('.moj-office-card').first().innerText()).includes('رفرنس')) failures.push('Owner reference is not displayed in office');
+    if(await member.locator('.moj-office-tabs a[href*="section=workers"]').count()) failures.push('Owner was shown forbidden worker tool');
+    const officeDims=await member.evaluate(()=>({vw:innerWidth,sw:document.documentElement.scrollWidth}));
+    if(officeDims.sw>officeDims.vw+2) failures.push('Mobile project office has horizontal overflow');
+    await member.screenshot({path:outputs+'/office-owner-375.png',fullPage:true,animations:'disabled'});
+
   }
   await member.close();
 } finally { await browser.close(); }
