@@ -37,7 +37,7 @@ import * as THREE from 'three';
   key.position.set(4,7,7);
   scene.add(ambient,rim,key);
   const tower = new THREE.Group();
-  tower.position.x=mobile?2.3:3.2;
+  tower.position.x=mobile?-2.3:-3.0;
   scene.add(tower);
   const floors=[], outlines=[], lines=[], winMats=[], bodyMats=[], edgeMats=[];
   const widths=[2.6,2.6,2.45,2.45,2.3,2.3,2.15,2.15,2.0];

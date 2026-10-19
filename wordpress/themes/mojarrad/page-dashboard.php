@@ -69,7 +69,7 @@ foreach($project_ids as $project_id) {
               <div class="demo-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<?php echo esc_attr((string)$progress); ?>"><span style="width:<?php echo esc_attr((string)$progress); ?>%"></span></div>
               <div class="dashboard-project-actions">
                 <small class="muted"><?php echo esc_html(number_format_i18n($progress)); ?>٪ پیشرفت</small>
-                <a class="text-link" href="<?php echo esc_url(get_permalink($pid)); ?>">صفحه عمومی پروژه ←</a>
+                <?php if(get_post_status($pid)==='publish'): ?><a class="text-link" href="<?php echo esc_url(get_permalink($pid)); ?>">صفحه عمومی پروژه ←</a><?php else: ?><span class="muted">این پروژه صفحه عمومی ندارد</span><?php endif; ?>
                 <?php if($is_manager): ?><a class="text-link" href="<?php echo esc_url(get_edit_post_link($pid)); ?>">ویرایش و تخصیص اعضا</a><?php endif; ?>
               </div>
             </div>

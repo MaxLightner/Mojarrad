@@ -44,3 +44,7 @@ Text Domain: mojarrad
 .hero-three-active .hero-inner{z-index:4}
 .hero-three-active .hero-scroll{z-index:5}
 @media(max-width:768px){.hero-three-active .hero-gradient{background:linear-gradient(90deg,#0a1424ef 0%,#0a1424b8 62%,#0a142477 100%)}}
+
+/* Hero emphasis matches RTL text alignment: legibility on the right, tower on the left. */
+.hero-three-active .hero-gradient{background:linear-gradient(270deg,#0a1424 0%,#0a1424e0 28%,#0a14245a 66%,transparent 100%)}
+@media(max-width:768px){.hero-three-active .hero-gradient{background:linear-gradient(270deg,#0a1424eb 0%,#0a1424ba 65%,#0a142460 100%)}}
