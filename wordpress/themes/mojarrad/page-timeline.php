@@ -31,6 +31,7 @@ get_header();
           <option value="report">گزارش‌های رسمی</option>
           <option value="stage">شروع و پایان مراحل</option>
           <option value="followup">پیگیری‌های باز</option>
+          <option value="trash" hidden>رویدادهای حذف‌شده</option>
         </select>
       </label>
       <span class="muted" id="moj-timeline-counter"></span>

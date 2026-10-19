@@ -122,6 +122,10 @@
     const el=node('div','moj-comment');
     el.append(node('div','moj-comment-meta',comment.authorName+' — '+label(comment.visibility,visibility)+' — '+fmtDate(comment.createdAt)));
     el.append(node('p',null,comment.body));
+    if(comment.media?.length) {
+      const media=node('div','moj-media');comment.media.forEach(item=>media.append(mediaItem(item)));
+      el.append(media);
+    }
     if(comment.needsFollowUp) {
       el.append(node('div','moj-comment-followup',comment.resolvedAt?'پیگیری انجام‌شده':'نیازمند پیگیری'));
       if(comment.canResolve) {
@@ -142,17 +146,25 @@
     const select=node('select');
     allowed.forEach(value=>{const option=node('option',null,label(value,visibility));option.value=value;select.append(option);});
     const visLabel=node('label',null,'مخاطب پیام');visLabel.append(select);
+    const attachment=node('input');attachment.type='file';attachment.accept='.jpg,.jpeg,.png,.webp';attachment.setAttribute('aria-label','عکس پیوست پیام');
     const follow=node('input');follow.type='checkbox';
     const followLabel=node('label',null,'نیازمند پیگیری');followLabel.prepend(follow);
     const submit=node('button','btn-gold','ارسال پیام');submit.type='submit';
-    row.append(visLabel,followLabel,submit);f.append(text,row);
+    row.append(visLabel,followLabel,attachment,submit);f.append(text,row);
     f.addEventListener('submit',async e=>{
       e.preventDefault();submit.disabled=true;
-      try{await call('timeline/'+event.id+'/comments',{
-        method:'POST',body:JSON.stringify({
-          body:text.value,visibility:select.value,needsFollowUp:follow.checked
-        })
-      });await load(true);}
+      try{
+        const result=await call('timeline/'+event.id+'/comments',{
+          method:'POST',body:JSON.stringify({
+            body:text.value,visibility:select.value,needsFollowUp:follow.checked
+          })
+        });
+        if(attachment.files?.length && result.commentId){
+          const data=new FormData();data.append('file',attachment.files[0]);data.append('commentId',String(result.commentId));
+          await call('timeline/'+event.id+'/media',{method:'POST',body:data});
+        }
+        await load(true);
+      }
       catch(error){setStatus(error.message,true);}
       finally{submit.disabled=false;}
     });
@@ -200,6 +212,10 @@
     card.append(node('div','moj-comment-meta','ثبت‌شده توسط '+event.authorName));
     const actions=node('div','moj-event-actions');
     if(event.canEdit) actions.append(button('ویرایش',()=>openForm(event)));
+    if(event.canRestore) actions.append(button('بازیابی',async()=>{
+      try{await call('timeline/'+event.id+'/restore',{method:'PATCH'});await load(true);}
+      catch(error){setStatus(error.message,true);}
+    }));
     if(event.canDelete) actions.append(button('حذف',async()=>{
       if(!window.confirm('رویداد از تایم‌لاین پنهان شود؟ قابل بازگردانی توسط مدیر فنی خواهد بود.'))return;
       try{await call('timeline/'+event.id,{method:'DELETE'});await load(true);}
@@ -211,12 +227,12 @@
       event.media.forEach(media=>section.append(mediaItem(media)));
       card.append(section);
     }
-    if(state.viewer?.canComment) {
+    if(!event.trashed && state.viewer?.canComment) {
       const comments=node('div','moj-comment-list');
       (event.comments||[]).forEach(comment=>comments.append(commentItem(comment)));
       card.append(comments,commentForm(event));
     }
-    if(event.isReport || state.viewer?.canCreate || state.viewer?.role==='supervisor')card.append(uploadBlock(event));
+    if(!event.trashed && (event.isReport || state.viewer?.canCreate || state.viewer?.role==='supervisor'))card.append(uploadBlock(event));
     root.append(card);
     return root;
   }
@@ -237,6 +253,7 @@
   function render(){
     const filter=$('moj-filter').value;
     const items=state.events.filter(ev=>{
+      if(filter==='trash')return ev.trashed;
       if(filter==='report')return ev.isReport;
       if(filter==='stage')return ev.kind!=='point';
       if(filter==='followup')return (ev.comments||[]).some(c=>c.needsFollowUp&&!c.resolvedAt);
@@ -256,12 +273,15 @@
     setStatus('در حال دریافت گزارش‌ها…');
     try {
       const page=state.page+1;
-      const response=await call('projects/'+cfg.project+'/timeline?page='+page+'&per_page=25');
+      const trash=$('moj-filter').value==='trash';
+      const response=await call('projects/'+cfg.project+'/timeline?page='+page+'&per_page=25'+(trash?'&trashed=1':''));
       state.viewer=response.viewer;state.hasNext=!!response.hasNext;
       populateStages(response.stages);
       state.events=state.events.concat(response.events.filter(e=>!state.events.some(old=>old.id===e.id)));
       state.page=page;
       create.hidden=!state.viewer.canCreate;
+      const trashOption=$('moj-filter').querySelector('option[value="trash"]');
+      if(trashOption)trashOption.hidden=!state.viewer.canViewTrash;
       setStatus('');
       render();
     }catch(error){setStatus(error.message,true);}
@@ -269,7 +289,11 @@
   }
   create.addEventListener('click',()=>openForm(null));
   more.addEventListener('click',()=>load());
-  $('moj-filter').addEventListener('change',render);
+  $('moj-filter').addEventListener('change',()=>{
+    const trash=$('moj-filter').value==='trash';
+    if(trash !== state.trashLoaded) {state.trashLoaded=trash;load(true);}
+    else render();
+  });
   form.addEventListener('submit',saveForm);
   form.elements.namedItem('kind').addEventListener('change',toggleStage);
   $('moj-stage-key').addEventListener('change',()=>{

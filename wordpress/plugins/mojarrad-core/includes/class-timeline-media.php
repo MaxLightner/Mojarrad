@@ -15,7 +15,9 @@ final class Mojarrad_Timeline_Media {
             : dirname(untrailingslashit(ABSPATH)).DIRECTORY_SEPARATOR.'mojarrad-private-vault';
         if(!$folder || !wp_mkdir_p($folder)) return self::error('storage','فضای خصوصی فایل‌ها در دسترس نیست.',503);
         $directory=realpath($folder);
-        if(!$directory || !$root || $directory===$root || str_starts_with($directory,$root.DIRECTORY_SEPARATOR)) {
+        $document_root=isset($_SERVER['DOCUMENT_ROOT'])?realpath($_SERVER['DOCUMENT_ROOT']):false;
+        if(!$directory || !$root || $directory===$root || str_starts_with($directory,$root.DIRECTORY_SEPARATOR)
+            || ($document_root && ($directory===$document_root || str_starts_with($directory,$document_root.DIRECTORY_SEPARATOR)))) {
             return self::error('unsafe_storage','محل ذخیره فایل خصوصی نباید داخل مسیر عمومی وردپرس باشد.',503);
         }
         @chmod($directory,0700);
@@ -64,6 +66,13 @@ final class Mojarrad_Timeline_Media {
         }
         return $list;
     }
+    public static function list_for_comment(int $comment_id,int $uid): array {
+        global $wpdb;$t=Mojarrad_Timeline::media_table();
+        $rows=$wpdb->get_results($wpdb->prepare("SELECT * FROM {$t} WHERE comment_id=%d ORDER BY id DESC LIMIT 25",$comment_id));
+        $list=array();
+        foreach($rows as $row) if(self::can_read($uid,$row)) $list[]=self::serialize($row,$uid);
+        return $list;
+    }
     public static function upload(WP_REST_Request $req) {
         $event=Mojarrad_Timeline::event(absint($req['id']));$uid=get_current_user_id();
         if(!$event) return self::error('not_found','رویداد پیدا نشد.',404);
@@ -80,6 +89,12 @@ final class Mojarrad_Timeline_Media {
                 return self::error('forbidden','پیوست پیام را فقط نویسنده یا مدیر ثبت می‌کند.',403);
             }
         }
+        global $wpdb;
+        $rate='moj_media_rate_'.$uid;
+        if((int)get_transient($rate)>=40) return self::error('limit','سقف بارگذاری ۴۰ فایل در ساعت است.',429);
+        $table=Mojarrad_Timeline::media_table();
+        $count=(int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$table} WHERE event_id=%d",(int)$event->id));
+        if($count>=80) return self::error('limit','حداکثر ۸۰ فایل برای هر رویداد مجاز است.',429);
         $params=$req->get_file_params();
         $file=$params['file']??null;
         if(!is_array($file) || !isset($file['tmp_name'],$file['name'],$file['size'],$file['error'])
@@ -88,7 +103,11 @@ final class Mojarrad_Timeline_Media {
         }
         $size=(int)$file['size'];
         if($size<1 || $size>6*1024*1024) return self::error('size','حداکثر حجم هر فایل ۶ مگابایت است.',413);
-        $type=function_exists('finfo_open')?finfo_file(finfo_open(FILEINFO_MIME_TYPE),$file['tmp_name']):false;
+        $type=false;
+        if(function_exists('finfo_open')){
+            $info=finfo_open(FILEINFO_MIME_TYPE);
+            if($info){$type=finfo_file($info,$file['tmp_name']);finfo_close($info);}
+        }
         $allowed=array('image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp','application/pdf'=>'pdf');
         if(!is_string($type) || !isset($allowed[$type])) {
             return self::error('mime','فقط JPG، PNG، WebP و PDF مجاز است.',415);
@@ -113,7 +132,6 @@ final class Mojarrad_Timeline_Media {
         $name=sanitize_file_name((string)$file['name']);
         if($name==='') $name='attachment.'.$allowed[$type];
         $status=Mojarrad_Timeline_Access::moderate_media($uid,(int)$event->project_id)?'approved':'pending';
-        global $wpdb;
         $ok=$wpdb->insert(Mojarrad_Timeline::media_table(),array(
             'project_id'=>(int)$event->project_id,'event_id'=>(int)$event->id,
             'comment_id'=>$comment_id?:null,'author_id'=>$uid,
@@ -123,6 +141,7 @@ final class Mojarrad_Timeline_Media {
             'status'=>$status,'created_at'=>current_time('mysql',true),
         ));
         if(!$ok) { @unlink($target); return self::error('database','ثبت اطلاعات فایل انجام نشد.',500); }
+        set_transient($rate,(int)get_transient($rate)+1,HOUR_IN_SECONDS);
         $row=self::record((int)$wpdb->insert_id);
         return new WP_REST_Response(array('media'=>self::serialize($row,$uid)),201);
     }

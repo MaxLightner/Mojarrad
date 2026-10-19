@@ -38,6 +38,9 @@ final class Mojarrad_Timeline {
             array('methods'=>WP_REST_Server::EDITABLE,'callback'=>array(__CLASS__,'update_event'),'permission_callback'=>$logged),
             array('methods'=>WP_REST_Server::DELETABLE,'callback'=>array(__CLASS__,'delete_event'),'permission_callback'=>$logged),
         ));
+        register_rest_route('mojarrad/v1','/timeline/(?P<id>\d+)/restore',array(
+            'methods'=>WP_REST_Server::EDITABLE,'callback'=>array(__CLASS__,'restore_event'),'permission_callback'=>$logged,
+        ));
         register_rest_route('mojarrad/v1','/timeline/(?P<id>\d+)/comments',array(
             'methods'=>WP_REST_Server::CREATABLE,'callback'=>array(__CLASS__,'create_comment'),'permission_callback'=>$logged,
         ));
@@ -56,10 +59,14 @@ final class Mojarrad_Timeline {
         return new WP_Error($code,$message,array('status'=>$http));
     }
     public static function event(int $id) {
+        $row=self::raw_event($id);
+        return $row && !$row->deleted_at ? $row : null;
+    }
+    public static function raw_event(int $id) {
         if($id<1) return null;
         global $wpdb;
         $table=self::events_table();
-        return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id=%d AND deleted_at IS NULL",$id));
+        return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id=%d",$id));
     }
     private static function project_id(WP_REST_Request $req): int { return absint($req['project_id']); }
     public static function validate_fields(array $input,bool $partial=false) {
@@ -138,7 +145,12 @@ final class Mojarrad_Timeline {
         $per=min(50,max(1,absint($req->get_param('per_page')?:25)));
         $offset=($page-1)*$per;
         global $wpdb;$table=self::events_table();
-        $where='project_id=%d AND deleted_at IS NULL';$params=array($project);
+        $trashed=in_array($req->get_param('trashed'),array('1',1,true,'true'),true);
+        if($trashed && !Mojarrad_Timeline_Access::moderate_media($uid,$project)) {
+            return self::error('forbidden','فهرست حذف‌شده‌ها فقط برای مدیر و مجری است.',403);
+        }
+        $where=$trashed?'project_id=%d AND deleted_at IS NOT NULL':'project_id=%d AND deleted_at IS NULL';
+        $params=array($project);
         if(in_array($role,array('owner','supervisor'),true)) $where.=' AND is_report=1';
         if(!in_array($role,array('owner','admin','executor'),true)) $where.=" AND category <> 'payment'";
         $sql="SELECT * FROM {$table} WHERE {$where} ORDER BY occurred_at DESC,id DESC LIMIT %d OFFSET %d";
@@ -155,6 +167,7 @@ final class Mojarrad_Timeline {
                 'canCreate'=>Mojarrad_Timeline_Access::create_event($uid,$project),
                 'canComment'=>$role!=='supervisor',
                 'canModerate'=>Mojarrad_Timeline_Access::moderate_media($uid,$project),
+                'canViewTrash'=>Mojarrad_Timeline_Access::moderate_media($uid,$project),
                 'reportOnly'=>in_array($role,array('owner','supervisor'),true),
             ),
             'categories'=>self::registered_categories(),
@@ -170,9 +183,11 @@ final class Mojarrad_Timeline {
             'date'=>(string)$row->occurred_at,'category'=>(string)$row->category,
             'kind'=>(string)$row->kind,'stageKey'=>$row->stage_key,'stageGroup'=>$row->stage_group,
             'isReport'=>(bool)$row->is_report,'authorName'=>$author?$author->display_name:'—',
-            'canEdit'=>Mojarrad_Timeline_Access::edit_event($uid,$row),
-            'canDelete'=>Mojarrad_Timeline_Access::delete_event($uid,$row),
-            'comments'=>$comments,'media'=>Mojarrad_Timeline_Media::list_for_event((int)$row->id,$uid),
+            'canEdit'=>!$row->deleted_at && Mojarrad_Timeline_Access::edit_event($uid,$row),
+            'canDelete'=>!$row->deleted_at && Mojarrad_Timeline_Access::delete_event($uid,$row),
+            'trashed'=>(bool)$row->deleted_at,'canRestore'=>(bool)$row->deleted_at && Mojarrad_Timeline_Access::delete_event($uid,$row),
+            'comments'=>$row->deleted_at?array():$comments,
+            'media'=>$row->deleted_at?array():Mojarrad_Timeline_Media::list_for_event((int)$row->id,$uid),
         );
     }
     public static function visible_comments(int $event_id,int $uid): array {
@@ -190,6 +205,7 @@ final class Mojarrad_Timeline {
                 'resolvedAt'=>$comment->resolved_at,'createdAt'=>$comment->created_at,
                 'authorName'=>$author?$author->display_name:'—',
                 'canResolve'=>Mojarrad_Timeline_Access::resolve_comment($uid,$comment),
+                'media'=>Mojarrad_Timeline_Media::list_for_comment((int)$comment->id,$uid),
             );
         }
         return $output;
@@ -240,6 +256,20 @@ final class Mojarrad_Timeline {
         if($ok===false) return self::error('database','حذف انجام نشد.',500);
         return new WP_REST_Response(array('deleted'=>true),200);
     }
+    public static function restore_event(WP_REST_Request $req) {
+        $event=self::raw_event(absint($req['id']));$uid=get_current_user_id();
+        if(!$event) return self::error('not_found','رویداد پیدا نشد.',404);
+        if(!Mojarrad_Timeline_Access::delete_event($uid,$event)) {
+            return self::error('forbidden','فقط مدیر یا مجری می‌تواند رویداد را بازیابی کند.',403);
+        }
+        if(!$event->deleted_at) return self::error('invalid','رویداد حذف نشده است.',409);
+        global $wpdb;
+        $ok=$wpdb->update(self::events_table(),array(
+            'deleted_at'=>null,'deleted_by'=>null,'updated_at'=>current_time('mysql',true),
+        ),array('id'=>(int)$event->id));
+        if($ok===false) return self::error('database','بازیابی انجام نشد.',500);
+        return new WP_REST_Response(array('event'=>self::serialize(self::event((int)$event->id),$uid)),200);
+    }
     public static function create_comment(WP_REST_Request $req) {
         $event=self::event(absint($req['id']));$uid=get_current_user_id();
         if(!$event) return self::error('not_found','رویداد پیدا نشد.',404);
@@ -258,7 +288,10 @@ final class Mojarrad_Timeline {
             'needs_follow_up'=>$follow?1:0,'created_at'=>current_time('mysql',true),
         ));
         if(!$ok) return self::error('database','پیام ذخیره نشد.',500);
-        return new WP_REST_Response(array('comments'=>self::visible_comments((int)$event->id,$uid)),201);
+        return new WP_REST_Response(array(
+            'commentId'=>(int)$wpdb->insert_id,
+            'comments'=>self::visible_comments((int)$event->id,$uid)
+        ),201);
     }
     public static function resolve_comment(WP_REST_Request $req) {
         global $wpdb;$id=absint($req['id']);$t=self::comments_table();$uid=get_current_user_id();
