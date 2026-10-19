@@ -79,6 +79,39 @@ foreach($project_ids as $project_id) {
         </div>
       <?php endif; ?>
     </section>
+    <?php
+    $recent=array();
+    if(class_exists('Mojarrad_Timeline') && $project_ids){
+      global $wpdb;
+      $tbl=Mojarrad_Timeline::events_table();
+      $allowed=array_values(array_filter(array_unique(array_map('absint',$project_ids))));
+      if($allowed){
+        $markers=implode(',',array_fill(0,count($allowed),'%d'));
+        $rows=$wpdb->get_results($wpdb->prepare(
+          "SELECT * FROM {$tbl} WHERE project_id IN ({$markers}) AND deleted_at IS NULL ORDER BY occurred_at DESC,id DESC LIMIT 100",
+          $allowed
+        ));
+        foreach($rows as $item){
+          if(Mojarrad_Timeline_Access::read_event($user->ID,$item))$recent[]=$item;
+          if(count($recent)>=8)break;
+        }
+      }
+    }
+    ?>
+    <?php if($recent): ?>
+    <section class="dashboard-section" id="my-updates">
+      <h2 class="title-line">آخرین گزارش‌ها و رویدادها</h2>
+      <div class="dashboard-tools">
+        <?php foreach($recent as $entry): ?>
+        <a class="card-lux tool-card" href="<?php echo esc_url(add_query_arg('project',(int)$entry->project_id,home_url('/timeline/'))); ?>">
+          <span class="section-label"><?php echo esc_html(get_the_title((int)$entry->project_id)); ?></span>
+          <strong><?php echo esc_html($entry->title); ?></strong>
+          <span class="muted"><?php echo esc_html(mysql2date('Y/m/d',$entry->occurred_at,false)); ?> — مشاهده در تایم‌لاین ←</span>
+        </a>
+        <?php endforeach; ?>
+      </div>
+    </section>
+    <?php endif; ?>
     <section id="my-tools" class="dashboard-section">
       <h2 class="title-line">ابزارهای من</h2>
       <div class="dashboard-tools">
