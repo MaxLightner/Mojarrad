@@ -1,0 +1,73 @@
+name: WordPress Real Install / ACL Integration
+on:
+  push:
+    branches: [wordpress]
+    paths:
+      - '.github/workflows/wordpress-smoke.yml'
+      - 'wordpress/plugins/**'
+      - 'wordpress/themes/mojarrad/*.php'
+      - 'wordpress/playground/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  wordpress:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: local_only_test
+          MYSQL_DATABASE: mojarrad_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -plocal_only_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mysqli,mbstring,gd,zip,curl
+          coverage: none
+      - name: Install isolated WordPress and WP-CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o wp-cli.phar
+          php wp-cli.phar --info
+          php wp-cli.phar core download --path=/tmp/mojarrad-test --quiet
+          php wp-cli.phar config create --path=/tmp/mojarrad-test --dbname=mojarrad_test --dbuser=root --dbpass=local_only_test --dbhost=127.0.0.1:3306 --skip-check --quiet
+          php wp-cli.phar core install --path=/tmp/mojarrad-test --url=http://127.0.0.1 --title='Mojarrad Test' --admin_user=siteadmin --admin_password='temporary-local-ci-only' --admin_email=test@example.org --skip-email --quiet
+      - name: Install and activate theme and plugin
+        run: |
+          mkdir -p /tmp/mojarrad-test/wp-content/plugins/mojarrad-core
+          cp -R wordpress/plugins/mojarrad-core/. /tmp/mojarrad-test/wp-content/plugins/mojarrad-core/
+          mkdir -p /tmp/mojarrad-test/wp-content/themes/mojarrad
+          cp -R wordpress/themes/mojarrad/. /tmp/mojarrad-test/wp-content/themes/mojarrad/
+          php wp-cli.phar plugin activate mojarrad-core --path=/tmp/mojarrad-test
+          php wp-cli.phar theme activate mojarrad --path=/tmp/mojarrad-test
+      - name: Create demo fixture and run real WordPress permission tests
+        run: |
+          php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $admins = get_users(array("role"=>"administrator","number"=>1));
+            if (!$admins) throw new RuntimeException("Admin missing");
+            wp_set_current_user((int)$admins[0]->ID);
+            define("MOJARRAD_PLAYGROUND_SEED",true);
+            require WP_PLUGIN_DIR . "/mojarrad-core/demo/demo-seed.php";
+            require WP_PLUGIN_DIR . "/mojarrad-core/demo/smoke.php";
+            if(get_option("mojarrad_playground_smoke")!=="passed") throw new RuntimeException("Smoke suite failed");
+            echo "Mojarrad WordPress MySQL integration and ACL tests PASSED\n";
+          '
+      - name: Validate critical pages and plugin are registered
+        run: |
+          php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            foreach(array("dashboard","login","sale","blog","collaborate","consulting") as $slug){
+              $p=get_page_by_path($slug);
+              if(!$p) throw new RuntimeException("Missing page ".$slug);
+            }
+            if(!get_role("moj_owner")) throw new RuntimeException("Role not installed");
+            if(!post_type_exists("moj_project")) throw new RuntimeException("CPT absent");
+            echo "Template routes and activation verified\n";
+          '
