@@ -48,3 +48,41 @@ Text Domain: mojarrad
 /* Hero emphasis matches RTL text alignment: legibility on the right, tower on the left. */
 .hero-three-active .hero-gradient{background:linear-gradient(270deg,#0a1424 0%,#0a1424e0 28%,#0a14245a 66%,transparent 100%)}
 @media(max-width:768px){.hero-three-active .hero-gradient{background:linear-gradient(270deg,#0a1424eb 0%,#0a1424ba 65%,#0a142460 100%)}}
+
+
+/* Independently optimized mobile UX: accessible login, stable nav and limited GPU work */
+.mobile-account{display:none}
+@media(max-width:880px){
+  .header-inner{justify-content:space-between}
+  .primary-nav{max-height:min(70dvh,540px);overflow:auto;box-shadow:0 18px 30px #0007}
+  .primary-nav .mobile-account{display:flex;width:100%;margin-top:12px;min-height:44px;align-items:center;justify-content:center}
+  .primary-nav a{min-height:42px;display:flex;align-items:center}
+  .menu-toggle{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .header-actions{gap:6px}
+  .header-inner .site-brand{min-width:0}
+}
+@media(max-width:580px){
+  .site-brand{gap:6px;font-size:13px;min-width:0}
+  .site-brand img{flex:none;width:30px;height:30px}
+  .site-brand span{white-space:normal;line-height:1.35;max-width:154px}
+  .header-actions select{max-width:82px;padding:6px 3px;font-size:12px}
+  .header-inner{gap:4px;min-height:66px}
+  .hero-home{min-height:clamp(480px,85svh,650px)}
+  .hero-copy{max-width:100%}
+  .hero-copy h1{font-size:clamp(30px,9vw,46px);line-height:1.45}
+  .hero-copy p{font-size:14px;line-height:2}
+  .button-row .btn-large{min-height:46px;flex:1;padding:10px 15px}
+  .page-top{padding-block:34px 48px}
+  .page-title{font-size:clamp(24px,7vw,36px)}
+  .dashboard-project-actions{align-items:flex-start}
+}
+@media(max-width:360px){
+  .site-brand span{max-width:110px;font-size:12px}
+  .header-actions select{width:67px;max-width:67px}
+  .button-row{gap:8px}
+  .button-row .btn-large{font-size:12px;padding:8px 10px}
+  .quick-grid{grid-template-columns:1fr 1fr}
+  .quick-card{padding:12px}
+}
+html,body{max-width:100%;overflow-x:clip}
+:where(a,button,input,textarea,select):focus-visible{outline:2px solid var(--accent);outline-offset:3px}

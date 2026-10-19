@@ -16,6 +16,9 @@
     </a>
     <nav class="primary-nav" id="primary-nav" aria-label="ناوبری اصلی">
       <?php wp_nav_menu(array('theme_location'=>'primary','container'=>false,'fallback_cb'=>'mojarrad_fallback_menu')); ?>
+      <a class="mobile-account btn-gold" href="<?php echo esc_url(is_user_logged_in()?mojarrad_link('dashboard'):mojarrad_link('login')); ?>">
+        <?php echo is_user_logged_in()?'ورود به پنل من':'ورود اعضا'; ?>
+      </a>
     </nav>
     <div class="header-actions">
       <label class="screen-reader-text" for="moj-theme">انتخاب تم</label>
@@ -25,7 +28,7 @@
       <a class="header-login btn-gold" href="<?php echo esc_url(is_user_logged_in()?mojarrad_link('dashboard'):mojarrad_link('login')); ?>">
         <?php echo is_user_logged_in()?'پنل من':'ورود اعضا'; ?>
       </a>
-      <button class="menu-toggle" id="menu-toggle" aria-controls="primary-nav" aria-expanded="false" type="button">☰<span class="screen-reader-text">نمایش منو</span></button>
+      <button class="menu-toggle" id="menu-toggle" aria-controls="primary-nav" aria-expanded="false" aria-label="باز کردن فهرست" type="button">☰<span class="screen-reader-text">نمایش منو</span></button>
     </div>
   </div>
 </header>

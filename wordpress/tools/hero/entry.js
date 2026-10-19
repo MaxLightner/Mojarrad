@@ -4,7 +4,9 @@ import * as THREE from 'three';
 (function mountMojarradHero() {
   'use strict';
   const container = document.getElementById('moj-three-hero');
-  if (!container || !window.WebGLRenderingContext) return;
+  // Full WebGL tower is deliberately desktop-only. On small screens the
+  // CSS building is quicker to paint, lighter on battery and easier to read.
+  if (!container || !window.WebGLRenderingContext || window.matchMedia('(max-width: 767px)').matches) return;
   const parent = container.closest('.hero-home');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = window.innerWidth < 768;
