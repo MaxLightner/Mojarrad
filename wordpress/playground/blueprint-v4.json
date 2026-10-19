@@ -1,0 +1,47 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/dashboard/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/MaxLightner/Mojarrad",
+        "ref": "wordpress",
+        "refType": "branch",
+        "path": "wordpress/plugins/mojarrad-core"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "mojarrad-core"
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/MaxLightner/Mojarrad",
+        "ref": "wordpress",
+        "refType": "branch",
+        "path": "wordpress/themes/mojarrad"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "mojarrad"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\nif (!function_exists('mojarrad_register_content_types')) { throw new RuntimeException('Mojarrad Core plugin is not active.'); }\nif (get_stylesheet() !== 'mojarrad') { throw new RuntimeException('Mojarrad theme is not active.'); }\nif (!file_exists(WP_PLUGIN_DIR . '/mojarrad-core/demo/demo-seed.php')) { throw new RuntimeException('Mojarrad demo seed was not installed.'); }\nif (!get_current_user_id()) { $admins=get_users(array('role'=>'administrator','number'=>1)); if (!$admins) throw new RuntimeException('No WordPress demo admin was created'); wp_set_current_user((int)$admins[0]->ID); }\ndefine('MOJARRAD_PLAYGROUND_SEED',true);\nrequire WP_PLUGIN_DIR . '/mojarrad-core/demo/demo-seed.php';\nif(!file_exists(WP_PLUGIN_DIR . '/mojarrad-core/demo/smoke.php')) {throw new RuntimeException('Role smoke tests missing');}\nrequire WP_PLUGIN_DIR . '/mojarrad-core/demo/smoke.php';\nif(get_option('mojarrad_playground_smoke')!=='passed'){throw new RuntimeException('Smoke tests did not pass');}\n"
+    }
+  ],
+  "description": "Nika Bana WordPress v4: timeline, reports, stage tracking, comments, follow-ups and protected evidence"
+}
