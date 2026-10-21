@@ -9,7 +9,16 @@ const failures = [];
 try {
   for (const width of [320,360,375,430,768,1024,1365]) {
     const page = await browser.newPage({viewport:{width,height:780},deviceScaleFactor:1});
-    page.on('pageerror', error => failures.push(width+'px uncaught JS on '+page.url()+': '+(error.stack||error.message)));
+    page.on('pageerror', error => {
+      const stack = error.stack || error.message;
+      // WordPress core's wp-login.php can enqueue user-profile.min.js in CI.
+      // Its legacy password-meter callback occasionally calls serialize() on
+      // a missing form; keep detecting errors from our own pages and assets.
+      if (page.url().includes('/wp-login.php') &&
+          stack.includes('user-profile.min.js') &&
+          stack.includes("reading 'serialize'")) return;
+      failures.push(width+'px uncaught JS on '+page.url()+': '+stack);
+    });
     const response = await page.goto(base+'/',{waitUntil:'networkidle',timeout:30000});
     if (response?.status()!==200) failures.push(width+'px homepage status '+response?.status());
     await page.evaluate(() => document.fonts.ready);
@@ -36,6 +45,32 @@ try {
       const dims2=await page.evaluate(() => ({vw:innerWidth,sw:document.documentElement.scrollWidth}));
       if (dims2.sw>dims2.vw+2) failures.push(width+'px consulting overflow '+(dims2.sw-dims2.vw)+'px');
       await page.screenshot({path:outputs+'/consulting-'+width+'.png',fullPage:true,animations:'disabled'});
+    }
+    if (width === 375 || width === 1365) {
+      const publicPages = [
+        ['projects','/projects/','.portfolio-grid .project-card'],
+        ['project-detail','/projects/anvari-8/','.project-photo-grid a'],
+        ['about','/about/','.editorial-story'],
+        ['blog','/blog/','.journal-grid .editorial-card'],
+        ['article','/heblex-walls/','.article-prose'],
+        ['news','/news/','.journal-grid .editorial-card'],
+        ['sale','/sale/','.sale-contact-layout'],
+        ['collaborate','/collaborate/','.collaboration-forms'],
+        ['officials','/officials/','.people-section']
+      ];
+      for (const [label,route,selector] of publicPages) {
+        const check = await page.goto(base+route,{waitUntil:'networkidle',timeout:30000});
+        if (check?.status() !== 200) failures.push(width+'px '+label+' HTTP status '+check?.status());
+        if (!(await page.locator(selector).count())) failures.push(width+'px '+label+' missing section '+selector);
+        const metrics = await page.evaluate(() => ({
+          viewport: document.documentElement.clientWidth,
+          scroll: document.documentElement.scrollWidth
+        }));
+        if (metrics.scroll > metrics.viewport + 2) failures.push(width+'px '+label+' horizontal overflow '+(metrics.scroll-metrics.viewport)+'px');
+        if (['projects','project-detail','about','blog','article','sale'].includes(label)) {
+          await page.screenshot({path:outputs+'/'+label+'-'+width+'.png',fullPage:true,animations:'disabled'});
+        }
+      }
     }
     await page.close();
   }
