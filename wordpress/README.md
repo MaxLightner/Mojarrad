@@ -1,44 +1,41 @@
-# Mojarrad / Nika Bana — independent WordPress implementation
+# Nika Bana / Mojarrad WordPress
 
-This folder is the WordPress version. The original Next.js project on the main branch remains unchanged.
+WordPress theme and supporting plugin live under `wordpress/themes/mojarrad` and `wordpress/plugins/mojarrad-core`. The prior Next.js site on `main` remains unchanged.
 
-## Install locally
-- WordPress 6.5+, PHP 8.1+, MySQL/MariaDB.
-- Copy plugins/mojarrad-core -> wp-content/plugins/mojarrad-core and activate.
-- Copy themes/mojarrad -> wp-content/themes/mojarrad and activate.
-- Plugin activation/automatic version upgrade registers content types and creates About, Blog, Sale, Consulting, Collaborate, Login and Dashboard pages (existing pages are preserved).
-- Go to /wp-admin/edit.php?post_type=moj_project to manage projects. Set title/content, status taxonomy, cover image, project metadata and gallery.
-- Admin creates real accounts at Users > Add New and assigns one of six project roles. In project editor > Access project members, check users to grant scoped access.
-- Users log in at /login/ and visit /dashboard/.
+## Public design release — 0.6.0
 
-## One-click Playground
-Open the v4 Blueprint with timeline demonstration:
-https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2FMaxLightner%2FMojarrad%2Fwordpress%2Fwordpress%2Fplayground%2Fblueprint-v4.json
+The theme now includes:
+- Photography-led homepage, detailed project and gallery layouts, related projects and editorial portfolio archive.
+- Full About, Blog, news, sale, collaboration, consulting and people pages in Persian RTL.
+- Featured blog story, article pages, category links, responsive mobile styling and reduced-motion support.
+- The existing secure project-office/timeline infrastructure stays intact.
 
-Playground auto-installs, activates and seeds 9 demo projects, 5 news items, 6 blog posts and sample role users. Demo user passwords are random; to test individual accounts, reset via WP Admin > Users. The dashboard indicates whether the Playground membership/API checks passed.
+The plugin imports **missing** public material once when v0.6 is installed or upgraded: 8 portfolio projects, 8 evergreen technical articles, 3 editorial updates, and the About copy. It checks each slug and **never overwrites** existing customer posts, documents, users or membership data. Imported posts carry `_mojarrad_legacy_import` metadata for editorial review. Original demo accounts, fictional staff/public-officials, market-price news, time-sensitive news, unverified active sale offers, and sale prices are intentionally excluded. This is a curated public-content migration from the prior **demo seed**, not a verified real-world database migration; the site owner must validate project attribution, dates, area and current status.
 
-## Automated checks
-- .github/workflows/wordpress-lint.yml — all PHP files and browser JS syntax.
-- .github/workflows/wordpress-hero.yml — bundles original-style construction animation using Three.js into a local asset. The 2D fallback remains if WebGL is unavailable.
-- .github/workflows/wordpress-smoke.yml — boots a real WordPress/MySQL environment and verifies plugin/theme activation, content fixture, roles and cross-project REST ACL.
-- .github/workflows/wordpress-images.yml — optimized 42 JPG assets from 19.46 MB to ~6.05 MB.
+## Upgrade an installed WordPress site
 
-## Scope delivered in stages 1–3
-- WordPress-powered RTL public pages, multiple theme colors, native blog/news/official editor, sales, consultation and collaboration lead forms.
-- Working WordPress users/auth, six construction roles + built-in admin, project assignment via admin metabox and member dashboard with membership-scoped project list.
-- Read-only /wp-json/mojarrad/v1/me and /wp-json/mojarrad/v1/me/projects endpoints with WordPress REST cookie+nonce authorization.
-- Browser-loadable real Three.js hero with safe static fallback.
+1. Back up WordPress database and `wp-content` on your host.
+2. Replace or upgrade `wp-content/plugins/mojarrad-core` using the folder in this branch; keep the plugin activated.
+3. Replace or upgrade `wp-content/themes/mojarrad` and activate it.
+4. Open the home page once so the versioned one-time import runs. Confirm projects, blog and news are populated.
+5. Verify imported project facts in **Projects** and editorial content in **Posts / News** before declaring it a production factual record. The public templates do not present historic in-progress estimates as real-time values.
 
-## Timeline module (Mojarrad Core v0.4)
-- Authenticated /timeline/?project=ID is available from the assigned project card.
-- Timeline supports official reports, milestone start/end, note events, role-filtered comments, follow-up completion, attachment review, and soft-deletion recovery.
-- Images/PDF are stored in a private directory outside the web document root; downloads enforce session, project membership, recipient visibility, moderation and nonce.
-- See TIMELINE-MODULE.md for the storage setup, endpoint contract and limitations.
-- Demo timeline events are created automatically by the v4 Playground Blueprint.
+No CLI or Next.js process is required on the WordPress host.
 
-## Not yet delivered
-- Detailed pixel-by-pixel browser visual comparison against the Next.js site, animation effects other than the hero, accessibility/performance QA on real devices.
-- Design reference versioning, private general documents outside the timeline, contracts, financial ledgers, staff roster and archives; annotated photo editor, push/email notifications and other advanced timeline features.
-- Production domain/hosting deployment, old database migration, live client data.
+## Browser preview
 
-Private features are deliberately absent or labeled "under development" in the dashboard; they are not misleading clickable controls. Do not put private customer documents in the public WordPress media library.
+Open the [v6 Playground blueprint](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2FMaxLightner%2FMojarrad%2Fwordpress%2Fwordpress%2Fplayground%2Fblueprint-v6.json). It installs the current plugin/theme and selected public content without sample user identities. Older v5 demo is retained for private-module testing.
+
+## Project and editing workflow
+
+- Edit projects at **WP Admin → Projects**. Cover can be a WP featured image; gallery via WP media selector.
+- Edit technical articles at **Posts** and updates at **News**.
+- About copy is editable from **Pages → About**.
+- The public content import does not alter manually edited existing items; edit originals normally after import.
+- Production private files must stay outside the public media library, as described in the existing security notes.
+
+## Verification
+
+- PHP and JavaScript lint workflows under `.github/workflows`.
+- WordPress Playground v6 checks the content types and seed counts.
+- Validate layout in both mobile and desktop browsers on the target WordPress host before launch.

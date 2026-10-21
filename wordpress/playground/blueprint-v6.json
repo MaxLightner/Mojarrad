@@ -1,0 +1,47 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/MaxLightner/Mojarrad",
+        "ref": "wordpress",
+        "refType": "branch",
+        "path": "wordpress/plugins/mojarrad-core"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "mojarrad-core"
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/MaxLightner/Mojarrad",
+        "ref": "wordpress",
+        "refType": "branch",
+        "path": "wordpress/themes/mojarrad"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "mojarrad"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\nif (get_stylesheet() !== 'mojarrad') throw new RuntimeException('Theme activation failed');\nif (!function_exists('mojarrad_register_content_types')) throw new RuntimeException('Plugin activation failed');\nMojarrad_Starter_Content::import_once();\nif (wp_count_posts('moj_project')->publish < 8) throw new RuntimeException('Projects were not imported');\nif (wp_count_posts('moj_news')->publish < 3) throw new RuntimeException('Editorial updates were not imported');\nif (wp_count_posts('post')->publish < 8) throw new RuntimeException('Blog posts were not imported');\nif (!get_page_by_path('about')) throw new RuntimeException('About page missing');\n"
+    }
+  ],
+  "description": "Nika Bana WordPress 0.6: complete public portfolio, editorial articles, about and lead pages. No demo user accounts or fictional officials."
+}

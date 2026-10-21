@@ -31,6 +31,15 @@
     <?php endforeach; ?>
   </div>
 </section>
+<section class="home-manifesto container" aria-label="رویکرد ما">
+  <div class="home-manifesto-visual"><img src="<?php echo esc_url(mojarrad_asset('images/villa-z-1.jpg')); ?>" alt="ویلای کوهستانی و ارتباط معماری با طبیعت" loading="lazy"><div class="home-manifesto-inset"><img src="<?php echo esc_url(mojarrad_asset('images/cons-n-3.jpg')); ?>" alt="جزئیات اجرای ساختمان" loading="lazy"></div></div>
+  <div class="home-manifesto-copy">
+    <span class="editorial-index">THE ART OF BUILDING</span><span class="section-label">آنچه ما را تعریف می‌کند</span>
+    <h2>معماریِ ماندگار، از <em>اجرای دقیق</em> آغاز می‌شود.</h2>
+    <p>زیبایی در تصویر کافی نیست. یک پروژه موفق حاصل هماهنگی ایده، نقشه، مصالح و جزئیات اجرایی است؛ مسیری که باید برای همه عوامل روشن و قابل پیگیری باشد.</p>
+    <a href="<?php echo esc_url(mojarrad_link('about')); ?>" class="text-link">بیشتر درباره نیکا بنا ←</a>
+  </div>
+</section>
 <section class="container section" aria-label="پروژه‌های شاخص">
   <div class="section-head">
     <div><span class="section-label">نمونه‌کارها</span><h2 class="title-line">پروژه‌های شاخص</h2></div>
@@ -84,6 +93,14 @@ $news = post_type_exists('moj_news') ? new WP_Query(array('post_type'=>'moj_news
   </div><?php else : ?><p class="notice">هنوز مقاله‌ای منتشر نشده است.</p><?php endif; ?>
   <?php wp_reset_postdata(); ?>
 </section>
+<section class="home-services"><div class="container">
+ <div class="section-head"><div><span class="section-label">از دانش تا اجرا</span><h2 class="title-line">مسیر یک پروژه دقیق</h2></div></div>
+ <div class="process-cards">
+  <article><span>01 / STUDY</span><h3>شناخت و بررسی</h3><p>از شرایط زمین و خواسته‌های مالک تا شناخت محدودیت‌ها و فرصت‌ها.</p></article>
+  <article><span>02 / PLAN</span><h3>برنامه‌ریزی و هماهنگی</h3><p>هماهنگی معماری، سازه و تأسیسات و روشن‌کردن مسیر اجرا.</p></article>
+  <article><span>03 / BUILD</span><h3>اجرا و مستندسازی</h3><p>کنترل کیفیت، پیگیری مراحل و ثبت تصمیم‌های مهم کارگاه.</p></article>
+ </div>
+</div></section>
 <section class="container cta-band">
   <div><span class="section-label">همکاری با ما</span><h2>برای پروژه بعدی برنامه‌ریزی می‌کنید؟</h2><p class="muted">از مشاوره سرمایه‌گذاری تا اجرای پروژه، همراه شما هستیم.</p></div>
   <a class="btn-gold" href="<?php echo esc_url( mojarrad_link('consulting') ); ?>">درخواست مشاوره</a>
