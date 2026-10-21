@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 umask 077
+export PATH="/usr/local/cpanel/3rdparty/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 exec 9>/home/tutivari/.nikabana-deploy.lock
 flock -n 9 || exit 0

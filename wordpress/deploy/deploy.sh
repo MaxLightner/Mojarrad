@@ -2,6 +2,7 @@
 # Deploy only this project's code. Database, uploads and wp-config.php are untouched.
 set -euo pipefail
 umask 022
+export PATH="/usr/local/cpanel/3rdparty/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 home_root="${NIKABANA_HOME:-/home/tutivari}"
 home_root="$(realpath "$home_root")"
@@ -18,7 +19,7 @@ plugin="$repo/wordpress/plugins/mojarrad-core"
 [[ -f "$theme/style.css" && -f "$theme/functions.php" && -f "$plugin/mojarrad-core.php" ]]
 [[ -z "$(find "$theme" "$plugin" -type l -print -quit)" ]] || { echo "Symlink in source"; exit 1; }
 php_bin="${NIKABANA_PHP:-$(command -v php)}"
-while IFS= read -r -d '' file; do "$php_bin" -l "$file" >/dev/null; done < <(find "$theme" "$plugin" -name '*.php' -type f -print0)
+find "$theme" "$plugin" -name '*.php' -type f -print0 | while IFS= read -r -d '' file; do "$php_bin" -l "$file" >/dev/null; done
 for kind in themes plugins; do
   [[ ! -L "$web/wp-content/$kind" ]]
   mkdir -p "$web/wp-content/$kind"
@@ -29,9 +30,9 @@ for pair in "themes/mojarrad" "plugins/mojarrad-core"; do
   mkdir -p "$target"
   [[ "$(realpath "$target")" == "$web/wp-content/$pair" ]] || exit 1
 done
-# --delete is deliberately restricted to our two code directories.
-rsync -r --delete --exclude=release.txt --exclude=fixtures/ "$theme/" "$web/wp-content/themes/mojarrad/"
-rsync -r --delete --exclude=fixtures/ "$plugin/" "$web/wp-content/plugins/mojarrad-core/"
+# Synchronization is restricted to our two code directories, without rsync or /dev/fd.
+"$php_bin" "$repo/wordpress/deploy/sync.php" "$theme" "$web/wp-content/themes/mojarrad"
+"$php_bin" "$repo/wordpress/deploy/sync.php" "$plugin" "$web/wp-content/plugins/mojarrad-core"
 printf '%s\n' "$sha" > "$web/wp-content/themes/mojarrad/release.txt"
 printf '%s\n' "$sha" > "$state"
 echo "Deployed $sha at $(date -u +%FT%TZ)"
