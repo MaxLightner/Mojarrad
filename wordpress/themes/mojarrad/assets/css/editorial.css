@@ -306,3 +306,11 @@ h1{line-height:1.22}h2{line-height:1.36}
 .home-services{padding-block:85px 100px;border-block:1px solid var(--border);background:color-mix(in srgb,var(--card) 38%,var(--bg))}
 @media(max-width:880px){.home-manifesto{grid-template-columns:1fr;gap:48px;padding-block:50px}.home-manifesto-visual{max-width:600px}.home-manifesto-copy h2{font-size:40px}}
 @media(max-width:580px){.home-manifesto{gap:30px}.home-manifesto-copy h2{font-size:33px}.home-manifesto-copy>p{font-size:15px}.home-services{padding-block:55px}}
+
+.generic-page-body{padding-bottom:100px;max-width:900px;font-size:18px;line-height:2.5}
+.generic-featured img{width:100%;max-height:520px;object-fit:cover;border-radius:6px;margin-bottom:45px}
+.not-found-page{min-height:66vh;display:grid;grid-template-columns:1fr 1.1fr;gap:7%;align-items:center;padding-block:100px}
+.not-found-number{font:800 clamp(130px,20vw,280px)/1 system-ui;letter-spacing:-.12em;color:color-mix(in srgb,var(--accent) 30%,transparent);direction:ltr}
+.not-found-page h1{font-size:clamp(35px,4vw,54px);margin:14px 0 17px}
+.not-found-page p{color:var(--muted);max-width:490px}
+@media(max-width:750px){.not-found-page{grid-template-columns:1fr;gap:10px;padding-block:65px}.not-found-number{font-size:125px}.generic-page-body{font-size:16px}}

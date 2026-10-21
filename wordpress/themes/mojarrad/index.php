@@ -1,15 +1,7 @@
 <?php get_header(); ?>
-<div class="container"><section class="section">
-<?php if ( have_posts() ) : ?>
-  <?php while ( have_posts() ) : the_post(); ?>
-    <article <?php post_class( 'article' ); ?>>
-      <h1><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
-      <div><?php the_content(); ?></div>
-    </article>
-  <?php endwhile; ?>
-  <?php the_posts_pagination(); ?>
-<?php else : ?>
-  <p class="notice">محتوایی یافت نشد.</p>
-<?php endif; ?>
-</section></div>
+<section class="editorial-page-heading container"><div><span class="editorial-index">NIKA BANA / ARTICLES</span><span class="section-label">مجله و یادداشت‌ها</span><h1>دیدگاه‌های <em>اجرایی.</em></h1></div><p>یادداشت‌های کوتاه و بلند درباره مصالح، جزئیات ساخت و معماری.</p></section>
+<section class="container editorial-archive">
+  <?php if(have_posts()): ?><div class="card-grid journal-grid"><?php while(have_posts()):the_post();mojarrad_render_editorial_card();endwhile; ?></div><nav class="archive-pagination"><?php the_posts_pagination(); ?></nav>
+  <?php else: ?><div class="archive-empty"><h2>مطلبی در این بخش یافت نشد.</h2><a href="<?php echo esc_url(home_url('/')); ?>" class="text-link">صفحه اصلی ←</a></div><?php endif; ?>
+</section>
 <?php get_footer(); ?>
