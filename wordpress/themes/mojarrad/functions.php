@@ -11,6 +11,11 @@ add_action( 'after_setup_theme', function () {
 } );
 add_action( 'wp_enqueue_scripts', function () {
     $version = wp_get_theme()->get( 'Version' );
+    $release = get_template_directory() . '/release.txt';
+    if ( is_readable( $release ) ) {
+        $revision = trim( (string) file_get_contents( $release ) );
+        if ( preg_match( '/^[a-f0-9]{40}$/', $revision ) ) { $version .= '-' . substr( $revision, 0, 12 ); }
+    }
     wp_enqueue_style( 'mojarrad-theme', get_stylesheet_uri(), array(), $version );
     wp_enqueue_style( 'mojarrad-editorial', get_template_directory_uri() . '/assets/css/editorial.css', array('mojarrad-theme'), $version );
     wp_enqueue_script( 'mojarrad-ui', get_template_directory_uri() . '/assets/js/site.js', array(), $version, true );

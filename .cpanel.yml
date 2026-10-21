@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - /bin/bash /home/tutivari/repositories/nikabana/wordpress/deploy/deploy.sh

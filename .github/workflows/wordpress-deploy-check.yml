@@ -1,0 +1,17 @@
+name: WordPress deployment checks
+on:
+  push:
+    branches: [wordpress]
+    paths: ['wordpress/**', '.cpanel.yml', '.github/workflows/wordpress-deploy-check.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: bash -n wordpress/deploy/*.sh
+      - run: bash wordpress/deploy/test.sh
