@@ -32,6 +32,13 @@ add_filter( 'wp_sitemaps_posts_query_args', function ( array $args, string $post
             $excluded[] = (int) $page->ID;
         }
     }
+    // On some legacy installs the sample-page slug is stored URL-encoded,
+    // so get_page_by_path() alone does not resolve the published page.
+    foreach ( get_pages( array( 'post_status' => 'publish', 'hierarchical' => false ) ) as $candidate ) {
+        if ( in_array( rawurldecode( (string) $candidate->post_name ), array( 'sample-page', 'برگه-نمونه' ), true ) ) {
+            $excluded[] = (int) $candidate->ID;
+        }
+    }
     $args['post__not_in'] = array_values( array_unique( array_map( 'absint', $excluded ) ) );
     return $args;
 }, 10, 2 );
