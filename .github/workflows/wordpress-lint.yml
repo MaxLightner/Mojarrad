@@ -6,6 +6,12 @@ on:
       - '.github/workflows/wordpress-lint.yml'
       - 'wordpress/plugins/**'
       - 'wordpress/themes/**'
+  pull_request:
+    branches: [wordpress]
+    paths:
+      - '.github/workflows/wordpress-lint.yml'
+      - 'wordpress/plugins/**'
+      - 'wordpress/themes/**'
   workflow_dispatch:
 permissions:
   contents: read
