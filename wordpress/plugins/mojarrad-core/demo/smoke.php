@@ -11,6 +11,17 @@ foreach($required_cpt as $key) if(!post_type_exists($key)) throw new RuntimeExce
 foreach(array('about','sale','consulting','collaborate','blog','login','dashboard') as $slug) {
     if(!get_page_by_path($slug)) throw new RuntimeException('Required page missing: '.$slug);
 }
+$editorial_draft=get_page_by_path('sakhtan-ya-sabr',OBJECT,'post');
+if(!$editorial_draft || $editorial_draft->post_status!=='draft') {
+    throw new RuntimeException('First editorial article was not imported as a private draft.');
+}
+if(!get_post_meta($editorial_draft->ID,'_moj_seo_description',true) ||
+   !get_post_meta($editorial_draft->ID,'_moj_editorial_source_id',true)) {
+    throw new RuntimeException('Editorial source/SEO metadata missing.');
+}
+$public_editorial=get_posts(array('post_type'=>'post','post_status'=>'publish','include'=>array($editorial_draft->ID),'numberposts'=>1));
+if($public_editorial) throw new RuntimeException('Unapproved editorial article leaked into public posts.');
+
 if(!has_action('admin_post_nopriv_mojarrad_lead') || !has_action('save_post_moj_project',array('Mojarrad_Public_Content','save_project'))) {
     throw new RuntimeException('Lead or editor save handler not wired.');
 }
