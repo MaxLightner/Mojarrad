@@ -119,6 +119,64 @@ jobs:
           if grep -q 'ویلای دوبلکس دهم شریع' /tmp/owner-dashboard.html; then
             echo "Data leak: owner saw contractor project"; exit 1
           fi
+          # A review link is private navigation. Only a specifically assigned editor can approve.
+          ARTICLE_ID=$(php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $p=get_page_by_path("sakhtan-ya-sabr",OBJECT,"post");echo (int)$p->ID;
+          ')
+          test "$ARTICLE_ID" -gt 0
+          ANON_REVIEW=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:8081/editorial/?article=$ARTICLE_ID")
+          test "$ANON_REVIEW" = "302" || (echo "Anonymous reviewer page status: $ANON_REVIEW"; exit 1)
+          OWNER_REVIEW=$(curl -sS -o /tmp/moj-owner-review.html -w '%{http_code}' -b /tmp/moj-owner-cookie "http://127.0.0.1:8081/editorial/?article=$ARTICLE_ID")
+          test "$OWNER_REVIEW" = "403" || (echo "Ordinary member review status: $OWNER_REVIEW"; exit 1)
+          if grep -q 'ساختن یا صبر کردن؟' /tmp/moj-owner-review.html; then echo "Draft leaked to regular member";exit 1; fi
+
+          php wp-cli.phar user create moj_editorial_reviewer review@example.org --role=moj_engineer --user_pass='ci-reviewer-only' --path=/tmp/mojarrad-test --quiet
+          php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $u=get_user_by("login","moj_editorial_reviewer");$u->add_cap("moj_approve_editorial");
+          '
+          curl -fsS -c /tmp/moj-review-cookie http://127.0.0.1:8081/wp-login.php > /dev/null
+          curl -sS -L -b /tmp/moj-review-cookie -c /tmp/moj-review-cookie \
+            --data-urlencode 'log=moj_editorial_reviewer' \
+            --data-urlencode 'pwd=ci-reviewer-only' \
+            --data-urlencode 'wp-submit=Log In' \
+            --data-urlencode 'testcookie=1' \
+            --data-urlencode "redirect_to=http://127.0.0.1:8081/editorial/?article=$ARTICLE_ID" \
+            http://127.0.0.1:8081/wp-login.php > /tmp/moj-editorial-review.html
+          grep -q 'تأیید و زمان‌بندی انتشار' /tmp/moj-editorial-review.html
+          grep -q 'ساختن یا صبر کردن؟' /tmp/moj-editorial-review.html
+          REVIEW_NONCE=$(grep -o 'name="moj_editorial_nonce" value="[^"]*"' /tmp/moj-editorial-review.html | head -1 | sed -E 's/^.*value="([^"]*)"/\1/')
+          test -n "$REVIEW_NONCE"
+
+          REVIEW_FORBIDDEN=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-owner-cookie \
+            --data-urlencode 'action=moj_editorial_decision' \
+            --data-urlencode "article=$ARTICLE_ID" --data-urlencode "moj_editorial_nonce=$REVIEW_NONCE" \
+            --data-urlencode 'decision=publish' http://127.0.0.1:8081/wp-admin/admin-post.php)
+          test "$REVIEW_FORBIDDEN" = "403"
+          SCHEDULE_AT=$(date -u -d '+2 days' '+%Y-%m-%dT10:00')
+          REVIEW_SCHEDULE=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-review-cookie \
+            --data-urlencode 'action=moj_editorial_decision' \
+            --data-urlencode "article=$ARTICLE_ID" --data-urlencode "moj_editorial_nonce=$REVIEW_NONCE" \
+            --data-urlencode 'decision=schedule' --data-urlencode "publish_at=$SCHEDULE_AT" \
+            http://127.0.0.1:8081/wp-admin/admin-post.php)
+          test "$REVIEW_SCHEDULE" = "303" || (echo "Schedule status: $REVIEW_SCHEDULE"; exit 1)
+          php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $p=get_page_by_path("sakhtan-ya-sabr",OBJECT,"post");
+            if(!$p || $p->post_status!=="future" || !get_post_meta($p->ID,"_moj_editorial_approved_hash",true)) throw new RuntimeException("Article did not schedule.");
+          '
+          FUTURE_PUBLIC=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:8081/wp-json/wp/v2/posts/$ARTICLE_ID")
+          test "$FUTURE_PUBLIC" = "404" || (echo "Scheduled draft public REST status: $FUTURE_PUBLIC"; exit 1)
+
+          REVIEW_PUBLISH=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-review-cookie \
+            --data-urlencode 'action=moj_editorial_decision' \
+            --data-urlencode "article=$ARTICLE_ID" --data-urlencode "moj_editorial_nonce=$REVIEW_NONCE" \
+            --data-urlencode 'decision=publish' http://127.0.0.1:8081/wp-admin/admin-post.php)
+          test "$REVIEW_PUBLISH" = "303" || (echo "Immediate publish status: $REVIEW_PUBLISH"; exit 1)
+          php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $p=get_page_by_path("sakhtan-ya-sabr",OBJECT,"post");
+            if(!$p || $p->post_status!=="publish" || !get_post_meta($p->ID,"_moj_editorial_approved_hash",true)) throw new RuntimeException("Approved article not published.");
+          '
+          curl -fsS "http://127.0.0.1:8081/wp-json/wp/v2/posts/$ARTICLE_ID" > /tmp/moj-published-article.json
+          echo "Reviewer password login, private preview, denied member access, schedule and immediate publication PASSED"
           curl -fsS -c /tmp/moj-contractor-cookie http://127.0.0.1:8081/wp-login.php > /dev/null
           curl -sS -L -b /tmp/moj-contractor-cookie -c /tmp/moj-contractor-cookie \
             --data-urlencode 'log=moj_demo_contractor' \
