@@ -2,18 +2,20 @@
 /**
  * Plugin Name: Mojarrad Core
  * Description: WordPress content, memberships and role-aware dashboard backend for Nika Bana.
- * Version: 0.6.0
+ * Version: 0.6.1
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Text Domain: mojarrad-core
  */
 defined('ABSPATH') || exit;
 
-define('MOJARRAD_CORE_VERSION', '0.6.0');
+define('MOJARRAD_CORE_VERSION', '0.6.1');
 define('MOJARRAD_CORE_PATH', plugin_dir_path(__FILE__));
 
 require_once MOJARRAD_CORE_PATH . 'includes/class-schema.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-access.php';
+require_once MOJARRAD_CORE_PATH . 'includes/class-user-admin.php';
+Mojarrad_User_Admin::register();
 require_once MOJARRAD_CORE_PATH . 'includes/class-rest.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-public-content.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-starter-content.php';
@@ -160,9 +162,3 @@ add_action('admin_post_mojarrad_lead',array('Mojarrad_Leads','handle'));
 add_action('add_meta_boxes_moj_project',array('Mojarrad_Membership','register_box'));
 add_action('save_post_moj_project',array('Mojarrad_Membership','save_project_members'));
 
-add_filter('login_redirect',function($redirect,$requested,$user) {
-    if($user instanceof WP_User && !user_can($user,'manage_moj_projects')) {
-        return home_url('/dashboard/');
-    }
-    return $redirect;
-},10,3);
