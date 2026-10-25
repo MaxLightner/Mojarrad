@@ -36,6 +36,7 @@ $review_messages = array(
     'bad_date' => 'زمان انتخابی نامعتبر یا کمتر از پنج دقیقه با اکنون فاصله دارد.',
     'invalid' => 'عملیات انتخاب‌شده معتبر نیست.',
     'error' => 'تغییر وضعیت ثبت نشد؛ لطفاً مجدداً بررسی کنید.',
+    'stale' => 'مقاله پس از باز شدن پیش‌نمایش تغییر کرده است. صفحه را بازخوانی و نسخه جدید را بررسی کنید.',
 );
 ?>
 <?php if (!$review_id): ?>
@@ -100,6 +101,7 @@ $review_messages = array(
   <form class="review-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
     <input type="hidden" name="action" value="moj_editorial_decision">
     <input type="hidden" name="article" value="<?php echo esc_attr($review_post->ID); ?>">
+    <input type="hidden" name="review_hash" value="<?php echo esc_attr(Mojarrad_Editorial_Review::reviewed_hash($review_post)); ?>">
     <?php wp_nonce_field('moj_editorial_decision_' . $review_post->ID, 'moj_editorial_nonce'); ?>
     <div class="review-schedule">
       <label for="review-publish-at">زمان انتشار برنامه‌ریزی‌شده (به وقت تهران)</label>
