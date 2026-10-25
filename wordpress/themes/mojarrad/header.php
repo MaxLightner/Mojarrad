@@ -3,6 +3,7 @@
 <head>
 <meta charset="<?php bloginfo('charset'); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="<?php echo esc_url(mojarrad_asset('favicon.svg')); ?>">
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> data-moj-theme="navy">
@@ -11,8 +12,8 @@
 <header class="site-header glass" id="site-header">
   <div class="container header-inner">
     <a class="site-brand" href="<?php echo esc_url(home_url('/')); ?>">
-      <img src="<?php echo esc_url(mojarrad_asset('logo.svg')); ?>" alt="" width="36" height="36" />
-      <span>گروه ساختمانی <strong class="gold-text">نیکا بنا</strong></span>
+      <img src="<?php echo esc_url(mojarrad_asset('logo.svg')); ?>" alt="نشان نیکابنا" width="48" height="36" />
+      <span><strong>نیکابنا</strong></span>
     </a>
     <nav class="primary-nav" id="primary-nav" aria-label="ناوبری اصلی">
       <?php wp_nav_menu(array('theme_location'=>'primary','container'=>false,'fallback_cb'=>'mojarrad_fallback_menu')); ?>
