@@ -55,6 +55,17 @@ add_action( 'wp_enqueue_scripts', function () {
             'project'=>isset($_GET['project'])?absint($_GET['project']):0,
         ),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).';','before');
     }
+    // Scoped, progressive enhancement for the architectural home page.
+    if ( is_front_page() ) {
+        $home_style_path = get_template_directory() . '/assets/css/home-experience.css';
+        if ( is_readable( $home_style_path ) ) {
+            wp_enqueue_style( 'mojarrad-home-experience', get_template_directory_uri() . '/assets/css/home-experience.css', array('mojarrad-editorial'), $version . '-' . (string) filemtime( $home_style_path ) );
+        }
+        $home_script_path = get_template_directory() . '/assets/js/home-experience.js';
+        if ( is_readable( $home_script_path ) ) {
+            wp_enqueue_script( 'mojarrad-home-experience', get_template_directory_uri() . '/assets/js/home-experience.js', array(), $version . '-' . (string) filemtime( $home_script_path ), true );
+        }
+    }
     if ( is_front_page() && is_file( get_template_directory() . '/assets/js/hero3d.js' ) ) {
         wp_enqueue_script( 'mojarrad-three-hero', get_template_directory_uri() . '/assets/js/hero3d.js', array(), $version, true );
     }
