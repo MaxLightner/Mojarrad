@@ -50,6 +50,7 @@ final class Mojarrad_Editorial {
         update_post_meta($post_id, '_moj_seo_title', 'شروع پروژه ساختمانی در تورم ۱۴۰۵؛ ساختن یا صبر کردن؟ | نیکابنا');
         update_post_meta($post_id, '_moj_seo_description', 'در شرایط افزایش هزینه ساخت و ابهام بازار مسکن، شروع پروژه بهتر است یا تعویق آن؟ مسئله را از زاویه نقدینگی، ریسک توقف و تصمیم‌های کارگاهی بررسی می‌کنیم.');
         update_post_meta($post_id, '_moj_editorial_byline', 'تحریریه نیکابنا');
+        update_post_meta($post_id, '_moj_editorial_cover', 'editorial-economy.svg');
         update_post_meta($post_id, '_moj_editorial_researched_at', '۱۴۰۵/۰۸/۰۳');
         update_post_meta($post_id, '_moj_editorial_featured', '1');
         update_post_meta($post_id, '_moj_editorial_source_id', 'nikabana-journal-001');
@@ -127,7 +128,7 @@ final class Mojarrad_Editorial {
 
     public static function filter_legacy_list(WP_Query $query): void {
         if (!is_admin() || !$query->is_main_query() || !current_user_can('edit_others_posts')) return;
-        if (!isset($_GET['moj_legacy_only']) || sanitize_text_field(wp_unslash($_GET['moj_legacy_only'])) !== '1') return;
+        if (!isset($_GET['moj_legacy_only']) || !is_string($_GET['moj_legacy_only']) || sanitize_text_field(wp_unslash($_GET['moj_legacy_only'])) !== '1') return;
         $post_type = $query->get('post_type');
         if ($post_type && $post_type !== 'post') return;
         $query->set('meta_query', array(array('key' => '_mojarrad_legacy_import', 'compare' => 'EXISTS')));
@@ -137,7 +138,7 @@ final class Mojarrad_Editorial {
         if (!current_user_can('edit_others_posts')) return;
         $screen = function_exists('get_current_screen') ? get_current_screen() : null;
         if (!$screen || $screen->id !== 'edit-post' ||
-            !isset($_GET['moj_legacy_only']) || sanitize_text_field(wp_unslash($_GET['moj_legacy_only'])) !== '1') return;
+            !isset($_GET['moj_legacy_only']) || !is_string($_GET['moj_legacy_only']) || sanitize_text_field(wp_unslash($_GET['moj_legacy_only'])) !== '1') return;
         echo '<div class="notice notice-warning"><p>این فهرست فقط مقالات واردشده از نسخه قبلی را نشان می‌دهد. پس از تأیید محتوا و بررسی بازدید/لینک‌های ورودی، موارد غیرقابل استفاده را با ویرایش دسته‌جمعی به «پیش‌نویس» منتقل کنید. حذف مستقیم یا تغییر پروژه‌ها و اخبار انجام نمی‌شود.</p></div>';
     }
 }
