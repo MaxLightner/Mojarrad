@@ -2,7 +2,7 @@
 <footer class="site-footer glass">
   <div class="container footer-inner">
     <div>
-      <strong>گروه ساختمانی <span class="gold-text">نیکا بنا</span></strong>
+      <div class="footer-brand"><img src="<?php echo esc_url(mojarrad_asset('logo.svg')); ?>" alt="" width="48" height="36" loading="lazy"><strong>نیکابنا</strong></div>
       <p class="muted">ساخت با دقت، اعتماد با شفافیت — از طراحی تا پایان‌کار، همراه شما</p>
     </div>
     <nav class="footer-nav" aria-label="ناوبری فوتر">
@@ -12,7 +12,7 @@
     </nav>
     <div class="contact-info"><span>مشهد، ایران</span><a dir="ltr" href="tel:+989152061541">0915 206 1541</a><span>info@nikabana.ir</span></div>
   </div>
-  <div class="container footer-copy">© <?php echo esc_html( date_i18n( 'Y' ) ); ?> گروه ساختمانی نیکا بنا</div>
+  <div class="container footer-copy">© <?php echo esc_html( date_i18n( 'Y' ) ); ?> نیکابنا</div>
 </footer>
 <?php wp_footer(); ?>
 </body>
