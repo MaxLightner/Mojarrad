@@ -94,7 +94,10 @@ $review_messages = array(
       ?>
     </p>
     <?php if ($review_post->post_status === 'future'): ?>
-      <p>انتشار برنامه‌ریزی‌شده: <strong><?php echo esc_html(get_post_time('Y/m/d H:i', false, $review_post, true)); ?> (زمان ذخیره‌شده در وردپرس)</strong></p>
+      <p>انتشار برنامه‌ریزی‌شده: <strong><?php
+        $approved_time = new DateTimeImmutable($review_post->post_date_gmt, new DateTimeZone('UTC'));
+        echo esc_html($approved_time->setTimezone(new DateTimeZone('Asia/Tehran'))->format('Y/m/d H:i'));
+      ?> (به وقت تهران)</strong></p>
     <?php endif; ?>
   </div>
   <?php if (in_array($review_post->post_status, array('draft','pending','future'), true)): ?>
