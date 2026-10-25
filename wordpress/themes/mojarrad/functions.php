@@ -23,6 +23,11 @@ add_action( 'wp_enqueue_scripts', function () {
     }
     wp_enqueue_style( 'mojarrad-theme', get_stylesheet_uri(), array(), $version );
     wp_enqueue_style( 'mojarrad-editorial', get_template_directory_uri() . '/assets/css/editorial.css', array('mojarrad-theme'), $version );
+    // Optional, reversible finish layer for the public architectural theme.
+    $refinement_path = get_template_directory() . '/assets/css/refinements.css';
+    if ( is_readable( $refinement_path ) ) {
+        wp_enqueue_style( 'mojarrad-refinements', get_template_directory_uri() . '/assets/css/refinements.css', array('mojarrad-editorial'), $version . '-' . (string) filemtime( $refinement_path ) );
+    }
     wp_enqueue_script( 'mojarrad-ui', get_template_directory_uri() . '/assets/js/site.js', array(), $version, true );
     if ( is_page('editorial') ) {
         wp_enqueue_style('mojarrad-editorial-review',get_template_directory_uri().'/assets/css/review.css',array('mojarrad-editorial'),$version);
