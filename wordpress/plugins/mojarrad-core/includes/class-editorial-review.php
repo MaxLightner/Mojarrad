@@ -123,7 +123,7 @@ final class Mojarrad_Editorial_Review {
         if ($decision === 'changes') {
             $note = isset($_POST['review_note']) && is_string($_POST['review_note'])
                 ? sanitize_textarea_field(wp_unslash($_POST['review_note'])) : '';
-            if (mb_strlen(trim($note)) < 5) self::redirect_result($id,'note_required');
+            if (strlen(trim($note)) < 5) self::redirect_result($id,'note_required');
             self::$deciding = true;
             $updated = wp_update_post(array('ID' => $id, 'post_status' => 'draft'), true);
             self::$deciding = false;
