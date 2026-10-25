@@ -12,8 +12,8 @@
 <header class="site-header glass" id="site-header">
   <div class="container header-inner">
     <a class="site-brand" href="<?php echo esc_url(home_url('/')); ?>">
-      <img src="<?php echo esc_url(mojarrad_asset('logo.svg')); ?>" alt="نشان نیکابنا" width="48" height="36" />
-      <span><strong>نیکابنا</strong></span>
+      <span class="brand-symbol" aria-hidden="true"></span>
+      <span class="brand-wordmark"><strong>نیکابنا</strong><small lang="en">NIKABANA</small></span>
     </a>
     <nav class="primary-nav" id="primary-nav" aria-label="ناوبری اصلی">
       <?php wp_nav_menu(array('theme_location'=>'primary','container'=>false,'fallback_cb'=>'mojarrad_fallback_menu')); ?>
