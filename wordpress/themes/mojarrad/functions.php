@@ -108,7 +108,15 @@ function mojarrad_render_editorial_card() {
     ?>
     <article class="card-lux editorial-card">
         <a class="card-image" href="<?php the_permalink(); ?>">
-            <?php if ( has_post_thumbnail() ) { the_post_thumbnail( 'mojarrad-card', array( 'loading' => 'lazy' ) ); } elseif ( mojarrad_meta('demo_image') ) { echo '<img loading="lazy" src="' . esc_url( mojarrad_asset('images/' . ltrim(mojarrad_meta('demo_image'),'/')) ) . '" alt="" />'; } ?>
+            <?php
+              if ( has_post_thumbnail() ) {
+                  the_post_thumbnail( 'mojarrad-card', array( 'loading' => 'lazy', 'decoding' => 'async' ) );
+              } elseif ( get_post_meta(get_the_ID(), '_moj_editorial_cover', true) ) {
+                  echo '<img loading="lazy" decoding="async" src="' . esc_url(mojarrad_asset('images/' . basename((string)get_post_meta(get_the_ID(), '_moj_editorial_cover', true)))) . '" alt="" />';
+              } elseif ( mojarrad_meta('demo_image') ) {
+                  echo '<img loading="lazy" decoding="async" src="' . esc_url( mojarrad_asset('images/' . ltrim(mojarrad_meta('demo_image'),'/')) ) . '" alt="" />';
+              }
+            ?>
         </a>
         <div class="card-body">
           <span class="meta-line"><?php echo esc_html( get_the_date( 'Y/m/d' ) ); ?></span>
