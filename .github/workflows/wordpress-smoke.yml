@@ -173,7 +173,7 @@ jobs:
             if(!$p || $p->post_status!=="future" || !get_post_meta($p->ID,"_moj_editorial_approved_hash",true)) throw new RuntimeException("Article did not schedule.");
           '
           FUTURE_PUBLIC=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:8081/wp-json/wp/v2/posts/$ARTICLE_ID")
-          test "$FUTURE_PUBLIC" = "404" || (echo "Scheduled draft public REST status: $FUTURE_PUBLIC"; exit 1)
+          case "$FUTURE_PUBLIC" in 401|403|404) ;; *) echo "Scheduled draft publicly exposed: HTTP $FUTURE_PUBLIC"; exit 1;; esac
 
           REVIEW_PUBLISH=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-review-cookie \
             --data-urlencode 'action=moj_editorial_decision' \
