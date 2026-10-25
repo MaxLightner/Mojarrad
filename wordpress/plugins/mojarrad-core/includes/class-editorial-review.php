@@ -36,7 +36,19 @@ final class Mojarrad_Editorial_Review {
     }
 
     public static function requested_review_id(): int {
-        return isset($_GET['article']) && is_scalar($_GET['article']) ? absint($_GET['article']) : 0;
+        if (isset($_GET['article']) && is_scalar($_GET['article'])) {
+            return absint($_GET['article']);
+        }
+        // Stable private-preview links for source-managed drafts. The slug is only
+        // a locator; page-editorial.php still enforces authenticated approval access.
+        if (isset($_GET['slug']) && is_string($_GET['slug'])) {
+            $slug = sanitize_title(wp_unslash($_GET['slug']));
+            $post = $slug ? get_page_by_path($slug, OBJECT, 'post') : null;
+            if ($post instanceof WP_Post && self::is_managed($post)) {
+                return (int) $post->ID;
+            }
+        }
+        return 0;
     }
 
     public static function validated_login_redirect(string $requested, WP_User $user): string {
