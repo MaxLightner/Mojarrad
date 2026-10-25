@@ -77,7 +77,7 @@ function mojarrad_seo_description(): string {
 
     $pages = array(
         'about'       => 'آشنایی با گروه ساختمانی نیکا بنا، مهندس حسین مجرد و رویکرد مجموعه در مدیریت، طراحی و اجرای ساختمان در مشهد.',
-        'blog'        => 'مقالات کاربردی معماری، فناوری ساخت، مصالح و مدیریت پروژه از مجله فنی گروه ساختمانی نیکا بنا.',
+        'blog'        => 'دیدگاه نیکابنا درباره اقتصاد ساخت، مدیریت پروژه، روابط کارگاهی و مسئله‌های واقعی صنعت ساختمان در مشهد و ایران.',
         'sale'        => 'معرفی املاک و فرصت‌های فروش و سرمایه‌گذاری منتشرشده توسط گروه ساختمانی نیکا بنا.',
         'consulting'  => 'درخواست مشاوره طراحی، اجرا، برآورد و مدیریت پروژه ساختمانی با گروه ساختمانی نیکا بنا در مشهد.',
         'collaborate' => 'فرصت همکاری پیمانکاران، مهندسان و متخصصان صنعت ساختمان با گروه ساختمانی نیکا بنا.',
@@ -90,6 +90,10 @@ function mojarrad_seo_description(): string {
 
     $object = get_queried_object();
     if ( $object instanceof WP_Post ) {
+        if ( 'post' === $object->post_type ) {
+            $editorial_description = (string) get_post_meta( $object->ID, '_moj_seo_description', true );
+            if ( $editorial_description ) return mojarrad_seo_summary( $editorial_description );
+        }
         $summary = $object->post_excerpt ?: $object->post_content;
         if ( 'moj_project' === $object->post_type ) {
             $location = trim( (string) get_post_meta( $object->ID, 'moj_location', true ) );
@@ -125,7 +129,14 @@ add_filter( 'document_title_parts', function ( array $parts ): array {
     } elseif ( is_post_type_archive( 'moj_news' ) ) {
         $parts['title'] = 'اخبار و یادداشت‌های ساختمانی';
     } elseif ( is_page( 'blog' ) ) {
-        $parts['title'] = 'مقالات معماری و فناوری ساخت';
+        $parts['title'] = 'دیدگاه نیکابنا | اقتصاد و مسئله‌های ساخت‌وساز';
+    } elseif ( is_singular( 'post' ) ) {
+        $editorial_title = trim( (string) get_post_meta( get_queried_object_id(), '_moj_seo_title', true ) );
+        if ( $editorial_title ) {
+            $parts['title'] = $editorial_title;
+            unset( $parts['site'], $parts['tagline'] );
+            return $parts;
+        }
     } elseif ( is_singular( 'moj_project' ) ) {
         $id = get_queried_object_id();
         $location = trim( (string) get_post_meta( $id, 'moj_location', true ) );
@@ -143,6 +154,10 @@ function mojarrad_seo_social_image(): string {
         $featured = get_the_post_thumbnail_url( $id, 'large' );
         if ( $featured ) {
             return $featured;
+        }
+        $editorial_cover = (string) get_post_meta( $id, '_moj_editorial_cover', true );
+        if ( $editorial_cover && get_post_type( $id ) === 'post' ) {
+            return mojarrad_asset( 'images/' . basename( $editorial_cover ) );
         }
         $demo = (string) get_post_meta( $id, 'moj_demo_cover', true );
         if ( $demo && 'moj_project' === get_post_type( $id ) ) {
@@ -227,11 +242,18 @@ add_action( 'wp_head', function () {
             'datePublished'     => get_post_time( 'c', true, $id ),
             'dateModified'      => get_post_modified_time( 'c', true, $id ),
             'inLanguage'        => 'fa-IR',
-            'author'            => array( '@id' => $organization['@id'] ),
+            'author'            => is_singular( 'post' )
+                ? array(
+                    '@type' => ((string) get_post_meta( $id, '_moj_editorial_byline', true ) === 'تحریریه نیکابنا') ? 'Organization' : 'Person',
+                    'name'  => (string) get_post_meta( $id, '_moj_editorial_byline', true ) ?: get_the_author_meta( 'display_name', get_post_field( 'post_author', $id ) ),
+                )
+                : array( '@id' => $organization['@id'] ),
             'publisher'         => $organization,
         );
         if ( has_post_thumbnail( $id ) ) {
             $article['image'] = get_the_post_thumbnail_url( $id, 'full' );
+        } elseif ( is_singular( 'post' ) && get_post_meta( $id, '_moj_editorial_cover', true ) ) {
+            $article['image'] = mojarrad_asset( 'images/' . basename( (string) get_post_meta( $id, '_moj_editorial_cover', true ) ) );
         }
         $schema = $article;
     } else {
