@@ -69,6 +69,17 @@ add_action( 'wp_enqueue_scripts', function () {
     if ( is_front_page() && is_file( get_template_directory() . '/assets/js/hero3d.js' ) ) {
         wp_enqueue_script( 'mojarrad-three-hero', get_template_directory_uri() . '/assets/js/hero3d.js', array(), $version, true );
     }
+    // Shared public article and authenticated draft-review design.
+    if ( is_singular( array('post', 'moj_news') ) || is_page('editorial') ) {
+        $article_style_path = get_template_directory() . '/assets/css/article-experience.css';
+        if ( is_readable( $article_style_path ) ) {
+            wp_enqueue_style( 'mojarrad-article-experience', get_template_directory_uri() . '/assets/css/article-experience.css', array('mojarrad-editorial'), $version . '-' . (string) filemtime( $article_style_path ) );
+        }
+        $article_script_path = get_template_directory() . '/assets/js/article-experience.js';
+        if ( is_readable( $article_script_path ) ) {
+            wp_enqueue_script( 'mojarrad-article-experience', get_template_directory_uri() . '/assets/js/article-experience.js', array(), $version . '-' . (string) filemtime( $article_script_path ), true );
+        }
+    }
 } );
 
 function mojarrad_asset( string $path ): string {
