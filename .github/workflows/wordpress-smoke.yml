@@ -148,6 +148,11 @@ jobs:
           test -n "$REVIEW_NONCE"
           REVIEW_HASH=$(grep -o 'name="review_hash" value="[^"]*"' /tmp/moj-editorial-review.html | head -1 | sed -E 's/^.*value="([^"]*)"/\\1/')
           test -n "$REVIEW_HASH"
+          EXPECTED_HASH=$(php wp-cli.phar eval --path=/tmp/mojarrad-test '
+            $p=get_page_by_path("sakhtan-ya-sabr",OBJECT,"post");
+            echo Mojarrad_Editorial_Review::reviewed_hash($p);
+          ')
+          echo "TRACE reviewer preview SHA=$REVIEW_HASH current stored SHA=$EXPECTED_HASH"
 
           REVIEW_FORBIDDEN=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-owner-cookie \
             --data-urlencode 'action=moj_editorial_decision' \
