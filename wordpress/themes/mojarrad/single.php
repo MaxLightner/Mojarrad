@@ -16,7 +16,7 @@
   </header>
   <?php if($cover): ?><div class="container article-cover"><img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" fetchpriority="high"></div><?php endif; ?>
   <div class="container article-reading-layout">
-    <aside class="article-sidebar"><span class="section-label">نیکا بنا / مجله</span><div class="story-rule"></div><p>تجربه، جزئیات و نگاه اجرایی به ساختمان</p><a href="<?php echo esc_url($back); ?>">← بازگشت به <?php echo esc_html($back_label); ?></a></aside>
+    <aside class="article-sidebar"><div class="editorial-signature"><span class="brand-symbol" aria-hidden="true"></span><strong>نیکابنا</strong></div><span class="section-label">مجله نیکابنا</span><div class="story-rule"></div><p>تجربه، جزئیات و نگاه اجرایی به ساختمان</p><a href="<?php echo esc_url($back); ?>">← بازگشت به <?php echo esc_html($back_label); ?></a></aside>
     <div class="prose article-prose"><?php the_content(); ?></div>
   </div>
   <?php
