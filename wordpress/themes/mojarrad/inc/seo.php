@@ -6,7 +6,7 @@
 defined( 'ABSPATH' ) || exit;
 
 function mojarrad_seo_private_route(): bool {
-    return is_page( array( 'login', 'dashboard', 'timeline', 'office', 'sample-page', 'برگه-نمونه' ) )
+    return is_page( array( 'login', 'editorial', 'dashboard', 'timeline', 'office', 'sample-page', 'برگه-نمونه' ) )
         || is_search()
         || is_author();
 }
@@ -26,7 +26,7 @@ add_filter( 'wp_sitemaps_posts_query_args', function ( array $args, string $post
         return $args;
     }
     $excluded = isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array();
-    foreach ( array( 'login', 'dashboard', 'timeline', 'office', 'sample-page', 'برگه-نمونه' ) as $slug ) {
+    foreach ( array( 'login', 'editorial', 'dashboard', 'timeline', 'office', 'sample-page', 'برگه-نمونه' ) as $slug ) {
         $page = get_page_by_path( $slug );
         if ( $page instanceof WP_Post ) {
             $excluded[] = (int) $page->ID;
