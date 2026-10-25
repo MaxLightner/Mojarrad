@@ -111,6 +111,11 @@ final class Mojarrad_Editorial_Review {
             wp_die('این مقاله در وضعیت قابل بررسی نیست.', 'درخواست نامعتبر', array('response'=>400));
         }
         check_admin_referer('moj_editorial_decision_' . $id, 'moj_editorial_nonce');
+        $review_hash = isset($_POST['review_hash']) && is_string($_POST['review_hash'])
+            ? sanitize_text_field(wp_unslash($_POST['review_hash'])) : '';
+        if (!$review_hash || !hash_equals(self::reviewed_hash($post), $review_hash)) {
+            self::redirect_result($id, 'stale');
+        }
         $decision = isset($_POST['decision']) && is_string($_POST['decision'])
             ? sanitize_key(wp_unslash($_POST['decision'])) : '';
         if (!in_array($decision, array('schedule','publish','changes'), true)) self::redirect_result($id,'invalid');
