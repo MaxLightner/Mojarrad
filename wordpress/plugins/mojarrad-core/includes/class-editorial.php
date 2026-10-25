@@ -52,6 +52,10 @@ final class Mojarrad_Editorial {
         update_post_meta($post_id, '_moj_editorial_byline', 'تحریریه نیکابنا');
         update_post_meta($post_id, '_moj_editorial_cover', 'editorial-economy.svg');
         update_post_meta($post_id, '_moj_editorial_researched_at', '۱۴۰۵/۰۸/۰۳');
+        if (!empty($_POST['moj_editorial_review_required'])) {
+            update_post_meta($post_id, '_moj_editorial_managed', '1');
+            update_post_meta($post_id, '_moj_editorial_review_required', '1');
+        }
         update_post_meta($post_id, '_moj_editorial_featured', '1');
         update_post_meta($post_id, '_moj_editorial_source_id', 'nikabana-journal-001');
         update_post_meta($post_id, '_moj_editorial_review_required', '1');
@@ -79,7 +83,12 @@ final class Mojarrad_Editorial {
             '_moj_editorial_byline' => array('نام نویسنده برای نمایش عمومی', 'text', 90),
             '_moj_editorial_researched_at' => array('تاریخ بررسی منابع', 'text', 24),
         );
-        echo '<p>این اطلاعات برای پیش‌نمایش و انتشار همان مقاله در سایت ذخیره می‌شوند. مقاله تأییدنشده را منتشر نکنید.</p>';
+        echo '<p>مقاله تأییدنشده را منتشر نکنید. تأیید نهایی در خود سایت توسط شخص مجاز انجام می‌شود.</p>';
+        if (class_exists('Mojarrad_Editorial_Review') && Mojarrad_Editorial_Review::is_managed($post)) {
+            $review_link = Mojarrad_Editorial_Review::review_url($post->ID);
+            echo '<p><strong>لینک خصوصی برای ارسال به مهندس:</strong><br><input readonly type="text" class="widefat" dir="ltr" value="' . esc_attr($review_link) . '">';
+            echo '<a target="_blank" rel="noopener noreferrer" href="' . esc_url($review_link) . '">باز کردن پیش‌نمایش در سایت</a></p>';
+        }
         foreach ($fields as $key => $spec) {
             $value = (string) get_post_meta($post->ID, $key, true);
             echo '<p><label for="' . esc_attr($key) . '"><strong>' . esc_html($spec[0]) . '</strong></label><br>';
@@ -94,6 +103,9 @@ final class Mojarrad_Editorial {
             }
             echo '</p>';
         }
+        echo '<p><label><input type="checkbox" name="moj_editorial_review_required" value="1" '
+            . checked((string) get_post_meta($post->ID, '_moj_editorial_review_required', true), '1', false)
+            . '> ارسال این مقاله به صف بررسی خصوصی مهندس</label></p>';
         echo '<p><label><input type="checkbox" name="moj_editorial_featured" value="1" '
             . checked((string) get_post_meta($post->ID, '_moj_editorial_featured', true), '1', false)
             . '> مطلب منتخب صفحه بلاگ (در صورت چند انتخاب، جدیدترین منتشرشده نمایش داده می‌شود)</label></p>';
