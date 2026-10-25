@@ -1,23 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-<title id="title">ساختمان نیمه‌تمام و مسیر هزینه</title>
-<desc id="desc">تصویر مفهومی برای مقاله اقتصاد ساخت نیکابنا؛ اسکلت یک ساختمان با یک مسیر زمانی و خط متغیر هزینه</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1060" role="img" aria-labelledby="title desc">
+<title id="title">معماری، زمان و مسیر تصمیم</title>
+<desc id="desc">اثر تصویری مفهومی برای مقاله تصمیم به شروع ساخت؛ خطوط اسکلت ساختمان و مسیرهای غیرعددی زمان و هزینه</desc>
 <defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#091626"/><stop offset="1" stop-color="#192c43"/></linearGradient>
-<linearGradient id="rise" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#e79c56"/><stop offset="1" stop-color="#ff6d45"/></linearGradient>
-<pattern id="grid" width="58" height="58" patternUnits="userSpaceOnUse"><path d="M58 0H0V58" fill="none" stroke="#ffffff" stroke-opacity=".045"/></pattern>
+  <linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0a1b29"/><stop offset=".6" stop-color="#183548"/><stop offset="1" stop-color="#0b1a29"/></linearGradient>
+  <linearGradient id="copper" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#855c45"/><stop offset=".5" stop-color="#dba679"/><stop offset="1" stop-color="#f1caa0"/></linearGradient>
+  <linearGradient id="tower" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e1b48d" stop-opacity=".38"/><stop offset="1" stop-color="#e1b48d" stop-opacity=".025"/></linearGradient>
+  <pattern id="blueprint" width="54" height="54" patternUnits="userSpaceOnUse"><path d="M54 0H0V54" fill="none" stroke="#dbe8e8" stroke-opacity=".07" stroke-width="1"/></pattern>
+  <filter id="glow"><feGaussianBlur stdDeviation="11"/></filter>
 </defs>
-<rect width="1200" height="630" fill="url(#bg)"/>
-<rect width="1200" height="630" fill="url(#grid)"/>
-<circle cx="170" cy="75" r="340" fill="#ff9a4b" fill-opacity=".045"/>
-<g fill="none" stroke="#dbe3e9" stroke-width="5" stroke-opacity=".77">
-<path d="M185 518V186H540V518M185 264H540M185 348H540M185 434H540"/>
-<path d="M260 186V518M355 186V518M450 186V518"/>
-<path d="M168 518H560M160 538H560M175 182L540 182"/>
+<rect width="900" height="1060" fill="url(#night)"/>
+<rect width="900" height="1060" fill="url(#blueprint)"/>
+<circle cx="765" cy="209" r="275" fill="#d99d72" fill-opacity=".075"/>
+<circle cx="765" cy="209" r="187" fill="none" stroke="#dba679" stroke-opacity=".16"/>
+<g stroke="#dba679" stroke-opacity=".18" stroke-width="2" fill="none"><path d="M78 103H825M78 932H825M78 103V932M825 103V932"/><path d="M78 158H825M78 870H825"/><path d="M380 103V932" stroke-dasharray="4 18"/></g>
+<g font-family="system-ui, sans-serif" fill="#e6b48d" font-size="13" letter-spacing="6">
+  <text x="93" y="139">NIKABANA / FIELD NOTES</text>
+  <text x="90" y="897" fill="#dfc6ad" font-size="12" letter-spacing="4">FORM / TIME / DECISION</text>
 </g>
-<g fill="#d5dce2" fill-opacity=".06"><rect x="190" y="270" width="70" height="76"/><rect x="360" y="355" width="86" height="77"/><rect x="454" y="440" width="78" height="72"/></g>
-<g fill="none" stroke="#ffffff" stroke-opacity=".17" stroke-width="2"><path d="M634 510H1130M634 380H1130M634 250H1130M690 195V530M830 195V530M970 195V530M1110 195V530"/></g>
-<path d="M644 486L730 457L815 476L888 347L957 380L1030 267L1124 205" fill="none" stroke="#e88a49" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M644 486L730 457L815 476L888 347L957 380L1030 267L1124 205L1124 525L644 525Z" fill="url(#rise)" fill-opacity=".12"/>
-<g fill="#ff9b4f" stroke="#17293d" stroke-width="5"><circle cx="730" cy="457" r="10"/><circle cx="888" cy="347" r="10"/><circle cx="1030" cy="267" r="10"/><circle cx="1124" cy="205" r="10"/></g>
-<path d="M60 576H1140" stroke="#ff9b4f" stroke-opacity=".47" stroke-width="3"/>
+<g transform="translate(345 233)">
+  <path d="M90 135L307 46L473 123L254 211Z" fill="#233f50" stroke="#e3b58c" stroke-opacity=".7" stroke-width="3"/>
+  <path d="M90 135V544L254 628V211Z" fill="url(#tower)" stroke="#dba679" stroke-opacity=".65" stroke-width="3"/>
+  <path d="M254 211L473 123V527L254 628Z" fill="#142c3d" stroke="#dba679" stroke-opacity=".7" stroke-width="3"/>
+  <g stroke="#f3d0a4" stroke-opacity=".54" stroke-width="2.4" fill="none">
+    <path d="M90 227L254 303L473 215M90 320L254 397L473 308M90 414L254 491L473 401M90 511L254 588L473 498"/>
+    <path d="M145 160V570M202 185V598M308 190V601M365 165V578M420 144V551"/>
+  </g>
+  <g fill="#dba679" fill-opacity=".1">
+    <path d="M103 240L241 306V387L103 321Z"/><path d="M267 320L460 243V301L267 379Z"/><path d="M267 413L460 336V394L267 471Z"/>
+  </g>
+  <path d="M64 551L249 649L496 546" stroke="#e6b48d" stroke-opacity=".65" stroke-width="4" fill="none"/>
+  <path d="M307 46V0M473 123L516 103M90 135L52 117" stroke="#e6b48d" stroke-opacity=".6" stroke-width="2"/>
+</g>
+<g transform="translate(85 268)" fill="none">
+  <circle cx="130" cy="205" r="130" stroke="#dba679" stroke-opacity=".55" stroke-width="1.5"/>
+  <circle cx="130" cy="205" r="93" stroke="#dba679" stroke-opacity=".23" stroke-width="1"/>
+  <path d="M-4 205H265M130 70V339" stroke="#c5b7aa" stroke-opacity=".2" stroke-width="1"/>
+  <path d="M130 205L190 112" stroke="#f2c49a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M130 205L73 245" stroke="#c4dce0" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="130" cy="205" r="10" fill="#f2c49a" stroke="#152a39" stroke-width="6"/>
+  <circle cx="190" cy="112" r="11" fill="#dba679"/>
+</g>
+<path d="M91 770C176 755 202 693 280 710S399 809 471 763S579 669 652 702S754 702 810 650" fill="none" stroke="#f4bb89" stroke-opacity=".33" stroke-width="17" filter="url(#glow)"/>
+<path d="M91 770C176 755 202 693 280 710S399 809 471 763S579 669 652 702S754 702 810 650" fill="none" stroke="url(#copper)" stroke-width="6" stroke-linecap="round"/>
+<g fill="#f0bf93" stroke="#142c3b" stroke-width="4"><circle cx="91" cy="770" r="8"/><circle cx="280" cy="710" r="8"/><circle cx="471" cy="763" r="8"/><circle cx="652" cy="702" r="8"/><circle cx="810" cy="650" r="8"/></g>
+<path d="M91 821H810M91 845H810" stroke="#cbb8a7" stroke-opacity=".25" stroke-width="1"/>
+<g stroke="#e4b48c" stroke-opacity=".35" stroke-width="2" fill="none"><path d="M86 79h48M86 79v48M812 961h-48M812 961v-48"/></g>
 </svg>
