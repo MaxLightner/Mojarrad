@@ -1,6 +1,6 @@
 # NIKABANA Editorial System — approved architecture to implement
 
-Status: design specification / not yet implemented in WordPress admin. Updated: 2026-10-25 (Asia/Tehran).
+Status: partially implemented in WordPress v0.6.2: first article draft import, SEO fields, lightweight cover, original-featured selection and read-only legacy-post audit. Protected frontend /editorial/ approval panel, approval locking and server Cron remain to implement. Updated: 2026-10-25 (Asia/Tehran).
 Production Git branch: `wordpress`; WordPress plugin: `wordpress/plugins/mojarrad-core`; theme: `wordpress/themes/mojarrad`.
 Do not publish, delete, or change public URLs merely because a new GitHub article draft is added.
 
@@ -21,6 +21,7 @@ Avoid made-up site anecdotes, current price claims without source/date, generic 
 
 - GitHub stores planning, source article drafts, source notes and versioned WordPress code.
 - WordPress DB stores real editable drafts, review status, authors, publication dates and production media. GitHub deployment must never overwrite an edited real WP post.
+- The first article exists as GitHub Markdown source and a deployed HTML snapshot under `plugins/mojarrad-core/editorial/`. Its importer runs once, creates a WordPress `draft`, and never overwrites later manual edits. WordPress admin Posts > Drafts > Preview shows the real themed article. A custom branded review page remains planned.
 - Imported drafts remain private until a WordPress publisher explicitly approves them.
 - Ordinary project roles (`moj_engineer`, `moj_supervisor`, `moj_owner` etc.) DO NOT convey editorial publishing permissions.
 - Editorial drafting service account: only create/edit designated own drafts via restricted authentication; no publish/delete/users or project-private-data capabilities.
@@ -98,12 +99,12 @@ The 8 blog slugs/titles:
 - construction-estimate — از متره تا برآورد؛ نگاه کاربردی به هزینه ساخت
 
 These posts are real public imported records. Do not conflate with the project's real data or unconditionally delete them. Proposed:
-1. Inventory the live WP database by post type + exact legacy meta + status, title, permalink, update history, search performance.
+1. In WordPress admin Posts, use the added «ورودی‌های قدیمی نیکابنا» filter to inspect the eight marked posts. Inventory the live WP database by post type + exact legacy meta + status, title, permalink, update history, search performance.
 2. Compare each with any human edits after migration and assign Keep/Rewrite/Draft/Redirect.
 3. Review with engineer. Preserve revisions, IDs, media and a DB backup. Move generic legacy articles to draft **after approval**, not trash; if a published URL has organic traffic or inbound links, prepare 301 only to a genuinely equivalent new article; otherwise 404/410 or keep as archival, case-by-case.
 4. Do not bulk unpublish `moj_project` or `moj_news` as a side effect of blog cleanup; handle separately.
-5. Fix `page-blog.php` featured selector: currently it intentionally highlights ONLY posts with legacy marker. New featured original would not be selected. Replace with explicit `_mojarrad_featured` controlled in WP admin, fallback latest eligible original; do not make old imported item permanent hero.
-6. Only after the new launch queue is ready, flip public landing to new originals. No silent rewriting of live content by GitHub deployments.
+5. Implemented in v0.6.2: `page-blog.php` now selects `_moj_editorial_featured=1` nonlegacy published articles, then falls back to latest nonlegacy published article. The field is editable in the WordPress post editor. Old imported content is no longer the permanent featured story.
+6. The public landing still lists all published posts, including legacy posts, until the editor deliberately moves selected posts to draft. Never silently rewrite/depublish existing records through GitHub deployment.
 
 ## Acceptance tests before publishing panel goes live
 
