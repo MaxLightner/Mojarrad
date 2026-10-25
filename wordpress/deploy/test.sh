@@ -3,7 +3,7 @@ set -euo pipefail
 source_repo="$(git rev-parse --show-toplevel)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
-git clone --quiet --local --branch wordpress "$source_repo" "$tmp/repo"
+git clone --quiet --no-local --branch wordpress "$source_repo" "$tmp/repo"
 export NIKABANA_HOME="$tmp/home"
 mkdir -p "$NIKABANA_HOME/public_html/wp-content/"{uploads,themes/mojarrad,plugins/other}
 printf keep > "$NIKABANA_HOME/public_html/wp-config.php"
