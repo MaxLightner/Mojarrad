@@ -22,6 +22,9 @@ final class Mojarrad_Membership {
         $assigned=Mojarrad_Access::assigned_users($project->ID);
         echo '<p>فقط کاربرانی که اینجا انتخاب شوند می‌توانند پروژه را در «پنل من» ببینند. مدیر و مجری به همه پروژه‌ها دسترسی دارند.</p>';
         if(!$users) echo '<p>ابتدا از بخش کاربران، یک مالک، ناظر یا همکار ایجاد کنید.</p>';
+        $login_link=add_query_arg('project',$project->ID,home_url('/login/'));
+        echo '<p><strong>لینک ورود پروژه برای QR</strong><input class="widefat" type="text" dir="ltr" readonly value="'.esc_attr($login_link).'" onclick="this.select()"></p>';
+        echo '<p class="description">این آدرس را می‌توان داخل QR قرار داد. اسکن فقط صفحه ورود را باز می‌کند؛ نام کاربری و رمز لازم است و دسترسی پروژه در سرور کنترل می‌شود. رمز عبور یا کلید ورود را در QR قرار ندهید.</p>';
         foreach($users as $user) {
             $role=Mojarrad_Access::role_for($user);
             echo '<label style="display:block;padding:5px 0"><input type="checkbox" name="moj_assigned_users[]" value="' . esc_attr((string)$user->ID) . '" ' .
