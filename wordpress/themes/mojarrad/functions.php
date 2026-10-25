@@ -3,6 +3,9 @@ defined( 'ABSPATH' ) || exit;
 
 require_once get_template_directory() . '/inc/seo.php';
 
+// The theme owns the single Nikabana favicon, independent of any old WP site-icon setting.
+add_action('after_setup_theme', function () { remove_action('wp_head', 'wp_site_icon', 99); });
+
 add_action( 'after_setup_theme', function () {
     load_theme_textdomain( 'mojarrad', get_template_directory() . '/languages' );
     add_theme_support( 'title-tag' );
