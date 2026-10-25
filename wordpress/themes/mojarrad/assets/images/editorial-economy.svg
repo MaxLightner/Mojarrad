@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">ساختمان نیمه‌تمام و مسیر هزینه</title>
+<desc id="desc">تصویر مفهومی برای مقاله اقتصاد ساخت نیکابنا؛ اسکلت یک ساختمان با یک مسیر زمانی و خط متغیر هزینه</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#091626"/><stop offset="1" stop-color="#192c43"/></linearGradient>
+<linearGradient id="rise" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#e79c56"/><stop offset="1" stop-color="#ff6d45"/></linearGradient>
+<pattern id="grid" width="58" height="58" patternUnits="userSpaceOnUse"><path d="M58 0H0V58" fill="none" stroke="#ffffff" stroke-opacity=".045"/></pattern>
+</defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<rect width="1200" height="630" fill="url(#grid)"/>
+<circle cx="170" cy="75" r="340" fill="#ff9a4b" fill-opacity=".045"/>
+<g fill="none" stroke="#dbe3e9" stroke-width="5" stroke-opacity=".77">
+<path d="M185 518V186H540V518M185 264H540M185 348H540M185 434H540"/>
+<path d="M260 186V518M355 186V518M450 186V518"/>
+<path d="M168 518H560M160 538H560M175 182L540 182"/>
+</g>
+<g fill="#d5dce2" fill-opacity=".06"><rect x="190" y="270" width="70" height="76"/><rect x="360" y="355" width="86" height="77"/><rect x="454" y="440" width="78" height="72"/></g>
+<g fill="none" stroke="#ffffff" stroke-opacity=".17" stroke-width="2"><path d="M634 510H1130M634 380H1130M634 250H1130M690 195V530M830 195V530M970 195V530M1110 195V530"/></g>
+<path d="M644 486L730 457L815 476L888 347L957 380L1030 267L1124 205" fill="none" stroke="#e88a49" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M644 486L730 457L815 476L888 347L957 380L1030 267L1124 205L1124 525L644 525Z" fill="url(#rise)" fill-opacity=".12"/>
+<g fill="#ff9b4f" stroke="#17293d" stroke-width="5"><circle cx="730" cy="457" r="10"/><circle cx="888" cy="347" r="10"/><circle cx="1030" cy="267" r="10"/><circle cx="1124" cy="205" r="10"/></g>
+<path d="M60 576H1140" stroke="#ff9b4f" stroke-opacity=".47" stroke-width="3"/>
+</svg>
