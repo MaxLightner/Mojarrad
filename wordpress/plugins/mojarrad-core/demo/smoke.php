@@ -54,3 +54,12 @@ update_option('mojarrad_playground_smoke','passed',false);
 require __DIR__.'/timeline-smoke.php';
 
 require __DIR__.'/office-smoke.php';
+
+if (get_option('users_can_register')) throw new RuntimeException('Public member registration is open.');
+$project_login=add_query_arg('project',(int)$first->ID,home_url('/timeline/'));
+$allowed_login=Mojarrad_User_Admin::login_redirect(home_url('/dashboard/'),$project_login,$owner);
+if ($allowed_login!==$project_login) throw new RuntimeException('QR project redirect denied assigned user.');
+$denied_login=Mojarrad_User_Admin::login_redirect(home_url('/dashboard/'),$project_login,$contractor);
+if ($denied_login!==home_url('/dashboard/')) throw new RuntimeException('QR redirect leaked unrelated project.');
+$external=Mojarrad_User_Admin::login_redirect(home_url('/dashboard/'),'https://example.net/private',$owner);
+if ($external!==home_url('/dashboard/')) throw new RuntimeException('External login redirect was allowed.');
