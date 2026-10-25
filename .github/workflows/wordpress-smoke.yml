@@ -97,8 +97,8 @@ jobs:
             if ! curl -fsS "http://127.0.0.1:8081$path" >/tmp/mojarrad-page.html; then
               cat /tmp/mojarrad-server.log; exit 1
             fi
-            if ! grep -q 'گروه ساختمانی' /tmp/mojarrad-page.html; then
-              echo "Brand header missing: $path"; exit 1
+            if ! grep -q 'class="site-brand"' /tmp/mojarrad-page.html || ! grep -q 'نیکابنا' /tmp/mojarrad-page.html; then
+              echo "Nika Bana header missing: $path"; exit 1
             fi
           done
           CODE=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/dashboard/)
