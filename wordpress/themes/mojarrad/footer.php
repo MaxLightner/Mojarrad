@@ -2,7 +2,10 @@
 <footer class="site-footer glass">
   <div class="container footer-inner">
     <div>
-      <div class="footer-brand"><img src="<?php echo esc_url(mojarrad_asset('logo.svg')); ?>" alt="" width="48" height="36" loading="lazy"><strong>نیکابنا</strong></div>
+      <div class="footer-brand">
+        <span class="brand-symbol" aria-hidden="true"></span>
+        <span class="brand-wordmark"><strong>نیکابنا</strong><small lang="en">NIKABANA</small></span>
+      </div>
       <p class="muted">ساخت با دقت، اعتماد با شفافیت — از طراحی تا پایان‌کار، همراه شما</p>
     </div>
     <nav class="footer-nav" aria-label="ناوبری فوتر">
