@@ -99,3 +99,38 @@ html,body{max-width:100%;overflow-x:clip}
 [data-moj-theme=light] .site-brand img,[data-moj-theme=pastel] .site-brand img,
 [data-moj-theme=light] .footer-brand img,[data-moj-theme=pastel] .footer-brand img{filter:none}
 @media(max-width:580px){.site-brand img{width:40px;height:30px;flex:none}}
+
+/* NIKABANA responsive identity: one shape, purpose-built lockups, inherited contrast. */
+.brand-symbol{display:block;flex:none;width:48px;height:35px;background:currentColor;
+  -webkit-mask:url('assets/logo.svg') center/contain no-repeat;
+  mask:url('assets/logo.svg') center/contain no-repeat}
+.brand-wordmark{display:flex;flex-direction:column;align-items:flex-start;line-height:1.12;gap:3px}
+.brand-wordmark strong{font-weight:700;font-size:17px;white-space:nowrap;line-height:1.3}
+.brand-wordmark small{font:600 9px/1.1 Arial,sans-serif;letter-spacing:.3em;direction:ltr;white-space:nowrap}
+.site-brand{gap:8px;color:var(--fg);align-items:center}
+.site-brand .brand-symbol{width:44px;height:32px}
+.site-brand .brand-wordmark{max-width:none}
+.site-brand .brand-wordmark strong{font-size:16px}
+.site-brand .brand-wordmark small{font-size:8px}
+.footer-brand{display:flex;align-items:center;gap:14px;margin-bottom:12px;color:var(--fg)}
+.footer-brand .brand-symbol{width:75px;height:54px}
+.footer-brand .brand-wordmark strong{font-size:25px}
+.footer-brand .brand-wordmark small{font-size:11px;letter-spacing:.37em}
+.auth-brand{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--fg);margin:0 auto 24px;text-align:center}
+.auth-brand .brand-symbol{width:110px;height:74px}
+.auth-brand strong{font-size:23px;line-height:1.3}
+.auth-brand small{font:600 10px/1.2 Arial,sans-serif;letter-spacing:.4em;direction:ltr}
+.editorial-signature{display:flex;align-items:center;gap:7px;margin-bottom:16px;color:var(--fg)}
+.editorial-signature .brand-symbol{width:33px;height:24px}
+.editorial-signature strong{font-size:13px}
+@media(max-width:880px){
+  .site-brand .brand-symbol{width:37px;height:27px}
+  .site-brand .brand-wordmark small{display:none}
+  .site-brand .brand-wordmark strong{font-size:15px}
+}
+@media(max-width:580px){
+  .site-brand .brand-symbol{width:35px;height:25px}
+  .site-brand .brand-wordmark strong{font-size:14px}
+  .footer-brand .brand-symbol{width:61px;height:43px}
+  .footer-brand .brand-wordmark strong{font-size:21px}
+}
