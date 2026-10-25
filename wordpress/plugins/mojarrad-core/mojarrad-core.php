@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Mojarrad Core
  * Description: WordPress content, memberships and role-aware dashboard backend for Nika Bana.
- * Version: 0.6.2
+ * Version: 0.6.3
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Text Domain: mojarrad-core
  */
 defined('ABSPATH') || exit;
 
-define('MOJARRAD_CORE_VERSION', '0.6.2');
+define('MOJARRAD_CORE_VERSION', '0.6.3');
 define('MOJARRAD_CORE_PATH', plugin_dir_path(__FILE__));
 
 require_once MOJARRAD_CORE_PATH . 'includes/class-schema.php';
@@ -17,7 +17,9 @@ require_once MOJARRAD_CORE_PATH . 'includes/class-access.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-user-admin.php';
 Mojarrad_User_Admin::register();
 require_once MOJARRAD_CORE_PATH . 'includes/class-editorial.php';
+require_once MOJARRAD_CORE_PATH . 'includes/class-editorial-review.php';
 Mojarrad_Editorial::register();
+Mojarrad_Editorial_Review::register();
 require_once MOJARRAD_CORE_PATH . 'includes/class-rest.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-public-content.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-starter-content.php';
@@ -100,6 +102,7 @@ function mojarrad_create_public_pages() {
         'consulting'=>array('مشاوره','page-consulting.php'),
         'collaborate'=>array('همکاری','page-collaborate.php'),
         'blog'=>array('وبلاگ','page-blog.php'),
+        'editorial'=>array('بررسی مقالات','page-editorial.php'),
         'login'=>array('ورود اعضا','page-login.php'),
         'dashboard'=>array('پنل من','page-dashboard.php'),
         'timeline'=>array('تایم‌لاین پروژه','page-timeline.php'),
