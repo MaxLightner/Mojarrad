@@ -153,14 +153,16 @@ jobs:
             --data-urlencode 'decision=publish' http://127.0.0.1:8081/wp-admin/admin-post.php)
           test "$REVIEW_FORBIDDEN" = "403"
           SCHEDULE_AT=$(date -u -d '+2 days' '+%Y-%m-%dT10:00')
-          REVIEW_SCHEDULE=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/moj-review-cookie \
+          REVIEW_SCHEDULE=$(curl -sS -D /tmp/moj-schedule-headers -o /dev/null -w '%{http_code}' -b /tmp/moj-review-cookie \
             --data-urlencode 'action=moj_editorial_decision' \
             --data-urlencode "article=$ARTICLE_ID" --data-urlencode "moj_editorial_nonce=$REVIEW_NONCE" \
             --data-urlencode 'decision=schedule' --data-urlencode "publish_at=$SCHEDULE_AT" \
             http://127.0.0.1:8081/wp-admin/admin-post.php)
           test "$REVIEW_SCHEDULE" = "303" || (echo "Schedule status: $REVIEW_SCHEDULE"; exit 1)
+          grep -i '^Location:' /tmp/moj-schedule-headers || true
           php wp-cli.phar eval --path=/tmp/mojarrad-test '
             $p=get_page_by_path("sakhtan-ya-sabr",OBJECT,"post");
+            echo "DEBUG editorial status=".($p?$p->post_status:"missing")." approved=".($p?get_post_meta($p->ID,"_moj_editorial_approved_hash",true):"")." needsReview=".($p?get_post_meta($p->ID,"_moj_editorial_review_required",true):"")."\\n";
             if(!$p || $p->post_status!=="future" || !get_post_meta($p->ID,"_moj_editorial_approved_hash",true)) throw new RuntimeException("Article did not schedule.");
           '
           FUTURE_PUBLIC=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:8081/wp-json/wp/v2/posts/$ARTICLE_ID")
