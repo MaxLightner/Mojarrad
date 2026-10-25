@@ -91,3 +91,11 @@ html,body{max-width:100%;overflow-x:clip}
 /* Keep the anti-bot honeypot in the DOM without adding 9999px document overflow. */
 .form-grid .hidden-trap{position:absolute!important;left:auto!important;right:auto!important;top:auto!important;width:1px!important;height:1px!important;margin:0!important;padding:0!important;clip-path:inset(50%)!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
 .form-grid .hidden-trap input{position:absolute;width:1px;height:1px;padding:0}
+
+/* Nikabana identity: compact, single-source SVG mark (no raster logo downloads). */
+.site-brand img{width:48px;height:36px;object-fit:contain;filter:invert(1)}
+.footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.footer-brand img{width:48px;height:36px;object-fit:contain;filter:invert(1)}
+[data-moj-theme=light] .site-brand img,[data-moj-theme=pastel] .site-brand img,
+[data-moj-theme=light] .footer-brand img,[data-moj-theme=pastel] .footer-brand img{filter:none}
+@media(max-width:580px){.site-brand img{width:40px;height:30px;flex:none}}
