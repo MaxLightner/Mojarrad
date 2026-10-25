@@ -152,11 +152,20 @@ final class Mojarrad_Editorial_Review {
             $utc = $slot->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
         }
         self::$deciding = true;
-        $updated = wp_update_post(array('ID' => $id, 'post_status' => $status, 'post_date' => $wp_local, 'post_date_gmt' => $utc), true);
+        $updated = wp_update_post(array('ID' => $id, 'post_status' => $status, 'post_date' => $wp_local,
+            'post_date_gmt' => $utc, 'edit_date' => true), true);
         self::$deciding = false;
         if (is_wp_error($updated) || !$updated) self::redirect_result($id,'error');
         $saved = get_post($id);
-        if (!$saved || $saved->post_status !== $status) self::redirect_result($id,'error');
+        if (!$saved || $saved->post_status !== $status) {
+            // Fail closed if a host/plugin unexpectedly changes a scheduled post to public.
+            if ($status === 'future' && $saved && $saved->post_status === 'publish') {
+                self::$deciding = true;
+                wp_update_post(array('ID' => $id, 'post_status' => 'draft', 'edit_date' => true), true);
+                self::$deciding = false;
+            }
+            self::redirect_result($id,'error');
+        }
         update_post_meta($id, '_moj_editorial_managed', '1');
         update_post_meta($id, '_moj_editorial_review_required', '0');
         update_post_meta($id, '_moj_editorial_approved_hash', self::reviewed_hash($saved));
