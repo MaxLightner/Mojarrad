@@ -15,6 +15,14 @@ $editorial_draft=get_page_by_path('sakhtan-ya-sabr',OBJECT,'post');
 if(!$editorial_draft || $editorial_draft->post_status!=='draft') {
     throw new RuntimeException('First editorial article was not imported as a private draft.');
 }
+$review_page=get_page_by_path('editorial');
+if(!$review_page || get_post_meta($review_page->ID,'_wp_page_template',true)!=='page-editorial.php') {
+    throw new RuntimeException('Private onsite editorial review route missing.');
+}
+if(!Mojarrad_Editorial_Review::is_managed($editorial_draft)
+   || !str_contains(Mojarrad_Editorial_Review::review_url($editorial_draft->ID),'/editorial/?article=')) {
+    throw new RuntimeException('Article is not accessible to the reviewer queue.');
+}
 if(!get_post_meta($editorial_draft->ID,'_moj_seo_description',true) ||
    !get_post_meta($editorial_draft->ID,'_moj_editorial_source_id',true)) {
     throw new RuntimeException('Editorial source/SEO metadata missing.');
@@ -34,6 +42,9 @@ if(!$first || !$second) throw new RuntimeException('Demo projects unavailable.')
 $owner=get_user_by('login','moj_demo_owner');
 $contractor=get_user_by('login','moj_demo_contractor');
 $supervisor=get_user_by('login','moj_demo_supervisor');
+if ($supervisor && Mojarrad_Editorial_Review::can_approve((int)$supervisor->ID)) {
+    throw new RuntimeException('Project supervisor gained editorial approval without assignment.');
+}
 if(!$owner || !$contractor || !$supervisor) throw new RuntimeException('Demo identities unavailable.');
 if(!Mojarrad_Access::can_read((int)$owner->ID,(int)$first->ID)) throw new RuntimeException('Owner assignment failed.');
 if(Mojarrad_Access::can_read((int)$owner->ID,(int)$second->ID)) throw new RuntimeException('Owner can access unrelated project.');
