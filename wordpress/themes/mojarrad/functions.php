@@ -24,6 +24,9 @@ add_action( 'wp_enqueue_scripts', function () {
     wp_enqueue_style( 'mojarrad-theme', get_stylesheet_uri(), array(), $version );
     wp_enqueue_style( 'mojarrad-editorial', get_template_directory_uri() . '/assets/css/editorial.css', array('mojarrad-theme'), $version );
     wp_enqueue_script( 'mojarrad-ui', get_template_directory_uri() . '/assets/js/site.js', array(), $version, true );
+    if ( is_page('editorial') ) {
+        wp_enqueue_style('mojarrad-editorial-review',get_template_directory_uri().'/assets/css/review.css',array('mojarrad-editorial'),$version);
+    }
     if ( is_page('office') ) {
         wp_enqueue_style('mojarrad-office',get_template_directory_uri().'/assets/css/office.css',array('mojarrad-theme'),$version);
         wp_enqueue_script('mojarrad-office',get_template_directory_uri().'/assets/js/office.js',array(),$version,true);
