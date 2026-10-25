@@ -1,12 +1,20 @@
 <?php
 /* Template Name: Member Login */
 $project_id = isset($_GET['project']) && is_scalar($_GET['project']) ? absint($_GET['project']) : 0;
+$editorial_id = isset($_GET['editorial']) && is_scalar($_GET['editorial']) ? absint($_GET['editorial']) : 0;
 // A QR code is only a deep link; it never contains credentials or grants access.
 if ($project_id && get_post_type($project_id) !== 'moj_project') $project_id = 0;
 $destination = $project_id
     ? add_query_arg('project', $project_id, home_url('/timeline/'))
     : home_url('/dashboard/');
+if ($editorial_id && class_exists('Mojarrad_Editorial_Review')) {
+    $destination = Mojarrad_Editorial_Review::review_url($editorial_id);
+}
 if (is_user_logged_in()) {
+    if ($editorial_id) {
+        wp_safe_redirect($destination);
+        exit;
+    }
     $allowed = !$project_id || (
         class_exists('Mojarrad_Access')
         && Mojarrad_Access::can_read(get_current_user_id(), $project_id)
@@ -23,8 +31,11 @@ get_header();
       <strong>نیکابنا</strong><small lang="en">NIKABANA</small>
     </div>
     <span class="section-label">ورود اعضای تأییدشده</span>
-    <h1 class="page-title"><?php echo $project_id ? 'ورود به پروژه' : 'ورود به پنل من'; ?></h1>
+    <h1 class="page-title"><?php echo $editorial_id ? 'ورود برای بررسی مقاله' : ($project_id ? 'ورود به پروژه' : 'ورود به پنل من'); ?></h1>
     <p class="muted">نام کاربری و رمز عبور را از مدیر سیستم دریافت کنید. ایجاد حساب و تعیین دسترسی پروژه فقط توسط مدیر انجام می‌شود.</p>
+    <?php if ($editorial_id): ?>
+      <p class="notice" role="status">پس از ورود با حساب تأییدکننده، همین مقاله در قالب واقعی سایت باز می‌شود.</p>
+    <?php endif; ?>
     <?php if ($project_id): ?>
       <p class="notice" role="status">لینک پروژه شناسایی شد. پس از ورود، در صورت داشتن مجوز به تایم‌لاین پروژه منتقل می‌شوید.</p>
     <?php endif; ?>
