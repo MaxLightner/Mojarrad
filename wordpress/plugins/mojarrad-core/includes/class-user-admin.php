@@ -93,7 +93,12 @@ final class Mojarrad_User_Admin {
 
     /** Only a valid member may be redirected to a project after logging in. */
     public static function login_redirect(string $redirect, string $requested, $user): string {
-        if (!$user instanceof WP_User || user_can($user, 'manage_moj_projects')) return $redirect;
+        if (!$user instanceof WP_User) return $redirect;
+        if (class_exists('Mojarrad_Editorial_Review')) {
+            $editorial = Mojarrad_Editorial_Review::validated_login_redirect($requested, $user);
+            if ($editorial) return $editorial;
+        }
+        if (user_can($user, 'manage_moj_projects')) return $redirect;
         $dashboard = home_url('/dashboard/');
         $requested = wp_validate_redirect($requested, '');
         if (!$requested) return $dashboard;
