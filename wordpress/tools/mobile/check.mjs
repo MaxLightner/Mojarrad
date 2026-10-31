@@ -62,7 +62,25 @@ try {
         const check = await page.goto(base+route,{waitUntil:'networkidle',timeout:30000});
         if (check?.status() !== 200) failures.push(width+'px '+label+' HTTP status '+check?.status());
         if (!(await page.locator(selector).count())) failures.push(width+'px '+label+' missing section '+selector);
-        if (label === 'projects' && await page.locator('.portfolio-grid .project-card').count() !== 15) failures.push(width+'px public project inventory is not exactly 15');
+        if (label === 'projects') {
+          if (await page.locator('.portfolio-grid .project-card').count() !== 15) failures.push(width+'px public project inventory is not exactly 15');
+          const images = await page.locator('.portfolio-grid .project-card .card-image img').evaluateAll(els =>
+            els.map(el => ({src:el.getAttribute('src') || '',loaded:el.complete && el.naturalWidth > 0}))
+          );
+          if (images.length !== 15) failures.push(width+'px projects expected 15 image elements but found '+images.length);
+          const bad=images.filter(img => !img.loaded);
+          if(bad.length) failures.push(width+'px project thumbnails failed to load: '+bad.map(x=>x.src).join(', '));
+          if (images.filter(img=>img.src.endsWith('.avif')).length !== 8) failures.push(width+'px expected 8 real project thumbnails');
+          if (images.filter(img=>img.src.endsWith('project-placeholder.svg')).length !== 7) failures.push(width+'px expected 7 graphic thumbnails');
+        }
+        if (label === 'project-detail') {
+          const hero = page.locator('.project-showcase-photo img');
+          if (!(await hero.count()) || !(await hero.first().evaluate(img => img.complete && img.naturalWidth > 0)))
+            failures.push(width+'px project hero image failed to load');
+          const gallery=await page.locator('.project-photo-grid img').evaluateAll(els =>
+            els.map(el => ({src:el.getAttribute('src') || '',loaded:el.complete && el.naturalWidth > 0})));
+          if(gallery.length < 2 || gallery.some(img=>!img.loaded)) failures.push(width+'px project detail images are missing or broken');
+        }
         const metrics = await page.evaluate(() => ({
           viewport: document.documentElement.clientWidth,
           scroll: document.documentElement.scrollWidth
