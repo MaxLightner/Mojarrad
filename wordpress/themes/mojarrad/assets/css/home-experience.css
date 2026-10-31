@@ -33,10 +33,10 @@
   background:linear-gradient(var(--home-copper), transparent);
   transform-origin:top; animation:home-draw-vertical 1.25s .4s both;
 }
-.home-cinematic .eyebrow {font-size:12px; border:0; padding:0; background:none; backdrop-filter:none; color:#f0c49f;}
+.home-cinematic .eyebrow {font-size:13px; border:0; padding:0; background:none; backdrop-filter:none; color:#f0c49f;}
 .home-hero-overline {
   display:block; direction:ltr; text-align:right; margin-top:15px;
-  font:500 10px/1.5 system-ui,sans-serif; letter-spacing:.24em;
+  font:500 13px/1.5 system-ui,sans-serif; letter-spacing:.24em;
   color:rgba(222,231,233,.48);
 }
 .home-cinematic .hero-copy h1 {
@@ -66,15 +66,15 @@
   display:flex;align-items:center;flex-wrap:wrap;gap:5px 0;max-width:655px;
   margin-top:34px;padding-top:16px;border-top:1px solid rgba(232,215,199,.24);
 }
-.home-hero-principles>span {font-size:11px;color:#b8c7cc;white-space:nowrap;padding:6px 0 6px 18px;margin-left:18px;}
+.home-hero-principles>span {font-size:13px;color:#b8c7cc;white-space:nowrap;padding:6px 0 6px 18px;margin-left:18px;}
 .home-hero-principles>span+span {border-inline-start:1px solid rgba(224,214,205,.23);padding-inline-start:18px;}
-.home-hero-principles b {font:600 10px system-ui,sans-serif;color:#d6a27c;letter-spacing:.08em;margin-left:10px;}
+.home-hero-principles b {font:600 13px system-ui,sans-serif;color:#d6a27c;letter-spacing:.08em;margin-left:10px;}
 .home-hero-side {
   position:absolute;z-index:5;left:30px;top:50%;transform:translateY(-50%);
   writing-mode:vertical-rl;display:flex;align-items:center;gap:28px;
-  color:rgba(232,226,213,.60);font-size:10px;letter-spacing:.12em;
+  color:rgba(232,226,213,.60);font-size:13px;letter-spacing:.12em;
 }
-.home-hero-side span:first-child {font:500 10px/1.6 system-ui,sans-serif;letter-spacing:.3em;}
+.home-hero-side span:first-child {font:500 13px/1.6 system-ui,sans-serif;letter-spacing:.3em;}
 .home-hero-side::after {content:"";display:block;width:1px;height:82px;background:rgba(237,203,166,.4);}
 .home-hero-watermark {
   position:absolute;z-index:3;left:8%;bottom:-23px;line-height:1;
@@ -91,7 +91,7 @@
 .home-hero-linework i:nth-child(3){right:0;bottom:20%;height:1px;width:100%;background:#d6a27c30;transform-origin:right;animation:home-draw-horizontal 1.9s .8s both;}
 .home-cinematic .hero-scroll{
   left:50%;bottom:32px;z-index:6;transform:translateX(-50%);
-  display:flex;align-items:center;gap:14px;color:#f6d0a6;font-size:11px;
+  display:flex;align-items:center;gap:14px;color:#f6d0a6;font-size:13px;
   text-decoration:none;letter-spacing:.02em;
 }
 .home-cinematic .hero-scroll::before {content:"";width:58px;height:1px;background:rgba(246,208,166,.5);}
@@ -120,10 +120,10 @@
 .home-quick-access .quick-icon{
   display:inline-flex;align-items:center;justify-content:start;width:auto;height:auto;margin:0 0 7px;
   padding:0;background:none;border:0;border-radius:0;
-  font:500 12px/1.2 system-ui,sans-serif;letter-spacing:.1em;color:#d6a27c;
+  font:500 13px/1.2 system-ui,sans-serif;letter-spacing:.1em;color:#d6a27c;
 }
 .home-quick-access .quick-card strong{font-size:18px;line-height:1.45;color:#f0eee9;}
-.home-quick-access .quick-card .muted{font-size:11px;line-height:1.65;color:#9fadb4;}
+.home-quick-access .quick-card .muted{font-size:13px;line-height:1.65;color:#9fadb4;}
 .home-manifesto-band {
   background:#dfd7ca;color:#172632;
   margin-block:8px 0;position:relative;isolation:isolate;
@@ -148,7 +148,7 @@
 .home-manifesto-inset{left:0;bottom:0;width:36%;border:5px solid #dfd7ca;box-shadow:0 12px 38px #55412e38;}
 .home-manifesto-inset img{aspect-ratio:1;object-fit:cover;}
 .home-manifesto .section-label {color:#926748;}
-.home-manifesto .editorial-index{color:#765f4e;font-size:10px;letter-spacing:.26em;}
+.home-manifesto .editorial-index{color:#765f4e;font-size:13px;letter-spacing:.26em;}
 .home-manifesto-copy h2{
   font-size:clamp(32px,3.5vw,54px);line-height:1.5;letter-spacing:-.045em;margin:14px 0 15px;
 }
@@ -218,7 +218,7 @@
 .home-steps .process-cards article:hover{transform:translateY(-7px);background:#1d3440;}
 .home-steps .process-cards article>span{
   display:inline-flex;padding:0 10px;background:#152b36;
-  color:#e2b48e;font:600 11px/1.6 system-ui,sans-serif;letter-spacing:.08em;
+  color:#e2b48e;font:600 13px/1.6 system-ui,sans-serif;letter-spacing:.08em;
   position:relative;z-index:1;direction:ltr;
 }
 .home-steps .process-cards h3{font-size:22px;margin:22px 0 8px;}
@@ -285,25 +285,25 @@ body.home-motion-enabled .home-project-grid .project-card:hover{transform:transl
   .home-cinematic .hero-inner{padding-top:69px;padding-bottom:110px;}
   .home-cinematic .hero-copy{padding-inline-start:0;}
   .home-cinematic .hero-copy::before{display:none;}
-  .home-cinematic .eyebrow{font-size:11px;}
-  .home-hero-overline{font-size:8px;letter-spacing:.16em;margin-top:11px;}
+  .home-cinematic .eyebrow{font-size:13px;}
+  .home-hero-overline{font-size:13px;letter-spacing:.16em;margin-top:11px;}
   .home-cinematic .hero-copy h1{font-size:clamp(41px,10.8vw,58px);letter-spacing:-.06em;line-height:1.45;margin:21px 0 16px;}
   .home-cinematic .hero-copy p{font-size:13px;line-height:2.05;margin-bottom:19px;}
   .home-cinematic .button-row{gap:8px;}
-  .home-cinematic .btn-gold,.home-cinematic .btn-outline{padding:10px 13px;min-height:45px;font-size:11px;}
+  .home-cinematic .btn-gold,.home-cinematic .btn-outline{padding:10px 13px;min-height:45px;font-size:13px;}
   .home-hero-principles{margin-top:24px;padding-top:12px;gap:3px 0;}
-  .home-hero-principles>span{font-size:9px;margin-left:9px;padding-left:9px;}
+  .home-hero-principles>span{font-size:13px;margin-left:9px;padding-left:9px;}
   .home-hero-principles>span+span{padding-inline-start:9px;}
-  .home-hero-principles b{font-size:9px;margin-left:4px;}
-  .home-cinematic .hero-scroll{bottom:21px;font-size:10px;}
+  .home-hero-principles b{font-size:13px;margin-left:4px;}
+  .home-cinematic .hero-scroll{bottom:21px;font-size:13px;}
   .home-cinematic .hero-scroll::before{width:27px;}
   .home-hero-watermark{font-size:32vw;bottom:36px;opacity:.7;}
   .home-quick-access{margin-top:0;padding-inline:0;padding-bottom:15px;}
   .home-quick-access .quick-grid{border-inline:0;}
   .home-quick-access .quick-card{padding:13px 17px;min-height:113px;}
-  .home-quick-access .quick-icon{font-size:11px;margin-bottom:5px;}
+  .home-quick-access .quick-icon{font-size:13px;margin-bottom:5px;}
   .home-quick-access .quick-card strong{font-size:15px;}
-  .home-quick-access .quick-card .muted{display:block;font-size:10px;line-height:1.5;}
+  .home-quick-access .quick-card .muted{display:block;font-size:13px;line-height:1.5;}
   .home-manifesto{padding-block:31px 37px;}
   .home-manifesto-copy h2{font-size:31px;line-height:1.5;}
   .home-manifesto-copy>p{font-size:14px;line-height:2.05;}
@@ -359,7 +359,7 @@ body.home-motion-enabled .home-quick-access.in-view .quick-card:hover{transform:
 /* v2 sizing pass — tighter, human-scaled project and editorial imagery. */
 .home-quick-access .quick-card {min-height:108px;padding:15px 19px;gap:2px;}
 .home-quick-access .quick-card strong {font-size:16px;}
-.home-quick-access .quick-icon {font-size:11px;margin-bottom:4px;}
+.home-quick-access .quick-icon {font-size:13px;margin-bottom:4px;}
 .home-manifesto {max-width:1110px;gap:5%;padding-block:36px 43px;}
 .home-manifesto-visual {padding-bottom:18px;padding-left:36px;}
 .home-manifesto-visual>img {height:292px;}
@@ -374,13 +374,13 @@ body.home-motion-enabled .home-quick-access.in-view .quick-card:hover{transform:
 .home-project-grid .project-card .card-body {min-height:55px;padding:11px 16px;}
 .home-project-grid .project-card .image-title {font-size:17px;right:16px;bottom:14px;}
 .home-project-grid .project-card:first-child:nth-last-child(n+3) .image-title {font-size:clamp(22px,2.5vw,28px);}
-.home-project-grid .project-card .meta-line {font-size:11px;}
+.home-project-grid .project-card .meta-line {font-size:13px;}
 .home-updates {padding-block:23px 27px;}
 .home-journal {padding-block:18px 30px;}
 .home-updates .editorial-card .card-image,.home-journal .editorial-card .card-image {height:132px;}
 .home-updates .editorial-card .card-body,.home-journal .editorial-card .card-body {padding:12px 15px 16px;}
 .home-updates .editorial-card h3,.home-journal .editorial-card h3 {font-size:16px;line-height:1.6;}
-.home-updates .editorial-card p,.home-journal .editorial-card p {font-size:12px;line-height:1.8;}
+.home-updates .editorial-card p,.home-journal .editorial-card p {font-size:13px;line-height:1.8;}
 .home-steps .process-cards article {padding:23px 21px 21px;}
 .home-steps .process-cards h3 {font-size:20px;margin-top:16px;}
 @media(max-width:880px){

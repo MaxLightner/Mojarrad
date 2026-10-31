@@ -6,6 +6,14 @@ const outputs = '/tmp/mojarrad-mobile-captures';
 fs.mkdirSync(outputs,{recursive:true});
 const browser = await chromium.launch({headless:true,args:['--no-sandbox']});
 const failures = [];
+async function checkPublicFontFloor(page, label, width) {
+  const smallText = await page.evaluate(() => [...document.querySelectorAll('.site-header *, .site-main *, .site-footer *')]
+    .filter(el => el.getClientRects().length && el.childNodes && [...el.childNodes]
+      .some(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim()))
+    .filter(el => parseFloat(getComputedStyle(el).fontSize) < 12.99)
+    .slice(0, 8).map(el => ({tag:el.tagName,text:el.textContent.trim().slice(0, 30),px:getComputedStyle(el).fontSize})));
+  if (smallText.length) failures.push(width+'px '+label+' text below 13px: '+JSON.stringify(smallText));
+}
 try {
   for (const width of [320,360,375,430,768,1024,1365]) {
     const page = await browser.newPage({viewport:{width,height:780},deviceScaleFactor:1});
@@ -28,6 +36,7 @@ try {
     }));
     if (!dims.brand || !dims.hero) failures.push(width+'px missing header/hero');
     if (dims.scroll>dims.viewport+2) failures.push(width+'px page overflow '+(dims.scroll-dims.viewport)+'px');
+    await checkPublicFontFloor(page, 'homepage', width);
     await page.screenshot({path:outputs+'/home-'+width+'.png',fullPage:true,animations:'disabled'});
     if (width<=880) {
       const button=page.locator('#menu-toggle');
@@ -62,6 +71,7 @@ try {
         const check = await page.goto(base+route,{waitUntil:'networkidle',timeout:30000});
         if (check?.status() !== 200) failures.push(width+'px '+label+' HTTP status '+check?.status());
         if (!(await page.locator(selector).count())) failures.push(width+'px '+label+' missing section '+selector);
+        await checkPublicFontFloor(page, label, width);
         if (label === 'projects') {
           if (await page.locator('.portfolio-mosaic .portfolio-tile').count() !== 15) failures.push(width+'px public project inventory is not exactly 15');
           const images = await page.locator('.portfolio-mosaic .portfolio-tile img').evaluateAll(async els =>

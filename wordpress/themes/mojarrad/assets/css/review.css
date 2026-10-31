@@ -1,7 +1,7 @@
 /* Private editorial review UI; the article itself uses the public single-post template. */
 .review-ribbon{margin-top:32px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:20px;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));border-radius:14px;background:color-mix(in srgb,var(--accent) 8%,var(--card))}
 .review-ribbon p{max-width:720px;color:var(--muted);margin:4px 0 0;font-size:14px}
-.review-ribbon .section-label{font-size:12px}
+.review-ribbon .section-label{font-size:13px}
 .review-back{white-space:nowrap;color:var(--accent);font-size:14px;font-weight:700}
 .review-result{margin-block:16px;padding-block:13px;border:1px solid var(--accent);border-radius:9px;background:color-mix(in srgb,var(--accent) 12%,var(--bg))}
 .review-decision{margin-block:50px 100px;padding:32px;border:1px solid var(--border);border-radius:20px;background:var(--card);box-shadow:0 12px 45px #0003;max-width:1050px}
@@ -28,7 +28,7 @@
 .review-list-card:hover{border-color:var(--accent)}
 .review-list-card strong{font-size:20px;line-height:1.7}
 .review-list-card small{color:var(--muted)}
-.review-status{font-size:12px;color:var(--accent);font-weight:700}
+.review-status{font-size:13px;color:var(--accent);font-weight:700}
 .review-access{min-height:50vh}
 .review-access h1{font-size:clamp(24px,4vw,39px)}
 @media(max-width:720px){.review-ribbon{flex-direction:column;align-items:flex-start}.review-actions{grid-template-columns:1fr}.review-decision{padding:20px;margin-block:30px 65px}.review-schedule input,.review-schedule button{width:100%}}

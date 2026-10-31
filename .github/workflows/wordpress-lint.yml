@@ -38,3 +38,5 @@ jobs:
           node --check wordpress/themes/mojarrad/assets/js/portfolio-experience.js
           node --check wordpress/plugins/mojarrad-core/assets/admin-gallery.js
           if test -f wordpress/themes/mojarrad/assets/js/hero3d.js; then node --check wordpress/themes/mojarrad/assets/js/hero3d.js; fi
+      - name: Enforce public minimum font size
+        run: node wordpress/tools/font-floor.mjs
