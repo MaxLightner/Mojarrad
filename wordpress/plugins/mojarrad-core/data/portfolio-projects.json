@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-01.1",
+  "version": "2026-11-01.2",
   "projects": [
     {
       "external_id": "nb-0001",
@@ -75,9 +75,9 @@
     },
     {
       "external_id": "nb-0005",
-      "slug": "emam-reza-27-bostan-3",
-      "title": "ساختمان امام رضا ۲۷ نبش بوستان ۳",
-      "location": "مشهد، امام رضا ۲۷، نبش بوستان ۳",
+      "slug": "emam-reza-27-bestan-3",
+      "title": "ساختمان امام رضا ۲۷ نبش بستان ۳",
+      "location": "مشهد، امام رضا ۲۷، نبش بستان ۳",
       "kind": "مسکونی",
       "land_area_m2": null,
       "floors_above_ground": null,

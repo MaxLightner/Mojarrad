@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit;
 
 final class Mojarrad_Portfolio {
-    public const VERSION = '2026-11-01.1';
+    public const VERSION = '2026-11-01.2';
 
     public static function sync_once(): void {
         if (get_option('moj_portfolio_sync_version') === self::VERSION || !post_type_exists('moj_project')) {
@@ -50,8 +50,8 @@ final class Mojarrad_Portfolio {
         } else {
             $post = get_post($id);
             if (!$post || $post->post_type !== 'moj_project') { return false; }
-            if ($post->post_title !== $title || $post->post_status !== 'publish') {
-                wp_update_post(array('ID'=>$id,'post_title'=>$title,'post_status'=>'publish'));
+            if ($post->post_title !== $title || $post->post_status !== 'publish' || $post->post_name !== $slug) {
+                wp_update_post(array('ID'=>$id,'post_title'=>$title,'post_name'=>$slug,'post_status'=>'publish'));
             }
         }
         update_post_meta($id, '_moj_portfolio_external_id', $external_id);
