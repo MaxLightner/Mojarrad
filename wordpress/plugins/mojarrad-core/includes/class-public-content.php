@@ -6,6 +6,15 @@ final class Mojarrad_Public_Content {
     public const PROJECT_FIELDS = array(
         'subtitle' => 'زیرعنوان',
         'location' => 'موقعیت',
+        'kind' => 'نوع پروژه',
+        'land_area' => 'مساحت زمین (مترمربع)',
+        'units' => 'تعداد واحد',
+        'unit_area' => 'متراژ هر واحد (مترمربع)',
+        'floors_above_ground' => 'تعداد طبقات روی همکف',
+        'roof_count' => 'تعداد سقف بنا',
+        'owner' => 'مالک / کارفرما',
+        'designer' => 'طراح',
+        'supervisor' => 'ناظر',
         'area' => 'زیربنا',
         'year' => 'سال',
         'status' => 'توضیح وضعیت',
@@ -36,7 +45,7 @@ final class Mojarrad_Public_Content {
                 in_array( $key, array( 'sale_description' ), true ) ? 'textarea' : 'text'
             );
         }
-        self::field( 'moj_progress', 'درصد پیشرفت (۰ تا ۱۰۰)', (int) get_post_meta( $post->ID, 'moj_progress', true ), 'number' );
+        self::field( 'moj_progress', 'درصد پیشرفت (۰ تا ۱۰۰)', get_post_meta( $post->ID, 'moj_progress', true ), 'number' );
         $checked = (bool) get_post_meta( $post->ID, 'moj_for_sale', true );
         echo '<p><label><input type="checkbox" name="moj_for_sale" value="1" ' . checked( $checked, true, false ) . '> این پروژه برای فروش است</label></p>';
         $ids = (string) get_post_meta( $post->ID, 'moj_gallery_ids', true );
@@ -65,8 +74,13 @@ final class Mojarrad_Public_Content {
             $value = isset( $_POST[$field] ) && is_string( $_POST[$field] ) ? wp_unslash( $_POST[$field] ) : '';
             update_post_meta( $post_id, $field, 'sale_description' === $key ? sanitize_textarea_field( $value ) : sanitize_text_field( $value ) );
         }
-        $progress = isset( $_POST['moj_progress'] ) ? absint( $_POST['moj_progress'] ) : 0;
-        update_post_meta( $post_id, 'moj_progress', min( 100, $progress ) );
+        $progress_raw = isset( $_POST['moj_progress'] ) && is_scalar( $_POST['moj_progress'] )
+            ? trim((string)wp_unslash( $_POST['moj_progress'] )) : '';
+        if ( $progress_raw === '' ) {
+            delete_post_meta( $post_id, 'moj_progress' );
+        } else {
+            update_post_meta( $post_id, 'moj_progress', min( 100, absint( $progress_raw ) ) );
+        }
         update_post_meta( $post_id, 'moj_for_sale', isset( $_POST['moj_for_sale'] ) ? '1' : '0' );
         $raw = isset( $_POST['moj_gallery_ids'] ) && is_string( $_POST['moj_gallery_ids'] ) ? wp_unslash( $_POST['moj_gallery_ids'] ) : '';
         $ids = array_filter( array_map( 'absint', explode( ',', $raw ) ) );

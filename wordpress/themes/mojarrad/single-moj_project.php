@@ -40,6 +40,7 @@
         'floors_above_ground'=>array('طبقات روی همکف',' طبقه'),
         'roof_count'=>array('تعداد سقف بنا',' سقف'),
         'year'=>array('سال',''),
+        'owner'=>array('مالک / کارفرما',''),
         'designer'=>array('طراح',''),
         'supervisor'=>array('ناظر',''),
       );
