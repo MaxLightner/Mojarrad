@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit;
 
 final class Mojarrad_Portfolio {
-    public const VERSION = '2026-11-01.2';
+    public const VERSION = '2026-11-01.3';
 
     public static function sync_once(): void {
         if (get_option('moj_portfolio_sync_version') === self::VERSION || !post_type_exists('moj_project')) {
@@ -81,6 +81,8 @@ final class Mojarrad_Portfolio {
         $cover = (string)($project['cover'] ?? '');
         if ($cover && preg_match('#^projects/nb-\d{4}/[\w-]+\.avif$#', $cover)) {
             update_post_meta($id, 'moj_portfolio_cover', $cover);
+        } else {
+            delete_post_meta($id, 'moj_portfolio_cover');
         }
         if (isset($project['gallery']) && is_array($project['gallery'])) {
             $gallery = array_values(array_filter($project['gallery'], static function($path) {

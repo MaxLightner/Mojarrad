@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-01.2",
+  "version": "2026-11-01.3",
   "projects": [
     {
       "external_id": "nb-0001",
@@ -13,8 +13,10 @@
       "unit_count": 5,
       "unit_area_m2": 160,
       "credits": {},
-      "cover": "",
-      "gallery": [],
+      "cover": "projects/nb-0001/cover.avif",
+      "gallery": [
+        "projects/nb-0001/02.avif"
+      ],
       "status": "unknown",
       "description": "",
       "summary": ""
@@ -31,8 +33,10 @@
       "unit_count": 11,
       "unit_area_m2": null,
       "credits": {},
-      "cover": "",
-      "gallery": [],
+      "cover": "projects/nb-0002/cover.avif",
+      "gallery": [
+        "projects/nb-0002/02.avif"
+      ],
       "status": "unknown",
       "description": "",
       "summary": ""
@@ -49,7 +53,7 @@
       "unit_count": 10,
       "unit_area_m2": null,
       "credits": {},
-      "cover": "",
+      "cover": "projects/nb-0003/cover.avif",
       "gallery": [],
       "status": "unknown",
       "description": "",
@@ -67,7 +71,7 @@
       "unit_count": 5,
       "unit_area_m2": null,
       "credits": {},
-      "cover": "",
+      "cover": "projects/nb-0004/cover.avif",
       "gallery": [],
       "status": "unknown",
       "description": "",
@@ -88,8 +92,13 @@
         "designer": "مهندس مجرد",
         "supervisor": "مهندس مجرد"
       },
-      "cover": "",
-      "gallery": [],
+      "cover": "projects/nb-0005/cover.avif",
+      "gallery": [
+        "projects/nb-0005/02.avif",
+        "projects/nb-0005/03.avif",
+        "projects/nb-0005/04.avif",
+        "projects/nb-0005/05.avif"
+      ],
       "status": "unknown",
       "description": "",
       "summary": ""
@@ -106,7 +115,7 @@
       "unit_count": null,
       "unit_area_m2": null,
       "credits": {},
-      "cover": "",
+      "cover": "projects/nb-0006/cover.avif",
       "gallery": [],
       "status": "unknown",
       "description": "",
@@ -124,7 +133,7 @@
       "unit_count": null,
       "unit_area_m2": null,
       "credits": {},
-      "cover": "",
+      "cover": "projects/nb-0007/cover.avif",
       "gallery": [],
       "status": "unknown",
       "description": "",
@@ -142,7 +151,7 @@
       "unit_count": null,
       "unit_area_m2": null,
       "credits": {},
-      "cover": "",
+      "cover": "projects/nb-0008/cover.avif",
       "gallery": [],
       "status": "unknown",
       "description": "",

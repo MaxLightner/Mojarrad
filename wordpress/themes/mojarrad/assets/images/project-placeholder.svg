@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="نگاره معماری نیکابنا">
+<defs>
+  <linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1a2f40"/><stop offset=".58" stop-color="#2b4758"/><stop offset="1" stop-color="#152835"/></linearGradient>
+  <linearGradient id="line" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#dfccaa"/><stop offset="1" stop-color="#9e7e4f"/></linearGradient>
+  <pattern id="grid" width="65" height="65" patternUnits="userSpaceOnUse"><path d="M65 0H0V65" fill="none" stroke="#d3b98f" stroke-opacity=".055"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="url(#night)"/><rect width="1200" height="800" fill="url(#grid)"/>
+<g stroke="#d4bb91" stroke-opacity=".18" fill="none"><path d="M80 660H1100 M190 75V730 M1020 95V700"/><circle cx="920" cy="245" r="148"/><circle cx="920" cy="245" r="193" stroke-dasharray="8 20"/></g>
+<g fill="none" stroke="url(#line)" stroke-width="2.5" stroke-linejoin="round" opacity=".85">
+ <path d="M300 635V295L575 167L775 252V635"/>
+ <path d="M575 167V635 M300 295L575 408L775 324 M320 285L575 392L754 313"/>
+ <path d="M342 630V352L540 439V630 M610 630V417L743 363V630"/>
+ <path d="M380 401V469L487 511V441Z M380 508V576L487 618V548Z M624 446L718 409V485L624 523Z M624 542L718 505V580L624 618Z"/>
+ <path d="M242 655L575 655L835 655 M266 677H844 M300 225L575 99L846 224" stroke-opacity=".5"/>
+</g>
+<g font-family="Arial,Helvetica,sans-serif" fill="#e9dcc4"><text x="90" y="105" font-size="30" letter-spacing="9">NIKA BANA</text><text x="93" y="143" font-size="15" letter-spacing="4" opacity=".65">PROJECT ARCHIVE</text></g>
+<path d="M90 177H290" stroke="#b79763" stroke-width="3"/>
+</svg>

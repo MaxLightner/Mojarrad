@@ -111,7 +111,7 @@ function mojarrad_project_cover( int $id = 0, string $size = 'mojarrad-card' ) {
             && is_file( get_template_directory() . '/assets/' . $relative ) ) {
             echo '<img loading="lazy" decoding="async" src="' . esc_url( mojarrad_asset($relative) ) . '" alt="' . esc_attr(get_the_title($id)) . '">';
         } else {
-            echo '<div class="portfolio-photo-placeholder" role="img" aria-label="تصویر پروژه هنوز آماده نمایش نیست"><span>NIKA BANA / PROJECT</span></div>';
+            echo '<img class="portfolio-placeholder-image" loading="lazy" decoding="async" src="' . esc_url(mojarrad_asset('images/project-placeholder.svg')) . '" alt="تصویر واقعی این پروژه هنوز به آرشیو اضافه نشده است">';
         }
     }
 }

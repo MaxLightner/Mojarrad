@@ -61,6 +61,7 @@
   <?php if ( post_type_exists( 'moj_project' ) ) :
       $projects = new WP_Query( array(
           'post_type'=>'moj_project', 'post_status'=>'publish', 'posts_per_page'=>3, 'orderby'=>'date','order'=>'DESC',
+          'meta_query'=>array(array('key'=>'moj_portfolio_cover','value'=>'','compare'=>'!=')),
       ) );
   ?>
     <?php if ( $projects->have_posts() ) : ?>

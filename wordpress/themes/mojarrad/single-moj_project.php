@@ -4,6 +4,8 @@
   $gallery=array_values(array_filter(array_map('absint',explode(',',mojarrad_meta('gallery_ids',$id)))));
   $portfolio_gallery=json_decode(mojarrad_meta('portfolio_gallery',$id),true);
   if(!is_array($portfolio_gallery)) $portfolio_gallery=array();
+  $portfolio_cover=mojarrad_meta('portfolio_cover',$id);
+  if($portfolio_cover && !in_array($portfolio_cover,$portfolio_gallery,true)) array_unshift($portfolio_gallery,$portfolio_cover);
   $subtitle=mojarrad_meta('subtitle',$id);
   $project_code=(string)get_post_meta($id,'_moj_portfolio_external_id',true);
 ?>

@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Mojarrad Core
  * Description: WordPress content, memberships and role-aware dashboard backend for Nika Bana.
- * Version: 0.6.6
+ * Version: 0.6.7
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Text Domain: mojarrad-core
  */
 defined('ABSPATH') || exit;
 
-define('MOJARRAD_CORE_VERSION', '0.6.6');
+define('MOJARRAD_CORE_VERSION', '0.6.7');
 define('MOJARRAD_CORE_PATH', plugin_dir_path(__FILE__));
 
 require_once MOJARRAD_CORE_PATH . 'includes/class-schema.php';
