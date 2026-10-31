@@ -49,7 +49,7 @@ try {
     if (width === 375 || width === 1365) {
       const publicPages = [
         ['projects','/projects/','.portfolio-grid .project-card'],
-        ['project-detail','/projects/anvari-8/','.project-photo-grid a'],
+        ['project-detail','/projects/anvari-7/','.project-facts .project-fact'],
         ['about','/about/','.editorial-story'],
         ['blog','/blog/','.journal-grid .editorial-card'],
         ['article','/heblex-walls/','.article-prose'],
@@ -62,6 +62,7 @@ try {
         const check = await page.goto(base+route,{waitUntil:'networkidle',timeout:30000});
         if (check?.status() !== 200) failures.push(width+'px '+label+' HTTP status '+check?.status());
         if (!(await page.locator(selector).count())) failures.push(width+'px '+label+' missing section '+selector);
+        if (label === 'projects' && await page.locator('.portfolio-grid .project-card').count() !== 15) failures.push(width+'px public project inventory is not exactly 15');
         const metrics = await page.evaluate(() => ({
           viewport: document.documentElement.clientWidth,
           scroll: document.documentElement.scrollWidth
