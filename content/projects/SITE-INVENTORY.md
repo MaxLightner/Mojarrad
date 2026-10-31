@@ -10,7 +10,7 @@ The website portfolio currently has **15 named projects**. These names and avail
 | nb-0002 | ساختمان نبش انوری ۷ | 2 AI-assisted images |
 | nb-0003 | ساختمان امام رضا ۶۶ | 1 AI-assisted image |
 | nb-0004 | ساختمان کوثر ۱۰ | 1 AI-assisted image |
-| nb-0005 | ساختمان امام رضا ۲۷ نبش بوستان ۳ | 5 AI-assisted images |
+| nb-0005 | ساختمان امام رضا ۲۷ نبش بستان ۳ | 5 AI-assisted images |
 | nb-0006 | ساختمان امام خمینی ۶۶ | 1 AI-assisted image |
 | nb-0007 | ساختمان امام رضا ۶۳ | 1 AI-assisted image |
 | nb-0008 | ساختمان امام خمینی ۷۷ | 1 AI-assisted image |
