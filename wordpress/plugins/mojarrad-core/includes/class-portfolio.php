@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit;
 
 final class Mojarrad_Portfolio {
-    public const VERSION = '2026-11-01.3';
+    public const VERSION = '2026-11-01.4';
 
     public static function sync_once(): void {
         if (get_option('moj_portfolio_sync_version') === self::VERSION || !post_type_exists('moj_project')) {

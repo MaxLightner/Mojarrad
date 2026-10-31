@@ -100,6 +100,20 @@ try {
           await page.screenshot({path:outputs+'/portfolio-dialog-'+width+'.png',animations:'disabled'});
           await page.keyboard.press('Escape');
           if (await page.locator('#portfolio-lightbox').isVisible()) failures.push(width+'px Escape did not close portfolio dialog');
+          await page.locator('.portfolio-tile').nth(1).click();
+          if (!(await page.locator('#portfolio-dialog-title').innerText()).includes('انوری')) failures.push(width+'px Anvari 7 dialog did not open');
+          const anvariThumbs = page.locator('#portfolio-thumbs .portfolio-thumb');
+          if (await anvariThumbs.count() !== 10) failures.push(width+'px Anvari 7 expected 10 gallery photos');
+          else {
+            await anvariThumbs.last().click();
+            if ((await page.locator('#portfolio-image-count').innerText()) !== '10 / 10') failures.push(width+'px Anvari 7 last photo navigation failed');
+            const loaded = await page.locator('#portfolio-stage-image').evaluate(async img => {
+              try { await img.decode(); } catch (_) {}
+              return img.complete && img.naturalWidth > 0;
+            });
+            if (!loaded) failures.push(width+'px Anvari 7 last photo failed to load');
+          }
+          await page.keyboard.press('Escape');
         }
         if (label === 'project-detail') {
           const hero = page.locator('.project-showcase-photo img');

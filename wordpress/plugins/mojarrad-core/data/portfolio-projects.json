@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-01.3",
+  "version": "2026-11-01.4",
   "projects": [
     {
       "external_id": "nb-0001",
@@ -35,7 +35,15 @@
       "credits": {},
       "cover": "projects/nb-0002/cover.avif",
       "gallery": [
-        "projects/nb-0002/02.avif"
+        "projects/nb-0002/02.avif",
+        "projects/nb-0002/interior-01-open-plan.avif",
+        "projects/nb-0002/interior-02-living-kitchen.avif",
+        "projects/nb-0002/interior-03-hallway.avif",
+        "projects/nb-0002/interior-04-mirror.avif",
+        "projects/nb-0002/interior-05-entry.avif",
+        "projects/nb-0002/interior-06-bedroom-a.avif",
+        "projects/nb-0002/interior-07-bedroom-b.avif",
+        "projects/nb-0002/interior-08-bathroom.avif"
       ],
       "status": "unknown",
       "description": "",
