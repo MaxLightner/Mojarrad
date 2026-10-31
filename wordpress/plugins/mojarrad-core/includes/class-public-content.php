@@ -6,6 +6,8 @@ final class Mojarrad_Public_Content {
     public const PROJECT_FIELDS = array(
         'subtitle' => 'زیرعنوان',
         'location' => 'موقعیت',
+        'latitude' => 'عرض جغرافیایی نقشه (اختیاری، مانند 36.297)',
+        'longitude' => 'طول جغرافیایی نقشه (اختیاری، مانند 59.606)',
         'kind' => 'نوع پروژه',
         'land_area' => 'مساحت زمین (مترمربع)',
         'units' => 'تعداد واحد',
@@ -72,6 +74,14 @@ final class Mojarrad_Public_Content {
         foreach ( self::PROJECT_FIELDS as $key => $label ) {
             $field = 'moj_' . $key;
             $value = isset( $_POST[$field] ) && is_string( $_POST[$field] ) ? wp_unslash( $_POST[$field] ) : '';
+            if ( in_array( $key, array( 'latitude', 'longitude' ), true ) ) {
+                $value = trim( $value );
+                $limit = 'latitude' === $key ? 90 : 180;
+                if ( $value === '' || ! is_numeric( $value ) || abs( (float) $value ) > $limit ) {
+                    delete_post_meta( $post_id, $field );
+                    continue;
+                }
+            }
             update_post_meta( $post_id, $field, 'sale_description' === $key ? sanitize_textarea_field( $value ) : sanitize_text_field( $value ) );
         }
         $progress_raw = isset( $_POST['moj_progress'] ) && is_scalar( $_POST['moj_progress'] )

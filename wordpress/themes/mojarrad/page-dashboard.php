@@ -78,7 +78,7 @@ foreach($project_ids as $project_id) {
                   <?php endforeach;
                 endif; ?>
 
-                <?php if(get_post_status($pid)==='publish'): ?><a class="text-link" href="<?php echo esc_url(get_permalink($pid)); ?>">صفحه عمومی پروژه ←</a><?php else: ?><span class="muted">این پروژه صفحه عمومی ندارد</span><?php endif; ?>
+                <?php if(get_post_status($pid)==='publish'): ?><a class="text-link" href="<?php echo esc_url(mojarrad_link('projects').'#project='.rawurlencode(get_post_field('post_name',$pid))); ?>">نمایش در گالری پروژه‌ها ←</a><?php else: ?><span class="muted">این پروژه صفحه عمومی ندارد</span><?php endif; ?>
                 <?php if($is_manager): ?><a class="text-link" href="<?php echo esc_url(get_edit_post_link($pid)); ?>">ویرایش و تخصیص اعضا</a><?php endif; ?>
               </div>
             </div>

@@ -58,6 +58,13 @@ add_action( 'wp_enqueue_scripts', function () {
     if ( is_post_type_archive('moj_project') || is_singular('moj_project') ) {
         wp_enqueue_style('mojarrad-portfolio', get_template_directory_uri() . '/assets/css/portfolio.css', array('mojarrad-editorial'), $version);
     }
+    if ( is_post_type_archive('moj_project') ) {
+        // The interactive map is optional: gallery and dialog work even when tile/CDN hosts are blocked.
+        wp_enqueue_style('mojarrad-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', array(), '1.9.4');
+        wp_enqueue_script('mojarrad-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', array(), '1.9.4', true);
+        $portfolio_script = get_template_directory() . '/assets/js/portfolio-experience.js';
+        wp_enqueue_script('mojarrad-portfolio-experience', get_template_directory_uri() . '/assets/js/portfolio-experience.js', array('mojarrad-leaflet'), $version . '-' . (string) filemtime($portfolio_script), true);
+    }
     // Scoped, progressive enhancement for the architectural home page.
     if ( is_front_page() ) {
         $home_style_path = get_template_directory() . '/assets/css/home-experience.css';
@@ -125,7 +132,7 @@ function mojarrad_render_project_card( int $id = 0 ) {
     $is_sale = '1' === mojarrad_meta( 'for_sale', $id );
     ?>
     <article class="card-lux project-card">
-        <a href="<?php echo esc_url( get_permalink( $id ) ); ?>" class="card-image">
+        <a href="<?php echo esc_url( mojarrad_link( 'projects' ) . '#project=' . rawurlencode( get_post_field( 'post_name', $id ) ) ); ?>" class="card-image">
           <?php mojarrad_project_cover( $id ); ?>
           <span class="image-shade"></span>
           <?php if ( $is_sale ) : ?><span class="badge-gold">در فروش</span><?php endif; ?>
