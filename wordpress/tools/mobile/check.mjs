@@ -48,7 +48,7 @@ try {
     }
     if (width === 375 || width === 1365) {
       const publicPages = [
-        ['projects','/projects/','.portfolio-grid .project-card'],
+        ['projects','/projects/','.portfolio-mosaic .portfolio-tile'],
         ['project-detail','/projects/anvari-7/','.project-facts .project-fact'],
         ['about','/about/','.editorial-story'],
         ['blog','/blog/','.journal-grid .editorial-card'],
@@ -63,15 +63,33 @@ try {
         if (check?.status() !== 200) failures.push(width+'px '+label+' HTTP status '+check?.status());
         if (!(await page.locator(selector).count())) failures.push(width+'px '+label+' missing section '+selector);
         if (label === 'projects') {
-          if (await page.locator('.portfolio-grid .project-card').count() !== 15) failures.push(width+'px public project inventory is not exactly 15');
-          const images = await page.locator('.portfolio-grid .project-card .card-image img').evaluateAll(els =>
-            els.map(el => ({src:el.getAttribute('src') || '',loaded:el.complete && el.naturalWidth > 0}))
+          if (await page.locator('.portfolio-mosaic .portfolio-tile').count() !== 15) failures.push(width+'px public project inventory is not exactly 15');
+          const images = await page.locator('.portfolio-mosaic .portfolio-tile img').evaluateAll(async els =>
+            await Promise.all(els.map(async el => {
+              el.loading = 'eager';
+              try { await el.decode(); } catch (_) {}
+              return {src:el.getAttribute('src') || '',loaded:el.complete && el.naturalWidth > 0};
+            }))
           );
           if (images.length !== 15) failures.push(width+'px projects expected 15 image elements but found '+images.length);
           const bad=images.filter(img => !img.loaded);
           if(bad.length) failures.push(width+'px project thumbnails failed to load: '+bad.map(x=>x.src).join(', '));
           if (images.filter(img=>img.src.endsWith('.avif')).length !== 8) failures.push(width+'px expected 8 real project thumbnails');
           if (images.filter(img=>img.src.endsWith('project-placeholder.svg')).length !== 7) failures.push(width+'px expected 7 graphic thumbnails');
+          await page.locator('.portfolio-filter[data-filter=\"garden\"]').click();
+          if (await page.locator('.portfolio-tile:visible').count() !== 6) failures.push(width+'px garden filter did not show exactly 6 projects');
+          await page.locator('.portfolio-filter[data-filter=\"all\"]').click();
+          await page.locator('.portfolio-tile').first().click();
+          if (!(await page.locator('#portfolio-lightbox').isVisible())) failures.push(width+'px portfolio dialog did not open');
+          if (!(await page.locator('#portfolio-dialog-title').innerText()).includes('بزرگمهر')) failures.push(width+'px portfolio dialog title missing');
+          if (!(await page.locator('.portfolio-fact').count())) failures.push(width+'px portfolio facts missing');
+          if (await page.locator('#portfolio-next').isVisible()) {
+            await page.locator('#portfolio-next').click();
+            if (!(await page.locator('#portfolio-image-count').innerText()).includes('2 / 2')) failures.push(width+'px portfolio image navigation failed');
+          }
+          await page.screenshot({path:outputs+'/portfolio-dialog-'+width+'.png',animations:'disabled'});
+          await page.keyboard.press('Escape');
+          if (await page.locator('#portfolio-lightbox').isVisible()) failures.push(width+'px Escape did not close portfolio dialog');
         }
         if (label === 'project-detail') {
           const hero = page.locator('.project-showcase-photo img');
