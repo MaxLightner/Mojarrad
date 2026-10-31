@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Mojarrad Core
  * Description: WordPress content, memberships and role-aware dashboard backend for Nika Bana.
- * Version: 0.6.3
+ * Version: 0.6.4
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Text Domain: mojarrad-core
  */
 defined('ABSPATH') || exit;
 
-define('MOJARRAD_CORE_VERSION', '0.6.3');
+define('MOJARRAD_CORE_VERSION', '0.6.4');
 define('MOJARRAD_CORE_PATH', plugin_dir_path(__FILE__));
 
 require_once MOJARRAD_CORE_PATH . 'includes/class-schema.php';
@@ -23,6 +23,7 @@ Mojarrad_Editorial_Review::register();
 require_once MOJARRAD_CORE_PATH . 'includes/class-rest.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-public-content.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-starter-content.php';
+require_once MOJARRAD_CORE_PATH . 'includes/class-portfolio.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-leads.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-membership.php';
 require_once MOJARRAD_CORE_PATH . 'includes/class-timeline-access.php';
@@ -148,6 +149,8 @@ function mojarrad_core_upgrade() {
 add_action('init','mojarrad_core_upgrade',20);
 // Populate missing public showcase pages once; existing content is never overwritten.
 add_action('init',array('Mojarrad_Starter_Content','import_once'),25);
+add_action('init',array('Mojarrad_Portfolio','sync_once'),30);
+add_action('pre_get_posts',array('Mojarrad_Portfolio','archive_query'),20);
 
 add_action('rest_api_init',array('Mojarrad_REST','register_routes'));
 add_action('rest_api_init',array('Mojarrad_Timeline','register_routes'));

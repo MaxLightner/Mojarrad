@@ -1,0 +1,18 @@
+/* Public project placeholders: never use a demo building as a fallback photo. */
+.portfolio-photo-placeholder {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:240px;width:100%;height:100%;position:relative;
+  background:linear-gradient(137deg,#263342,#445367 48%,#6e7984);
+  color:#fff;overflow:hidden;text-align:center;isolation:isolate;
+}
+.portfolio-photo-placeholder::before {
+  content:"";position:absolute;inset:12%;opacity:.2;
+  background:repeating-linear-gradient(90deg,transparent 0 34px,rgba(255,255,255,.36) 35px 36px),
+    repeating-linear-gradient(0deg,transparent 0 34px,rgba(255,255,255,.28) 35px 36px);
+  transform:perspective(350px) rotateX(10deg) rotateY(-8deg);pointer-events:none;
+}
+.portfolio-photo-placeholder span {position:relative;z-index:1;letter-spacing:.18em;font-size:11px;font-weight:600;opacity:.9}
+.project-showcase-photo .portfolio-photo-placeholder {min-height:76vh;}
+.project-card .portfolio-photo-placeholder {min-height:240px;aspect-ratio:840 / 520;}
+.project-card .card-image > .portfolio-photo-placeholder + .image-shade {pointer-events:none;}
+.project-facts .project-fact strong {font-variant-numeric:tabular-nums;}

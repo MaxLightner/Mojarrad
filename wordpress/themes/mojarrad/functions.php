@@ -55,6 +55,9 @@ add_action( 'wp_enqueue_scripts', function () {
             'project'=>isset($_GET['project'])?absint($_GET['project']):0,
         ),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).';','before');
     }
+    if ( is_post_type_archive('moj_project') || is_singular('moj_project') ) {
+        wp_enqueue_style('mojarrad-portfolio', get_template_directory_uri() . '/assets/css/portfolio.css', array('mojarrad-editorial'), $version);
+    }
     // Scoped, progressive enhancement for the architectural home page.
     if ( is_front_page() ) {
         $home_style_path = get_template_directory() . '/assets/css/home-experience.css';
@@ -102,10 +105,14 @@ function mojarrad_project_cover( int $id = 0, string $size = 'mojarrad-card' ) {
     $id = $id ?: get_the_ID();
     if ( has_post_thumbnail( $id ) ) {
         echo get_the_post_thumbnail( $id, $size, array( 'loading' => 'lazy' ) );
-    } elseif ( mojarrad_meta( 'demo_cover', $id ) ) {
-        echo '<img loading="lazy" src="' . esc_url( mojarrad_asset( 'images/' . basename( mojarrad_meta( 'demo_cover', $id ) ) ) ) . '" alt="" />';
     } else {
-        echo '<img loading="lazy" src="' . esc_url( mojarrad_asset( 'images/cons-n-1.jpg' ) ) . '" alt="" />';
+        $relative = mojarrad_meta( 'portfolio_cover', $id );
+        if ( $relative && preg_match('#^projects/nb-\\d{4}/[\\w-]+\\.avif$#', $relative)
+            && is_file( get_template_directory() . '/assets/' . $relative ) ) {
+            echo '<img loading="lazy" decoding="async" src="' . esc_url( mojarrad_asset($relative) ) . '" alt="' . esc_attr(get_the_title($id)) . '">';
+        } else {
+            echo '<div class="portfolio-photo-placeholder" role="img" aria-label="تصویر پروژه هنوز آماده نمایش نیست"><span>NIKA BANA / PROJECT</span></div>';
+        }
     }
 }
 function mojarrad_project_status( int $id = 0 ): string {
@@ -126,7 +133,7 @@ function mojarrad_render_project_card( int $id = 0 ) {
         </a>
         <div class="card-body">
           <span class="meta-line"><?php echo esc_html( mojarrad_meta( 'location', $id ) ); ?></span>
-          <span class="meta-line"><?php echo esc_html( mojarrad_meta( 'status', $id ) ); ?></span>
+          <?php if (mojarrad_meta('units',$id)): ?><span class="meta-line"><?php echo esc_html(mojarrad_meta('units',$id)); ?> واحد</span><?php endif; ?>
           <?php if ( $is_sale && mojarrad_meta( 'sale_price', $id ) ) : ?>
             <span class="sale-price"><?php echo esc_html( mojarrad_meta( 'sale_price', $id ) ); ?></span>
           <?php endif; ?>
