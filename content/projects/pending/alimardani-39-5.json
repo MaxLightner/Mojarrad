@@ -1,0 +1,28 @@
+{
+  "location": "علیمردانی ۳۹/۵",
+  "status": "archived_together_not_published",
+  "notes": [
+    "این دو پروژه فعلاً در یک پرونده باقی می‌مانند و وارد فهرست عمومی سایت نمی‌شوند.",
+    "تقسیم عکس‌ها براساس ساختمان قابل مشاهده است؛ قبل از انتشار یا تفکیک نهایی تأیید شود.",
+    "تصاویر بازسازی هوش مصنوعی هستند و باید نسبت به عکس واقعی کنترل شوند."
+  ],
+  "projects": [
+    {
+      "internal_id": "alimardani-a",
+      "title": "علیمردانی ۳۹/۵ — پروژه الف",
+      "image_paths": [
+        "media/alimardani-39-5/project-a-01.avif",
+        "media/alimardani-39-5/project-a-02.avif"
+      ],
+      "details": {}
+    },
+    {
+      "internal_id": "alimardani-b",
+      "title": "علیمردانی ۳۹/۵ — پروژه ب",
+      "image_paths": [
+        "media/alimardani-39-5/project-b-01.avif"
+      ],
+      "details": {}
+    }
+  ]
+}

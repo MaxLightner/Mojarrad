@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "nb-0010",
+  "slug": "kahou-garden-1",
+  "title": "باغ کاهو — پروژه ۱",
+  "subtitle": "",
+  "summary": "",
+  "description": "",
+  "details": {
+    "kind": "باغ",
+    "status": "unknown",
+    "status_description": "",
+    "public_location": "کاهو",
+    "area_m2": null,
+    "land_area_m2": null,
+    "floors_above_ground": null,
+    "roof_count": null,
+    "unit_count": null,
+    "unit_area_m2": null,
+    "year": "",
+    "start_date": "",
+    "end_date": "",
+    "progress_percent": null,
+    "services": [],
+    "features": []
+  },
+  "sale": {
+    "for_sale": false,
+    "price": "",
+    "description": ""
+  },
+  "media": {
+    "cover": null,
+    "gallery": []
+  },
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "review": {
+    "stage": "collecting",
+    "approved_for_website": false,
+    "approved_at": null
+  },
+  "editorial": {
+    "notes": [
+      "اطلاعات ناموجود عمداً خالی ثبت شده است.",
+      "مالکین خصوصی تا اخذ مجوز نمایش در مخزن عمومی درج نمی‌شوند.",
+      "پروژه‌های ۱ و ۲ صرفاً شناسه‌های موقت برای تمایز دو باغ هستند."
+    ],
+    "publication_blocked": true
+  }
+}

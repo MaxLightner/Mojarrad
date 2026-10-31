@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31",
+  "updated_at": "2026-11-01",
   "projects": [
     {
       "id": "nb-0001",
@@ -31,6 +31,94 @@
       "slug": "kosar-10",
       "title": "ساختمان کوثر ۱۰",
       "record": "records/nb-0004.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0005",
+      "slug": "emam-reza-27-bostan-3",
+      "title": "ساختمان امام رضا ۲۷ نبش بوستان ۳",
+      "record": "records/nb-0005.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0006",
+      "slug": "emam-khomeini-66",
+      "title": "ساختمان امام خمینی ۶۶",
+      "record": "records/nb-0006.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0007",
+      "slug": "emam-reza-63",
+      "title": "ساختمان امام رضا ۶۳",
+      "record": "records/nb-0007.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0008",
+      "slug": "emam-khomeini-77",
+      "title": "ساختمان امام خمینی ۷۷",
+      "record": "records/nb-0008.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0009",
+      "slug": "koohsangi-project",
+      "title": "پروژه کوهسنگی",
+      "record": "records/nb-0009.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0010",
+      "slug": "kahou-garden-1",
+      "title": "باغ کاهو — پروژه ۱",
+      "record": "records/nb-0010.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0011",
+      "slug": "kahou-garden-2",
+      "title": "باغ کاهو — پروژه ۲",
+      "record": "records/nb-0011.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0012",
+      "slug": "kong-garden",
+      "title": "باغ کنگ",
+      "record": "records/nb-0012.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0013",
+      "slug": "ebrahimabad-garden",
+      "title": "باغ ابراهیم‌آباد",
+      "record": "records/nb-0013.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0014",
+      "slug": "zeshk-garden-1",
+      "title": "باغ زشک — پروژه ۱",
+      "record": "records/nb-0014.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0015",
+      "slug": "zeshk-garden-2",
+      "title": "باغ زشک — پروژه ۲",
+      "record": "records/nb-0015.json",
       "stage": "collecting",
       "approved_for_website": false
     }

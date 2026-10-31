@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "nb-0008",
+  "slug": "emam-khomeini-77",
+  "title": "ساختمان امام خمینی ۷۷",
+  "subtitle": "",
+  "summary": "",
+  "description": "",
+  "details": {
+    "kind": "مسکونی",
+    "status": "unknown",
+    "status_description": "",
+    "public_location": "مشهد، امام خمینی ۷۷",
+    "area_m2": null,
+    "land_area_m2": null,
+    "floors_above_ground": null,
+    "roof_count": null,
+    "unit_count": null,
+    "unit_area_m2": null,
+    "year": "",
+    "start_date": "",
+    "end_date": "",
+    "progress_percent": null,
+    "services": [],
+    "features": []
+  },
+  "sale": {
+    "for_sale": false,
+    "price": "",
+    "description": ""
+  },
+  "media": {
+    "cover": {
+      "path": "media/nb-0008/cover.avif",
+      "alt": "نمای پروژه ساختمان امام خمینی ۷۷",
+      "caption": "تصویر اصلاح‌شده با هوش مصنوعی؛ هندسه ساختمان پیش از انتشار بررسی شود.",
+      "credit": "",
+      "approved_for_public_use": false,
+      "source_type": "ai_assisted_edit",
+      "requires_visual_verification": true
+    },
+    "gallery": []
+  },
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "review": {
+    "stage": "collecting",
+    "approved_for_website": false,
+    "approved_at": null
+  },
+  "editorial": {
+    "notes": [
+      "اطلاعات ناموجود عمداً خالی ثبت شده است.",
+      "مالکین خصوصی تا اخذ مجوز نمایش در مخزن عمومی درج نمی‌شوند."
+    ],
+    "publication_blocked": true
+  }
+}
