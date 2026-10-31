@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "nb-0001",
   "slug": "project-slug",
   "title": "عنوان پروژه",
@@ -8,7 +8,7 @@
   "description": "",
   "details": {
     "kind": "",
-    "status": "in-progress",
+    "status": "unknown",
     "status_description": "",
     "public_location": "",
     "area_m2": null,
@@ -17,7 +17,12 @@
     "end_date": "",
     "progress_percent": null,
     "services": [],
-    "features": []
+    "features": [],
+    "land_area_m2": null,
+    "floors_above_ground": null,
+    "roof_count": null,
+    "unit_count": null,
+    "unit_area_m2": null
   },
   "sale": {
     "for_sale": false,
@@ -36,5 +41,9 @@
     "stage": "collecting",
     "approved_for_website": false,
     "approved_at": null
+  },
+  "editorial": {
+    "notes": [],
+    "publication_blocked": true
   }
 }

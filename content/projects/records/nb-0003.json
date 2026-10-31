@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "nb-0003",
+  "slug": "emam-reza-66",
+  "title": "ساختمان امام رضا ۶۶",
+  "subtitle": "پروژه ساختمانی نیکابنا",
+  "summary": "",
+  "description": "",
+  "details": {
+    "kind": "مسکونی",
+    "status": "unknown",
+    "status_description": "",
+    "public_location": "مشهد، امام رضا ۶۶",
+    "area_m2": null,
+    "land_area_m2": 280,
+    "floors_above_ground": null,
+    "roof_count": 8,
+    "unit_count": 10,
+    "unit_area_m2": null,
+    "year": "",
+    "start_date": "",
+    "end_date": "",
+    "progress_percent": null,
+    "services": [],
+    "features": [
+      "۸ سقف بنا"
+    ]
+  },
+  "sale": {
+    "for_sale": false,
+    "price": "",
+    "description": ""
+  },
+  "media": {
+    "cover": {
+      "path": "media/nb-0003/cover.avif",
+      "alt": "نمای ساختمان مسکونی امام رضا ۶۶ با نمای سنگی کلاسیک",
+      "caption": "اصلاح رنگ و نور توسط هوش مصنوعی؛ تفاوت جزئیات معماری با اصل پیش از انتشار بررسی شود.",
+      "credit": "",
+      "approved_for_public_use": false,
+      "source_type": "ai_assisted_edit",
+      "requires_visual_verification": true
+    },
+    "gallery": []
+  },
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "review": {
+    "stage": "collecting",
+    "approved_for_website": false,
+    "approved_at": null
+  },
+  "editorial": {
+    "notes": [
+      "«۸ سقف بنا» به همان عبارت منبع ثبت شد؛ برابر با تعداد طبقات فرض نشده است."
+    ],
+    "publication_blocked": true
+  }
+}

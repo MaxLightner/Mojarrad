@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "nb-0004",
+  "slug": "kosar-10",
+  "title": "ساختمان کوثر ۱۰",
+  "subtitle": "پروژه ساختمانی نیکابنا",
+  "summary": "",
+  "description": "",
+  "details": {
+    "kind": "مسکونی",
+    "status": "unknown",
+    "status_description": "",
+    "public_location": "مشهد، کوثر ۱۰",
+    "area_m2": null,
+    "land_area_m2": null,
+    "floors_above_ground": null,
+    "roof_count": null,
+    "unit_count": 5,
+    "unit_area_m2": null,
+    "year": "",
+    "start_date": "",
+    "end_date": "",
+    "progress_percent": null,
+    "services": [],
+    "features": []
+  },
+  "sale": {
+    "for_sale": false,
+    "price": "",
+    "description": ""
+  },
+  "media": {
+    "cover": {
+      "path": "media/nb-0004/cover.avif",
+      "alt": "نمای ساختمان کوثر ۱۰",
+      "caption": "اصلاح نور و حذف کابل برق توسط هوش مصنوعی؛ برای انتشار نیازمند بازبینی است.",
+      "credit": "",
+      "approved_for_public_use": false,
+      "source_type": "ai_assisted_edit",
+      "requires_visual_verification": true
+    },
+    "gallery": []
+  },
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "review": {
+    "stage": "collecting",
+    "approved_for_website": false,
+    "approved_at": null
+  },
+  "editorial": {
+    "notes": [
+      "نام مالک در مخزن عمومی ثبت نشده و باید در فضای خصوصی مدیریت شود."
+    ],
+    "publication_blocked": true
+  }
+}

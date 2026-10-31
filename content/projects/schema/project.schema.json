@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Nika Bana portfolio project v1",
+  "title": "Nika Bana portfolio project v2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 2
     },
     "id": {
       "type": "string",
@@ -52,7 +52,8 @@
           "enum": [
             "completed",
             "in-progress",
-            "future"
+            "future",
+            "unknown"
           ]
         },
         "status_description": {
@@ -98,6 +99,41 @@
             "type": "string"
           },
           "uniqueItems": true
+        },
+        "land_area_m2": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "floors_above_ground": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "roof_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "unit_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "unit_area_m2": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
         }
       }
     },
@@ -183,6 +219,25 @@
           "format": "date-time"
         }
       }
+    },
+    "editorial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notes",
+        "publication_blocked"
+      ],
+      "properties": {
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publication_blocked": {
+          "type": "boolean"
+        }
+      }
     }
   },
   "$defs": {
@@ -210,6 +265,16 @@
           "type": "string"
         },
         "approved_for_public_use": {
+          "type": "boolean"
+        },
+        "source_type": {
+          "enum": [
+            "original",
+            "ai_assisted_edit",
+            "generated"
+          ]
+        },
+        "requires_visual_verification": {
           "type": "boolean"
         }
       }

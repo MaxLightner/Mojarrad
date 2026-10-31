@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "nb-0001",
+  "slug": "bozorgmehr-9",
+  "title": "ساختمان بزرگمهر ۹",
+  "subtitle": "پروژه ساختمانی نیکابنا",
+  "summary": "",
+  "description": "",
+  "details": {
+    "kind": "مسکونی",
+    "status": "unknown",
+    "status_description": "",
+    "public_location": "مشهد، بزرگمهر ۹، انتهای کوچه",
+    "area_m2": null,
+    "land_area_m2": 250,
+    "floors_above_ground": 5,
+    "roof_count": null,
+    "unit_count": 5,
+    "unit_area_m2": 160,
+    "year": "",
+    "start_date": "",
+    "end_date": "",
+    "progress_percent": null,
+    "services": [],
+    "features": [
+      "۵ طبقه روی همکف",
+      "۵ واحد ۱۶۰ مترمربعی"
+    ]
+  },
+  "sale": {
+    "for_sale": false,
+    "price": "",
+    "description": ""
+  },
+  "media": {
+    "cover": {
+      "path": "media/nb-0001/cover.avif",
+      "alt": "نمای مایل بازسازی‌شده از ساختمان بزرگمهر ۹",
+      "caption": "تصویر بازسازی‌شده با هوش مصنوعی؛ تعداد طبقات و هندسه پیش از انتشار بازبینی شود.",
+      "credit": "",
+      "approved_for_public_use": false,
+      "source_type": "ai_assisted_edit",
+      "requires_visual_verification": true
+    },
+    "gallery": [
+      {
+        "path": "media/nb-0001/02.avif",
+        "alt": "نمای ورودی و طبقات ساختمان بزرگمهر ۹",
+        "caption": "گسترش تصویری بر پایه عکس ورودی؛ قسمت بالای نما بازسازی شده و تعداد طبقات نیازمند تأیید است.",
+        "credit": "",
+        "approved_for_public_use": false,
+        "source_type": "ai_assisted_edit",
+        "requires_visual_verification": true
+      }
+    ]
+  },
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "review": {
+    "stage": "collecting",
+    "approved_for_website": false,
+    "approved_at": null
+  },
+  "editorial": {
+    "notes": [
+      "طبق اطلاعات مالک: ۵ طبقه روی همکف؛ گالری بازسازی‌شده هنوز از نظر شمارش طبقات تأیید نشده است.",
+      "عکس‌های گالری صرفاً پیش‌نویس‌اند و تا تطبیق با ساختمان واقعی نباید در سایت منتشر شوند."
+    ],
+    "publication_blocked": true
+  }
+}

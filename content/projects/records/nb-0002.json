@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "nb-0002",
+  "slug": "anvari-7",
+  "title": "ساختمان نبش انوری ۷",
+  "subtitle": "پروژه ساختمانی نیکابنا",
+  "summary": "",
+  "description": "",
+  "details": {
+    "kind": "مسکونی",
+    "status": "unknown",
+    "status_description": "",
+    "public_location": "مشهد، نبش انوری ۷",
+    "area_m2": null,
+    "land_area_m2": 500,
+    "floors_above_ground": null,
+    "roof_count": null,
+    "unit_count": 11,
+    "unit_area_m2": null,
+    "year": "",
+    "start_date": "",
+    "end_date": "",
+    "progress_percent": null,
+    "services": [],
+    "features": []
+  },
+  "sale": {
+    "for_sale": false,
+    "price": "",
+    "description": ""
+  },
+  "media": {
+    "cover": {
+      "path": "media/nb-0002/cover.avif",
+      "alt": "نمای مایل ساختمان مسکونی نبش انوری ۷ مشهد",
+      "caption": "تصویر اصلاح نور و حذف کابل؛ جزئیات احتمالی بازسازی‌شده باید بازبینی شود.",
+      "credit": "",
+      "approved_for_public_use": false,
+      "source_type": "ai_assisted_edit",
+      "requires_visual_verification": true
+    },
+    "gallery": [
+      {
+        "path": "media/nb-0002/02.avif",
+        "alt": "نمای دیگر ساختمان نبش انوری ۷",
+        "caption": "تصویر اصلاح نور و حذف کابل؛ جزئیات احتمالی بازسازی‌شده باید بازبینی شود.",
+        "credit": "",
+        "approved_for_public_use": false,
+        "source_type": "ai_assisted_edit",
+        "requires_visual_verification": true
+      }
+    ]
+  },
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "review": {
+    "stage": "collecting",
+    "approved_for_website": false,
+    "approved_at": null
+  },
+  "editorial": {
+    "notes": [],
+    "publication_blocked": true
+  }
+}

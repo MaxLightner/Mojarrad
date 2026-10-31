@@ -1,5 +1,38 @@
 {
-  "schema_version": 1,
-  "updated_at": "2026-10-26",
-  "projects": []
+  "schema_version": 2,
+  "updated_at": "2026-10-31",
+  "projects": [
+    {
+      "id": "nb-0001",
+      "slug": "bozorgmehr-9",
+      "title": "ساختمان بزرگمهر ۹",
+      "record": "records/nb-0001.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0002",
+      "slug": "anvari-7",
+      "title": "ساختمان نبش انوری ۷",
+      "record": "records/nb-0002.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0003",
+      "slug": "emam-reza-66",
+      "title": "ساختمان امام رضا ۶۶",
+      "record": "records/nb-0003.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    },
+    {
+      "id": "nb-0004",
+      "slug": "kosar-10",
+      "title": "ساختمان کوثر ۱۰",
+      "record": "records/nb-0004.json",
+      "stage": "collecting",
+      "approved_for_website": false
+    }
+  ]
 }
