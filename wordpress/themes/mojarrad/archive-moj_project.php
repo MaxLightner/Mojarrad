@@ -117,14 +117,23 @@ $garden_count = count( $projects ) - $building_count;
   <div class="portfolio-dialog" tabindex="-1">
     <header class="portfolio-dialog-header"><div><span class="portfolio-overline">NIKA BANA / PROJECT</span><h2 id="portfolio-dialog-title"></h2></div>
       <button class="portfolio-icon-btn portfolio-close" type="button" data-close-dialog aria-label="بستن">×</button></header>
-    <div class="portfolio-dialog-scroll">
-      <div class="portfolio-stage"><img id="portfolio-stage-image" alt="">
-        <button id="portfolio-next" class="portfolio-stage-arrow portfolio-stage-next" type="button" aria-label="عکس بعدی">‹</button>
-        <button id="portfolio-prev" class="portfolio-stage-arrow portfolio-stage-prev" type="button" aria-label="عکس قبلی">›</button>
-        <span id="portfolio-image-count" class="portfolio-stage-count"></span></div>
-      <div id="portfolio-thumbs" class="portfolio-thumbs" role="group" aria-label="تصاویر پروژه"></div>
-      <div class="portfolio-dialog-details"><div><span class="portfolio-overline">PROJECT INFORMATION</span><h3>شناسنامه پروژه</h3><p id="portfolio-description" hidden></p></div><dl id="portfolio-facts" class="portfolio-facts"></dl></div>
-      <div class="portfolio-dialog-footer"><button id="portfolio-project-prev" class="portfolio-text-btn" type="button">پروژه قبلی →</button><button id="portfolio-project-next" class="portfolio-text-btn" type="button">پروژه بعدی ←</button></div>
+    <div class="portfolio-dialog-content">
+      <div class="portfolio-dialog-media">
+        <div class="portfolio-stage"><img id="portfolio-stage-image" alt="">
+          <button id="portfolio-next" class="portfolio-stage-arrow portfolio-stage-next" type="button" aria-label="عکس بعدی">‹</button>
+          <button id="portfolio-prev" class="portfolio-stage-arrow portfolio-stage-prev" type="button" aria-label="عکس قبلی">›</button>
+          <span id="portfolio-image-count" class="portfolio-stage-count"></span></div>
+        <div id="portfolio-thumbs" class="portfolio-thumbs" role="group" aria-label="تصاویر پروژه"></div>
+      </div>
+      <aside class="portfolio-info-panel" id="portfolio-info-panel" aria-label="مشخصات و پیمایش پروژه‌ها">
+        <div class="portfolio-dialog-details">
+          <div class="portfolio-info-heading"><span class="portfolio-overline">PROJECT INFORMATION</span><h3>شناسنامه پروژه</h3></div>
+          <dl id="portfolio-facts" class="portfolio-facts"></dl>
+          <p id="portfolio-description" hidden></p>
+        </div>
+        <button id="portfolio-details-toggle" class="portfolio-details-toggle" type="button" aria-controls="portfolio-facts" aria-expanded="false"><span id="portfolio-details-toggle-label">نمایش همه مشخصات</span><span class="portfolio-details-chevron" aria-hidden="true">⌄</span></button>
+        <div class="portfolio-dialog-footer"><button id="portfolio-project-prev" class="portfolio-text-btn" type="button">پروژه قبلی →</button><button id="portfolio-project-next" class="portfolio-text-btn" type="button">پروژه بعدی ←</button></div>
+      </aside>
     </div>
   </div>
 </div>

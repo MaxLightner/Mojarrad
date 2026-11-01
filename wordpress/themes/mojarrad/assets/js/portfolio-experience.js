@@ -10,11 +10,13 @@
   const $ = id => document.getElementById(id);
   const mosaic = $('portfolio-mosaic');
   const lightbox = $('portfolio-lightbox');
-  const panel = lightbox?.querySelector('.portfolio-dialog');
   const stage = $('portfolio-stage-image');
   const title = $('portfolio-dialog-title');
   const count = $('portfolio-image-count');
   const facts = $('portfolio-facts');
+  const infoPanel = $('portfolio-info-panel');
+  const detailsToggle = $('portfolio-details-toggle');
+  const detailsToggleLabel = $('portfolio-details-toggle-label');
   const thumbs = $('portfolio-thumbs');
   const description = $('portfolio-description');
   const previousImage = $('portfolio-prev');
@@ -36,6 +38,14 @@
 
   const visibleIndices = () => projects.map((p, i) => filter === 'all' || p.category === filter ? i : -1).filter(i => i >= 0);
   const currentImages = () => (projects[selected]?.images || []).filter(Boolean);
+
+  function setDetailsExpanded(expanded) {
+    if (!infoPanel || !detailsToggle) return;
+    infoPanel.classList.toggle('is-expanded', expanded);
+    detailsToggle.setAttribute('aria-expanded', String(expanded));
+    if (detailsToggleLabel) detailsToggleLabel.textContent = expanded ? 'بستن مشخصات' : 'نمایش همه مشخصات';
+    infoPanel.querySelector('.portfolio-dialog-details')?.scrollTo(0, 0);
+  }
 
   function setImage(index) {
     const images = currentImages();
@@ -86,6 +96,8 @@
     }
     description.textContent = project.description || '';
     description.hidden = !project.description;
+    if (detailsToggle) detailsToggle.hidden = facts.querySelectorAll('.portfolio-fact').length <= 2 && description.hidden;
+    setDetailsExpanded(false);
     setImage(0);
     const siblings = visibleIndices();
     const disableChange = siblings.length < 2;
@@ -133,8 +145,7 @@
     lightbox.hidden = false;
     lightbox.setAttribute('aria-hidden', 'false');
     document.body.classList.add('portfolio-dialog-open');
-    panel?.scrollTo(0, 0);
-    lightbox.querySelector('.portfolio-dialog-scroll')?.scrollTo(0, 0);
+    lightbox.querySelector('.portfolio-dialog-details')?.scrollTo(0, 0);
     if (fromTile) requestAnimationFrame(() => animateFromTile(index));
     if (changeUrl) updateHash(projects[index].slug);
     if (opening) lightbox.querySelector('.portfolio-close')?.focus({ preventScroll: true });
@@ -189,6 +200,7 @@
   nextImage?.addEventListener('click', () => setImage(imageIndex + 1));
   previousProject?.addEventListener('click', () => switchProject(-1));
   nextProject?.addEventListener('click', () => switchProject(1));
+  detailsToggle?.addEventListener('click', () => setDetailsExpanded(!infoPanel?.classList.contains('is-expanded')));
   stage?.addEventListener('error', () => {
     if (placeholder && !stage.src.endsWith(placeholder)) stage.src = placeholder;
   });

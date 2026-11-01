@@ -93,6 +93,28 @@ try {
           if (!(await page.locator('#portfolio-lightbox').isVisible())) failures.push(width+'px portfolio dialog did not open');
           if (!(await page.locator('#portfolio-dialog-title').innerText()).includes('بزرگمهر')) failures.push(width+'px portfolio dialog title missing');
           if (!(await page.locator('.portfolio-fact').count())) failures.push(width+'px portfolio facts missing');
+          const dialogLayout = await page.evaluate(() => {
+            const stage = document.querySelector('.portfolio-stage');
+            const facts = document.querySelector('.portfolio-fact');
+            const previous = document.querySelector('#portfolio-project-prev');
+            const next = document.querySelector('#portfolio-project-next');
+            const viewport = window.innerHeight;
+            const visible = element => {
+              if (!element) return false;
+              const rect = element.getBoundingClientRect();
+              return rect.height > 0 && rect.top >= -2 && rect.bottom <= viewport + 2;
+            };
+            return { stage: visible(stage), facts: visible(facts), previous: visible(previous), next: visible(next) };
+          });
+          if (Object.values(dialogLayout).some(visible => !visible)) failures.push(width+'px project image, facts or project navigation are below the viewport: '+JSON.stringify(dialogLayout));
+          if (width === 375) {
+            const detailsToggle = page.locator('#portfolio-details-toggle');
+            if (await detailsToggle.isVisible()) {
+              await detailsToggle.click();
+              if (await detailsToggle.getAttribute('aria-expanded') !== 'true') failures.push('375px portfolio full facts did not expand');
+              await detailsToggle.click();
+            }
+          }
           if (await page.locator('#portfolio-next').isVisible()) {
             await page.locator('#portfolio-next').click();
             if (!(await page.locator('#portfolio-image-count').innerText()).includes('2 / 2')) failures.push(width+'px portfolio image navigation failed');
