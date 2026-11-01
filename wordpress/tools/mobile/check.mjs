@@ -93,6 +93,10 @@ try {
           if (!(await page.locator('#portfolio-lightbox').isVisible())) failures.push(width+'px portfolio dialog did not open');
           if (!(await page.locator('#portfolio-dialog-title').innerText()).includes('بزرگمهر')) failures.push(width+'px portfolio dialog title missing');
           if (!(await page.locator('.portfolio-fact').count())) failures.push(width+'px portfolio facts missing');
+          // Judge layout after the opening transform, not during the entrance animation.
+          await page.locator('.portfolio-dialog').evaluate(async dialog => {
+            await Promise.all(dialog.getAnimations().map(animation => animation.finished.catch(() => {})));
+          });
           const dialogLayout = await page.evaluate(() => {
             const stage = document.querySelector('.portfolio-stage');
             const facts = document.querySelector('.portfolio-fact');
