@@ -114,7 +114,7 @@ body.portfolio-dialog-open{overflow:hidden}
   .portfolio-dialog{height:100dvh;width:100%;border:0}
   .portfolio-lightbox{padding:0}
   .portfolio-dialog-header{padding:10px 15px}
-  .portfolio-dialog-content{display:flex;flex-direction:column}
+  .portfolio-dialog-content{display:flex;flex-direction:column;padding-bottom:60px}
   .portfolio-dialog-media{flex:1;min-height:0}
   .portfolio-thumbs{height:53px;gap:5px;padding:5px 10px}
   .portfolio-thumb{width:44px;height:40px;flex-basis:44px}
@@ -130,7 +130,7 @@ body.portfolio-dialog-open{overflow:hidden}
   .portfolio-details-toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 15px 9px;width:100%;background:none;border:0;color:var(--accent);cursor:pointer;font-size:13px;font-weight:700;text-align:right}
   .portfolio-details-chevron{display:inline-block;transition:transform .2s}
   .portfolio-info-panel.is-expanded .portfolio-details-chevron{transform:rotate(180deg)}
-  .portfolio-dialog-footer{padding:8px 12px;gap:8px}
+  .portfolio-dialog-footer{position:absolute;inset-inline:0;bottom:0;z-index:3;padding:8px 12px;gap:8px;background:var(--card)}
   .portfolio-text-btn{min-height:42px}
 }
 @media(max-width:490px){.portfolio-intro{padding-top:20px}.portfolio-intro h1{font-size:30px}.portfolio-collection{padding-bottom:42px}.portfolio-filter{padding:7px 10px;font-size:13px}.portfolio-tile-info{right:9px;left:9px;bottom:10px}.portfolio-tile-info strong{font-size:13px;line-height:1.5}.portfolio-tile-info>span{display:none}.portfolio-tile-corner{top:9px;left:9px;width:25px;height:25px}.portfolio-map-shell{min-height:300px}.portfolio-dialog-header h2{font-size:18px}.portfolio-stage-arrow{width:36px;height:36px}.portfolio-stage-next{left:8px}.portfolio-stage-prev{right:8px}.portfolio-closing{align-items:start;flex-direction:column}}
